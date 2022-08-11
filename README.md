@@ -2,8 +2,8 @@
 
 > **油猴脚本开发指南教程目录**&nbsp;[**`去学习`**](https://bbs.tampermonkey.net.cn/thread-184-1-1.html)
 
-| 脚本名称 | 脚本猫 | 油叉GF | GitHub |
-|:---:|:---:|
+| 脚本名称 | 脚本猫 | Greasy Fork | GitHub |
+|:---:|:---:|:---:|:---:|
 | 去他のC语言中文网 |
 [安装](https://scriptcat.org/scripts/code/230/%E5%8E%BB%E4%BB%96%E3%81%AEC%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%96%87%E7%BD%91.user.js)
 |
