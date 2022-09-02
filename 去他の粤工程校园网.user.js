@@ -2,7 +2,7 @@
 // @name         去他の粤工程校园网
 // @namespace    s757129
 // @version      1.0.3
-// @description  自动登录粤工程西区宿舍校园网
+// @description  自动登录粤工程宿舍校园网
 // @author       柒伍七
 // @match        *://10.10.0.76/*
 // @match        *://10.10.0.253/*
