@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他の油猴中文网
 // @namespace    https://github.com/s757129/FuckScripts
-// @version      1.0.3
+// @version      1.0.4
 // @description  屏蔽油猴中文网广告加菊部美化
 // @author       柒伍七
 // @match        *://bbs.tampermonkey.net.cn/*
@@ -13,26 +13,22 @@
 // @license      MIT
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     //unsafeWindow
     unsafeWindow.GM_addStyle = GM_addStyle;
 
-    //fuckStyle
-    let fuckStyle = `
-.comiis_nv_pop,.a_f,.a_p{display: none; !important}
-.mn{width: 100%;height: 100%;left: 0;top:0;right:0;bottom: 0;margin: auto;}
-    `;
+    //隐藏已知广告
+    GM_addStyle('.comiis_nv_pop,.a_f,.a_p{display: none;}');
 
-    //loading
-    GM_addStyle(fuckStyle);
-
-    //李恒道哥哥牛逼！
-    setTimeout(function() {
+    //去除复制链接尾缀
+    //原创：李恒道
+    //原文：https://bbs.tampermonkey.net.cn/thread-1788-1-1.html
+    setTimeout(function () {
         let oldcopy = unsafeWindow.setCopy;
-        unsafeWindow.setCopy = function(text, msg){
-            return oldcopy.call(this,text.replace('\n(出处: 油猴中文网)\n',''), msg)
+        unsafeWindow.setCopy = function (text, msg) {
+            return oldcopy.call(this, text.replace('\n(出处: 油猴中文网)\n', ""), msg)
         }
     }, 1000);
 
