@@ -20,7 +20,7 @@
     unsafeWindow.GM_addStyle = GM_addStyle;
 
     //隐藏已知广告
-    GM_addStyle('.comiis_nv_pop,.a_f,.a_p{display: none;}');
+    GM_addStyle('.comiis_nv_pop, .a_f, .a_p { display: none; }');
 
     //去除复制链接尾缀
     //原创：李恒道
