@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他のC语言中文网
 // @namespace    https://github.com/s757129/FuckScripts
-// @version      1.1.4
+// @version      1.1.5
 // @description  屏蔽C语言中文网广告加菊部美化
 // @author       柒伍七
 // @match        *://c.biancheng.net/*
@@ -10,7 +10,7 @@
 // @icon         http://c.biancheng.net/favicon.ico
 // @require      https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.js
 // @resource     SwalCSS https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.css
-// @run-at       document-start
+// @run-at       document-body
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_getValue
