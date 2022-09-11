@@ -26,6 +26,6 @@
     //延时点击登录按钮
     setTimeout(function() {
         document.querySelector('#loginsubmit').click();
-    }, 250);
+    }, 500);
  
 })();
