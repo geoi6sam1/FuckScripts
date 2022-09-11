@@ -23,7 +23,7 @@
     GM_addStyle('.b_ad { display: none; }');//.b_adTop,.b_adBottom
 
     //旧版广告
-    let fuckad = document.querySelectorAll('.b_attribution[data-partnertag]');//data-tag
+    let fuckad = document.querySelectorAll('.b_attribution[data-partnertag]');//.b_attribution[data-tag]
     for (let i = 0; i < fuckad.length; i++) {
         fuckad[i].parentNode.parentNode.style.display = 'none';
     }
