@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name         去他の油猴中文网
-// @namespace    https://github.com/s757129/FuckScripts
+// @namespace    https://github.com/s757129
+// @homepage     https://s757129.github.io
+// @supportURL   https://github.com/s757129/FuckScripts
 // @version      1.0.4
 // @description  屏蔽油猴中文网广告加菊部美化
 // @author       柒伍七
@@ -9,7 +11,6 @@
 // @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
-// @homepage     https://s757129.github.io
 // @license      MIT
 // ==/UserScript==
 
