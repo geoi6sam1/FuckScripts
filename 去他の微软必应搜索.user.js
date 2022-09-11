@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name         去他の微软必应搜索
-// @namespace    https://github.com/s757129/FuckScripts
+// @namespace    https://github.com/s757129
+// @homepage     https://s757129.github.io
+// @supportURL   https://github.com/s757129/FuckScripts
 // @version      0.1
 // @description  屏蔽微软必应搜索广告加菊部美化
 // @author       柒伍七
@@ -9,7 +11,6 @@
 // @run-at       document-idle
 // @grant        unsafeWindow
 // @grant        GM_addStyle
-// @homepage     https://s757129.github.io
 // @license      MIT
 // ==/UserScript==
 
