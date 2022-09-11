@@ -3,7 +3,7 @@
 // @namespace    https://github.com/s757129
 // @homepage     https://s757129.github.io
 // @supportURL   https://github.com/s757129/FuckScripts
-// @version      0.1
+// @version      0.2
 // @description  屏蔽微软必应搜索广告加菊部美化
 // @author       柒伍七
 // @match        *://*.bing.com/search?q=*
@@ -21,7 +21,7 @@
     unsafeWindow.GM_addStyle = GM_addStyle;
 
     //新版广告
-    GM_addStyle('.b_ad { display: none; }');//.b_adTop,.b_adBottom
+    GM_addStyle('.b_ad, ul[data-partnertag] { display: none; }');//.b_adTop,.b_adBottom
 
     //旧版广告
     let fuckad = document.querySelectorAll('.b_attribution[data-partnertag]');//.b_attribution[data-tag]
