@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name         去他のC语言中文网
-// @namespace    https://github.com/s757129/FuckScripts
+// @namespace    https://github.com/s757129
+// @homepage     https://s757129.github.io
+// @supportURL   https://github.com/s757129/FuckScripts
 // @version      1.1.5
 // @description  屏蔽C语言中文网广告加菊部美化
 // @author       柒伍七
@@ -17,7 +19,6 @@
 // @grant        GM_setValue
 // @grant        GM_getResourceText
 // @grant        GM_registerMenuCommand
-// @homepage     https://s757129.github.io
 // @license      MIT
 // ==/UserScript==
 
