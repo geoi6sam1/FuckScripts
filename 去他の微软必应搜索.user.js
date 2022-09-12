@@ -138,7 +138,7 @@
         //CSS
         let SwalStyle = `
 .setting-container { z-index: 99999; }
-.swal2-popup { width: 29em; }
+.swal2-popup { width: 26em; }
 .swal2-footer { font-size: 0.875em; }
 #swal2-title strong { font-weight: bold; color: #515154;}
 .setting-label { display: flex; align-items: center; justify-content: space-between; letter-spacing:2px; margin:11px 22px; }
