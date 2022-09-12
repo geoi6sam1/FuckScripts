@@ -100,9 +100,10 @@
 
         //CSS
         let SwalStyle = `
-.setting-container { z-index: 99999; !important }
-.swal2-popup { width: 23em; !important }
-.swal2-footer { font-size: 0.875em; !important }
+.setting-container { z-index: 99999; }
+.swal2-popup { width: 23em; }
+.swal2-footer { font-size: 0.875em; }
+#swal2-title strong { font-weight: bold; color: #515154;}
 .setting-label { display: flex; align-items: center; justify-content: space-between; letter-spacing:2px; margin:11px 22px; }
 .switch-btn { cursor: pointer; width: 45px; height: 28px; position: relative; border: 1px solid #dfdfdf; background-color: #fdfdfd; box-shadow: #dfdfdf 0 0 0 0 inset; border-radius: 15px; background-clip: content-box; display: inline-block; -webkit-appearance: none; user-select: none; outline: none; }
 .switch-btn:before {content: ''; width: 25px; height: 25px; position: absolute; top: 0; left: 0; border-radius: 20px; background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .4); }
