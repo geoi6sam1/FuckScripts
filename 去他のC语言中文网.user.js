@@ -19,7 +19,7 @@
 // @grant        GM_setValue
 // @grant        GM_getResourceText
 // @grant        GM_registerMenuCommand
-// @license      MIT
+// @license      What The Hell
 // ==/UserScript==
 
 (function () {
