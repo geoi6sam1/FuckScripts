@@ -3,7 +3,7 @@
 // @namespace    https://github.com/s757129
 // @homepage     https://s757129.github.io
 // @supportURL   https://github.com/s757129/FuckScripts
-// @version      0.3
+// @version      0.4
 // @description  屏蔽微软必应搜索广告加菊部美化
 // @author       柒伍七
 // @match        *://*.bing.com/search?*
@@ -84,6 +84,14 @@
             }
         },
 
+        /*** 隐藏最新相关信息(资讯) ***/
+        hidezx() {
+            let between_zx = document.querySelector('#ans_nws');
+            if (between_zx) {
+                between_zx.parentNode.style.display = 'none';
+            }
+        },
+
     };
 
     //判断配置
@@ -99,6 +107,9 @@
     if (GM_getValue('setting_hide_rs')) {
         main.hiders();
     };
+    if (GM_getValue('setting_hide_zx')) {
+        main.hidezx();
+    };
 
     //默认配置
     let value = [{
@@ -109,10 +120,13 @@
         value: true
     }, {
         name: 'setting_hide_rw',
-        value: false
+        value: true
     }, {
         name: 'setting_hide_rs',
-        value: false
+        value: true
+    }, {
+        name: 'setting_hide_zx',
+        value: true
     }];
     value.forEach((v) => {
         GM_getValue(v.name) === undefined && GM_setValue(v.name, v.value);
@@ -124,7 +138,7 @@
         //CSS
         let SwalStyle = `
 .setting-container { z-index: 99999; }
-.swal2-popup { width: 23em; }
+.swal2-popup { width: 29em; }
 .swal2-footer { font-size: 0.875em; }
 #swal2-title strong { font-weight: bold; color: #515154;}
 .setting-label { display: flex; align-items: center; justify-content: space-between; letter-spacing:2px; margin:11px 22px; }
@@ -144,6 +158,7 @@
 <label class="setting-label">隐藏相关视频<input id="hide_sp" ${GM_getValue('setting_hide_sp') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
 <label class="setting-label">隐藏人们还会问<input id="hide_rw" ${GM_getValue('setting_hide_rw') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
 <label class="setting-label">隐藏底部相关搜索<input id="hide_rs" ${GM_getValue('setting_hide_rs') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
+<label class="setting-label">隐藏最新相关信息(资讯)<input id="hide_zx" ${GM_getValue('setting_hide_zx') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
     	`;
 
         //载入资源
@@ -174,6 +189,9 @@
         });
         document.querySelector('#hide_rs').addEventListener('change', (e) => {
             GM_setValue('setting_hide_rs', e.target.checked);
+        });
+        document.querySelector('#hide_zx').addEventListener('change', (e) => {
+            GM_setValue('setting_hide_zx', e.target.checked);
         });
 
     });
