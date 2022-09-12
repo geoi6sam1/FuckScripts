@@ -10,7 +10,7 @@
 // @match        *://10.10.0.253/*
 // @icon         https://www.gdep.edu.cn/__local/1/78/44/67DBBD0E4AF7849771AEBA0A69A_8F5875B0_45D51.jpg?e=.jpg
 // @run-at       document-end
-// @license      MIT
+// @license      What The Hell
 // ==/UserScript==
  
 (function() {
