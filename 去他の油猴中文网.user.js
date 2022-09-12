@@ -11,7 +11,7 @@
 // @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
-// @license      MIT
+// @license      What The Hell
 // ==/UserScript==
 
 (function () {
