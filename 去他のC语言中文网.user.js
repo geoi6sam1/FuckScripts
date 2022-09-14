@@ -3,7 +3,7 @@
 // @namespace    https://github.com/s757129
 // @homepage     https://s757129.github.io
 // @supportURL   https://github.com/s757129/FuckScripts
-// @version      1.1.5
+// @version      1.1.6
 // @description  屏蔽C语言中文网广告加菊部美化
 // @author       柒伍七
 // @match        *://c.biancheng.net/*
@@ -12,7 +12,7 @@
 // @icon         http://c.biancheng.net/favicon.ico
 // @require      https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.js
 // @resource     SwalCSS https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.css
-// @run-at       document-body
+// @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -48,8 +48,10 @@
         //隐藏付费内容
         hidecost() {
             let iconfontvip = document.querySelectorAll('.iconfont-vip2');
-            for (let i = 0; i < iconfontvip.length; i++) {
-                iconfontvip[i].parentNode.style.display = 'none';
+            if (iconfontvip) {
+                for (let i = 0; i < iconfontvip.length; i++) {
+                    iconfontvip[i].parentNode.style.display = 'none';
+                }
             }
         },
 
