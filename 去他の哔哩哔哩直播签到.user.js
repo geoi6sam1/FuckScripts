@@ -14,6 +14,30 @@
 // ==/UserScript==
 
 return new Promise((resolve, reject) => {
+
+    fetch("https://api.bilibili.com/x/web-interface/nav", {
+        method: "GET",
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'cookie': document.cookie.split(';'),
+        }
+    }).then(response => response.json())
+        .then(response => {
+            let login = response.data.isLogin;
+            let code = response.code;
+            let name = response.data.uname;
+            switch (login) {
+                case true:
+                    console.log('Code: ' + code + '\nUser: ' + name);
+                    break;
+                case false:
+                    console.log('Code: ' + code + '\nTips: 请登录后再试!');
+                    break;
+            }
+
+        })
+
     fetch("https://api.live.bilibili.com/xlive/web-ucenter/v1/sign/DoSign", {
         method: "GET",
         mode: 'cors',
@@ -25,7 +49,7 @@ return new Promise((resolve, reject) => {
         .then(response => {
             let code = response.code;
             let msg = response.message;
-            let log = 'Code: ' + code + '; Tips: ' + msg;
+            let log = 'Code: ' + code + '\nTips: ' + msg;
             console.log(log);
         })
 
@@ -43,5 +67,6 @@ return new Promise((resolve, reject) => {
             let log = '今日签到获得' + txt + ',' + stxt;
             console.log(log);
         })
+    
     resolve();
 });
