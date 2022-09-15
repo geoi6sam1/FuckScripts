@@ -22,86 +22,83 @@
 // @license      What The Hell
 // ==/UserScript==
 
-(function () {
-    'use strict';
+//unsafeWindow
+unsafeWindow.GM_addStyle = GM_addStyle;
+unsafeWindow.GM_getValue = GM_getValue;
+unsafeWindow.GM_setValue = GM_setValue;
+unsafeWindow.GM_getResourceText = GM_getResourceText;
+unsafeWindow.GM_registerMenuCommand = GM_registerMenuCommand;
 
-    //unsafeWindow
-    unsafeWindow.GM_addStyle = GM_addStyle;
-    unsafeWindow.GM_getValue = GM_getValue;
-    unsafeWindow.GM_setValue = GM_setValue;
-    unsafeWindow.GM_getResourceText = GM_getResourceText;
-    unsafeWindow.GM_registerMenuCommand = GM_registerMenuCommand;
+//菜单
+let main = {
 
-    //菜单
-    let main = {
+    //隐藏已知广告
+    hidead() {
+        GM_addStyle('#top-banner, #q2a-fudao, a[href*="fudao"], #product-type li a[href*="fudao"], #nav-main li a[href*="fudao"], #arc-append, .tip-box, blockquote, #ggxc-weixin-arcbottom, #ggxc-weixin-listbottom, .ad-box { display: none; }');
+    },
 
-        //隐藏已知广告
-        hidead() {
-            GM_addStyle('#top-banner, #q2a-fudao, a[href*="fudao"], #product-type li a[href*="fudao"], #nav-main li a[href*="fudao"], #arc-append, .tip-box, blockquote, #ggxc-weixin-arcbottom, #ggxc-weixin-listbottom, .ad-box { display: none; }');
-        },
+    //隐藏会员中心
+    hidevip() {
+        GM_addStyle('#topbar, .user-info, #nav-main li a[href*="vip.biancheng.net"] { display: none; }');
+    },
 
-        //隐藏会员中心
-        hidevip() {
-            GM_addStyle('#topbar, .user-info, #nav-main li a[href*="vip.biancheng.net"] { display: none; }');
-        },
-
-        //隐藏付费内容
-        hidecost() {
-            let iconfontvip = document.querySelectorAll('.iconfont-vip2');
-            if (iconfontvip) {
-                for (let i = 0; i < iconfontvip.length; i++) {
-                    iconfontvip[i].parentNode.style.display = 'none';
-                }
+    //隐藏付费内容
+    hidecost() {
+        let iconfontvip = document.querySelectorAll('.iconfont-vip2');
+        if (iconfontvip) {
+            for (let i = 0; i < iconfontvip.length; i++) {
+                iconfontvip[i].parentNode.style.display = 'none';
             }
-        },
+        }
+    },
 
-        //阻止新建标签
-        disabledblank() {
-            let rmatarget = document.querySelectorAll('a');
-            for (let i = 0; i < rmatarget.length; i++) {
-                rmatarget[i].removeAttribute('target');
-            }
-        },
+    //阻止新建标签
+    disabledblank() {
+        let rmatarget = document.querySelectorAll('a');
+        for (let i = 0; i < rmatarget.length; i++) {
+            rmatarget[i].removeAttribute('target');
+        }
+    },
 
-    };
+};
 
-    //判断配置
-    if (GM_getValue('setting_hide_ad')) {
-        main.hidead();
-    };
-    if (GM_getValue('setting_hide_vip')) {
-        main.hidevip();
-    };
-    if (GM_getValue('setting_hide_cost')) {
-        main.hidecost();
-    };
-    if (GM_getValue('setting_disabled_blank')) {
-        main.disabledblank();
-    };
+//判断配置
+if (GM_getValue('setting_hide_ad')) {
+    main.hidead();
+};
+if (GM_getValue('setting_hide_vip')) {
+    main.hidevip();
+};
+if (GM_getValue('setting_hide_cost')) {
+    main.hidecost();
+};
+if (GM_getValue('setting_disabled_blank')) {
+    main.disabledblank();
+};
 
-    //默认配置
-    let value = [{
-        name: 'setting_hide_ad',
-        value: true
-    }, {
-        name: 'setting_hide_vip',
-        value: true
-    }, {
-        name: 'setting_hide_cost',
-        value: true
-    }, {
-        name: 'setting_disabled_blank',
-        value: true
-    }];
-    value.forEach((v) => {
-        GM_getValue(v.name) === undefined && GM_setValue(v.name, v.value);
-    });
+//默认配置
+let value = [{
+    name: 'setting_hide_ad',
+    value: true
+}, {
+    name: 'setting_hide_vip',
+    value: true
+}, {
+    name: 'setting_hide_cost',
+    value: true
+}, {
+    name: 'setting_disabled_blank',
+    value: true
+}];
+value.forEach((v) => {
+    GM_getValue(v.name) === undefined && GM_setValue(v.name, v.value);
+});
 
-    //设置
-    GM_registerMenuCommand('⚙️ 设置', () => {
+//设置
+GM_registerMenuCommand('⚙️ 设置', () => {
 
-        //CSS
-        let SwalStyle = `
+    //CSS
+    let SwalStyle = `
 .setting-container { z-index: 99999; }
 .swal2-popup { width: 23em; }
 .swal2-footer { font-size: 0.875em; }
@@ -117,44 +114,42 @@
 .switch-btn.switch-btn-animbg:checked:before { transition: left .3s; }
 		`;
 
-        //HTML
-        let Swalhtml = `
+    //HTML
+    let Swalhtml = `
 <label class="setting-label">隐藏已知广告<input id="hide_ad" ${GM_getValue('setting_hide_ad') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
 <label class="setting-label">隐藏会员中心<input id="hide_vip" ${GM_getValue('setting_hide_vip') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
 <label class="setting-label">隐藏付费内容<input id="hide_cost" ${GM_getValue('setting_hide_cost') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
 <label class="setting-label">阻止新建标签<input id="disabled_blank" ${GM_getValue('setting_disabled_blank') ? 'checked' : ''} type="checkbox" class="switch-btn switch-btn-animbg" /></label>
     	`;
 
-        //载入资源
-        GM_addStyle(GM_getResourceText('SwalCSS'));
-        GM_addStyle(SwalStyle);
+    //载入资源
+    GM_addStyle(GM_getResourceText('SwalCSS'));
+    GM_addStyle(SwalStyle);
 
-        //SweetAlert2
-        Swal.fire({
-            icon: 'info',
-            title: '<strong>自定义配置</strong>',
-            html: Swalhtml,
-            showCloseButton: true,
-            confirmButtonText: '保存',
-            footer: '<div style="text-align: center;font-size: 1em;">一起学习 <a href="https://bbs.tampermonkey.net.cn/thread-184-1-1.html" target="_blank" style="color:#7066e0;">油猴脚本开发</a> 吧，此脚本免费开源<br>Powered by <a href="https://github.com/s757129" target="_blank" style="color:#7066e0;font-weight:bold;">柒伍七</a></div>',
-        }).then((result) => {
-            result.isConfirmed && history.go(0);
-        });
-
-        //Checkbox
-        document.querySelector('#hide_ad').addEventListener('change', (e) => {
-            GM_setValue('setting_hide_ad', e.target.checked);
-        });
-        document.querySelector('#hide_vip').addEventListener('change', (e) => {
-            GM_setValue('setting_hide_vip', e.target.checked);
-        });
-        document.querySelector('#hide_cost').addEventListener('change', (e) => {
-            GM_setValue('setting_hide_cost', e.target.checked);
-        });
-        document.querySelector('#disabled_blank').addEventListener('change', (e) => {
-            GM_setValue('setting_disabled_blank', e.target.checked);
-        });
-
+    //SweetAlert2
+    Swal.fire({
+        icon: 'info',
+        title: '<strong>自定义配置</strong>',
+        html: Swalhtml,
+        showCloseButton: true,
+        confirmButtonText: '保存',
+        footer: '<div style="text-align: center;font-size: 1em;">一起学习 <a href="https://bbs.tampermonkey.net.cn/thread-184-1-1.html" target="_blank" style="color:#7066e0;">油猴脚本开发</a> 吧，此脚本免费开源<br>Powered by <a href="https://github.com/s757129" target="_blank" style="color:#7066e0;font-weight:bold;">柒伍七</a></div>',
+    }).then((result) => {
+        result.isConfirmed && history.go(0);
     });
 
-})();
+    //Checkbox
+    document.querySelector('#hide_ad').addEventListener('change', (e) => {
+        GM_setValue('setting_hide_ad', e.target.checked);
+    });
+    document.querySelector('#hide_vip').addEventListener('change', (e) => {
+        GM_setValue('setting_hide_vip', e.target.checked);
+    });
+    document.querySelector('#hide_cost').addEventListener('change', (e) => {
+        GM_setValue('setting_hide_cost', e.target.checked);
+    });
+    document.querySelector('#disabled_blank').addEventListener('change', (e) => {
+        GM_setValue('setting_disabled_blank', e.target.checked);
+    });
+
+});
