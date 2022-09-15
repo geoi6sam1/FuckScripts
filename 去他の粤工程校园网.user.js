@@ -12,21 +12,16 @@
 // @run-at       document-end
 // @license      What The Hell
 // ==/UserScript==
- 
-(function() {
-    'use strict';
- 
-    //设置
-    var userid = '',
-        passwd = '';
- 
-    //你有对象么？
-    document.querySelector('#userid').value = userid;
-    document.querySelector('#passwd').value = passwd;
- 
-    //延时点击登录按钮
-    setTimeout(function() {
-        document.querySelector('#loginsubmit').click();
-    }, 500);
- 
-})();
+
+//设置
+var userid = '',
+    passwd = '';
+
+//你有对象么？
+document.querySelector('#userid').value = userid;
+document.querySelector('#passwd').value = passwd;
+
+//延时点击登录按钮
+setTimeout(function () {
+    document.querySelector('#loginsubmit').click();
+}, 500);
