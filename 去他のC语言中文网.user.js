@@ -46,7 +46,7 @@ let main = {
     hidecost() {
         let iconfontvip = document.querySelectorAll('.iconfont-vip2');
         if (iconfontvip) {
-            for (let i = 0; i < iconfontvip.length; i++) {
+            for (let i = 0; i < iconfontvip.length; ++i) {
                 iconfontvip[i].parentNode.style.display = 'none';
             }
         }
@@ -55,7 +55,7 @@ let main = {
     //阻止新建标签
     disabledblank() {
         let rmatarget = document.querySelectorAll('a');
-        for (let i = 0; i < rmatarget.length; i++) {
+        for (let i = 0; i < rmatarget.length; ++i) {
             rmatarget[i].removeAttribute('target');
         }
     },
