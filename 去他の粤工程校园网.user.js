@@ -22,6 +22,6 @@ document.querySelector('#userid').value = userid;
 document.querySelector('#passwd').value = passwd;
 
 //延时点击登录按钮
-setTimeout(function () {
+setTimeout(() => {
     document.querySelector('#loginsubmit').click();
-}, 500);
+}, 1000);
