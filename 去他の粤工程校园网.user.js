@@ -13,15 +13,14 @@
 // @license      What The Hell
 // ==/UserScript==
 
-//设置
-var userid = '',
-    passwd = '';
+var userid = '', // 学号
+    passwd = ''; // 密码
 
-//你有对象么？
-document.querySelector('#userid').value = userid;
-document.querySelector('#passwd').value = passwd;
+setTimeout(() => {
+    document.querySelector('#userid').value = userid;
+    document.querySelector('#passwd').value = passwd;
+}, 500);
 
-//延时点击登录按钮
 setTimeout(() => {
     document.querySelector('#loginsubmit').click();
 }, 1000);
