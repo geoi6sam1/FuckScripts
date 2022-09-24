@@ -19,8 +19,8 @@ var userid = '', // 学号
 setTimeout(() => {
     document.querySelector('#userid').value = userid;
     document.querySelector('#passwd').value = passwd;
-}, 500);
+}, 250);
 
 setTimeout(() => {
     document.querySelector('#loginsubmit').click();
-}, 1000);
+}, 500);
