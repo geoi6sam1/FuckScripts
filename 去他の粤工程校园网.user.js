@@ -3,7 +3,7 @@
 // @namespace    https://github.com/s757129
 // @homepage     https://s757129.github.io
 // @supportURL   https://github.com/s757129/FuckScripts
-// @version      1.0.3
+// @version      1.0.4
 // @description  自动登录粤工程宿舍校园网
 // @author       柒伍七
 // @match        *://10.10.0.76/*
