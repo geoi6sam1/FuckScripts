@@ -13,7 +13,7 @@
 // @license      What The Hell
 // ==/UserScript==
 
-var userid = '', // 学号
+let userid = '', // 学号
     passwd = ''; // 密码
 
 setTimeout(() => {
