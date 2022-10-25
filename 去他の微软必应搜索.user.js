@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         去他の微软必应搜索
 // @namespace    https://github.com/s757129
-// @homepage     https://s757129.github.io
-// @supportURL   https://github.com/s757129/FuckScripts
-// @version      0.5
+// @version      0.6
 // @description  屏蔽微软必应搜索广告加菊部美化
 // @author       柒伍七
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
+// @supportURL   https://github.com/s757129/FuckScripts
 // @require      https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.js
 // @resource     SwalCSS https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.css
 // @run-at       document-idle
@@ -17,7 +16,7 @@
 // @grant        GM_setValue
 // @grant        GM_getResourceText
 // @grant        GM_registerMenuCommand
-// @license      What The Hell
+// @license      MIT
 // ==/UserScript==
 
 //unsafeWindow
@@ -32,35 +31,45 @@ let main = {
 
     /*** 隐藏已知广告 ***/
     hidead() {
-        //新版广告
-        GM_addStyle('.b_ad, ul[data-partnertag], #b_opalpers { display: none; }');
+        //主要广告
+        GM_addStyle('.b_ad, ul[data-partnertag], #ev_talkbox_wrapper, #b_opalpers, #b_notificationContainer_bop { display: none !important; }');
 
-        //旧版广告
+        //隐含广告
         let fuckad = document.querySelectorAll('.b_algo');
         for (let i = 0; i < fuckad.length; ++i) {
             if (fuckad[i].firstChild.getAttribute('class') == null) {
                 fuckad[i].style.display = 'none';
             }
         }
+
+        //必应翻译
+        let bingfypc = document.querySelector('#bingApp_area');
+        if (bingfypc != null) {
+            bingfypc.parentNode.parentNode.parentNode.style.display = 'none';
+        }
+        let bingfym = document.querySelector('.bingApp_area_m');
+        if (bingfym != null) {
+            bingfym.parentNode.parentNode.style.display = 'none';
+        }
     },
 
     /*** 隐藏相关视频 ***/
     hidesp() {
-        let bottom_sp = document.querySelector('#serpvidans');
-        if (bottom_sp) {
-            bottom_sp.parentNode.parentNode.style.display = 'none';
+        let spinpc = document.querySelector('#serpvidans');
+        if (spinpc != null) {
+            spinpc.parentNode.parentNode.style.display = 'none';
         }
-        let phone_sp = document.querySelector('#vidans2');
-        if (phone_sp) {
-            phone_sp.parentNode.parentNode.style.display = 'none';
+        let spinm = document.querySelector('#vidans2');
+        if (spinm != null) {
+            spinm.parentNode.parentNode.style.display = 'none';
         }
     },
 
     /*** 隐藏人们还会问 ***/
     hiderw() {
         let bottom_rw = document.querySelector('#df_listaa');
-        if (bottom_rw) {
-            if (navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('iPhone') > -1 || navigator.userAgent.indexOf('iPad') > -1 || navigator.userAgent.indexOf('iPod') > -1 || navigator.userAgent.indexOf('Symbian') > -1) {
+        if (bottom_rw != null) {
+            if (navigator.userAgent.indexOf('Mobile') > -1) {
                 bottom_rw.parentNode.parentNode.parentNode.parentNode.style.display = 'none';
             } else {
                 bottom_rw.parentNode.parentNode.parentNode.style.display = 'none';
@@ -71,7 +80,7 @@ let main = {
     /*** 隐藏底部相关搜索 ***/
     hiders() {
         let bottom_rs = document.querySelector('.b_rs');
-        if (bottom_rs) {
+        if (bottom_rs != null) {
             bottom_rs.parentNode.style.display = 'none';
         }
     },
@@ -84,7 +93,7 @@ let main = {
     /*** 隐藏最新相关信息(资讯) ***/
     hidezx() {
         let between_zx = document.querySelector('#ans_nws');
-        if (between_zx) {
+        if (between_zx != null) {
             between_zx.parentNode.style.display = 'none';
         }
     },
