@@ -17,4 +17,4 @@
 unsafeWindow.GM_addStyle = GM_addStyle;
 
 //GM_addStyle
-GM_addStyle(`.quick_item.quick_games, .quick_item.quick_upload, .mod_row_box.mod_row_box_special, #ad_container, .vip-button, #iwan-game-switch-page, .txp-watermark, txpdiv.txp_zt {display: none !important;}`);
+GM_addStyle('.quick_item.quick_games, .quick_item.quick_upload, .mod_row_box.mod_row_box_special, #ad_container, .vip-button, #iwan-game-switch-page, .txp-watermark, txpdiv.txp_zt { display: none !important; }');
