@@ -6,7 +6,7 @@
 // @author       柒伍七
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
-// @supportURL   https://github.com/s757129/FuckScripts
+// @supportURL   https://github.com/s757129/FuckScripts/issues
 // @require      https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.js
 // @resource     SwalCSS https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.css
 // @run-at       document-idle
