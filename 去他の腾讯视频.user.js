@@ -10,7 +10,7 @@
 // @run-at       document-idle
 // @grant        unsafeWindow
 // @grant        GM_addStyle
-// @license      What The Hell
+// @license      MIT
 // ==/UserScript==
 
 unsafeWindow.GM_addStyle = GM_addStyle;
