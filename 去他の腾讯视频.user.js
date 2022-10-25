@@ -13,5 +13,8 @@
 // @license      MIT
 // ==/UserScript==
 
+//unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
+
+//GM_addStyle
 GM_addStyle(`.vip-button, #iwan-game-switch-page, .txp-watermark, txpdiv.txp_zt {display: none !important;}`);
