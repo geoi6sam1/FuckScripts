@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         去他の腾讯视频
 // @namespace    https://github.com/s757129
-// @version      0.2
-// @description  隐藏腾讯视频影响观影体验的内容建议搭配VIP食用
+// @version      0.3
+// @description  屏蔽腾讯视频广告加菊部美化
 // @author       柒伍七
 // @match        *://v.qq.com/*
 // @match        *://film.qq.com/*
@@ -17,5 +17,27 @@
 //unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 
-//GM_addStyle
-GM_addStyle('.quick_item.quick_games, .quick_item.quick_upload, #pc_client, .site_board_ads_inner, .mod_row_box.mod_row_box_special, #ad_container, .fixed_box, .vip-button, #iwan-game-switch-page, .txp-watermark, txpdiv.txp_zt { display: none !important; }');
+//不能跳过视频开头广告
+GM_addStyle(`
+.quick_games,
+.quick_upload,
+#pc_client,
+.site_board_ads_inner,
+.mod_row_box_special,
+[dt-params*="ad_"],
+.tip_download,
+#ad_container,
+.fixed_box,
+.vip-button,
+#iwan-game-switch-page,
+[data-role*="ad-"],
+[data-role*="watermark"]
+{
+    display: none !important;
+}
+
+.video-card-wrap
+{
+    margin: 0.5rem;
+}
+`);
