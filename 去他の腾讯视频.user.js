@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         去他の腾讯视频
 // @namespace    https://github.com/s757129
-// @version      0.3
+// @version      0.4
 // @description  屏蔽腾讯视频广告加菊部美化
 // @author       柒伍七
 // @match        *://v.qq.com/*
 // @match        *://film.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
 // @supportURL   https://github.com/s757129/FuckScripts/issues
-// @run-at       document-idle
+// @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @license      MIT
