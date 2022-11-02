@@ -25,11 +25,14 @@ GM_addStyle(`
 .site_board_ads_inner,
 .mod_row_box_special,
 [dt-params*="ad_"],
+.nav-wrap a[href*="gamer"],
+.nav-wrap a[href*="iwan"],
 .tip_download,
 #ad_container,
 .fixed_box,
 .vip-button,
 #iwan-game-switch-page,
+.iwan-wrapper,
 [data-role*="ad-"],
 [data-role*="watermark"]
 {
