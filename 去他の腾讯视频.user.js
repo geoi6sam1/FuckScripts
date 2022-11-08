@@ -17,14 +17,15 @@
 //unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 
-//不能跳过视频开头广告
+//非跳过视频开头广告脚本，请搭配VIP食用
 GM_addStyle(`
 .quick_games,
 .quick_upload,
+.quick_vip,
 #pc_client,
+[dt-params*="ad_"],
 .site_board_ads_inner,
 .mod_row_box_special,
-[dt-params*="ad_"],
 .nav-wrap a[href*="gamer"],
 .nav-wrap a[href*="iwan"],
 .tip_download,
@@ -33,14 +34,14 @@ GM_addStyle(`
 .vip-button,
 #iwan-game-switch-page,
 .iwan-wrapper,
-[data-role*="ad-"],
-[data-role*="watermark"]
+txpdiv[data-role*="ad-"],
+txpdiv[data-role*="watermark"]
 {
     display: none !important;
 }
 
 .video-card-wrap
 {
-    margin: 0.5rem !important;
+    margin: 0.25rem !important;
 }
 `);
