@@ -14,26 +14,29 @@
 // @license      MIT
 // ==/UserScript==
 
-//unsafeWindow
+// unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 
-//非跳过视频开头广告脚本，请搭配VIP食用
+// 非跳过视频开头广告脚本，请搭配VIP食用
 GM_addStyle(`
 .quick_vip,
 .quick_games,
 .quick_upload,
 #pc_client,
+[dt-params*="ad_"],
 .nav-wrap a[href*="gamer"],
 .nav-wrap a[href*="iwan"],
-[dt-params*="ad_"],
 .tip_download,
 #ad_container,
 .fixed_box,
 .vip-button,
+.player-bottom__right,
 #iwan-game-switch-page,
 .iwan-wrapper,
 [data-role*="ad-"],
-[data-role*="watermark"]
+[data-role*="watermark"],
+.barrage-control,
+.thumbplayer-barrage
 {
     display: none !important;
 }
