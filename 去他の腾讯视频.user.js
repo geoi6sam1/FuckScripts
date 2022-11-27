@@ -34,6 +34,7 @@ GM_addStyle(`
 #iwan-game-switch-page,
 .iwan-wrapper,
 [data-role*="ad-"],
+[class*="txp_ad_"],
 [data-role*="watermark"],
 .barrage-control,
 .thumbplayer-barrage
