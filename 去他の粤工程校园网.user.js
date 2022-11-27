@@ -21,12 +21,10 @@ let login = setInterval(() => {
     if (userid && passwd != null) {
         userid.value = uid;
         passwd.value = pwd;
-        setTimeout(() => {
-            let loginsubmit = document.querySelector('#loginsubmit');
-            if (loginsubmit != null) {
-                loginsubmit.click();
-            }
-        }, 456);
+        let loginsubmit = document.querySelector('#loginsubmit');
+        if (loginsubmit != null) {
+            loginsubmit.click();
+        }
     }
 }, 99);
 
