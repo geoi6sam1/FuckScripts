@@ -46,4 +46,10 @@ GM_addStyle(`
 {
     margin: 0.25rem !important;
 }
+
+.gray-style-remembrance
+{
+    -webkit-filter: grayscale(0) !important;
+    filter: grayscale(0) !important;
+}
 `);
