@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他の腾讯视频
 // @namespace    https://github.com/s757129
-// @version      0.5
+// @version      0.6
 // @description  屏蔽腾讯视频广告加菊部美化
 // @author       柒伍七
 // @match        *://v.qq.com/*
@@ -13,6 +13,8 @@
 // @grant        GM_addStyle
 // @license      MIT
 // ==/UserScript==
+
+(()=>{
 
 // unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
@@ -53,3 +55,5 @@ GM_addStyle(`
     filter: grayscale(0) !important;
 }
 `);
+
+})();
