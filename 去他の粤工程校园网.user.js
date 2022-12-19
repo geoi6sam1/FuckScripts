@@ -12,6 +12,8 @@
 // @license      MIT
 // ==/UserScript==
 
+(()=>{
+
 let uid = ''; // 学号
 let pwd = ''; // 密码
 
@@ -32,3 +34,5 @@ let logoutsubmit = document.querySelector('#logoutsubmit');
 if (logoutsubmit != null) {
     clearInterval(login);
 }
+
+})();
