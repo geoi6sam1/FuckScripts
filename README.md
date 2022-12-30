@@ -15,4 +15,4 @@
 
 | UserScript Name | Why??? |
 |:---:|:---:|
-| 去他の粤工程校园网 | [已毕业](https://s757129.githuub.io) |
+| 去他の粤工程校园网 | [已毕业](https://s757129.github.io) |
