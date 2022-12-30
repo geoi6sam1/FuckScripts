@@ -14,8 +14,6 @@
 // @license      MIT
 // ==/UserScript==
 
-(()=>{
-
 // unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 
@@ -48,5 +46,3 @@ GM_addStyle(`
     filter: grayscale(0) !important;
 }
 `);
-
-})();
