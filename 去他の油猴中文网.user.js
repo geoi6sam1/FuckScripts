@@ -13,8 +13,6 @@
 // @license      MIT
 // ==/UserScript==
 
-(()=>{
-
 //unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 
@@ -30,5 +28,3 @@ setTimeout(function () {
         return oldcopy.call(this, text.replace('\n(出处: 油猴中文网)\n', ""), msg)
     }
 }, 1000);
-
-})();
