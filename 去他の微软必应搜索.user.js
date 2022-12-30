@@ -19,8 +19,6 @@
 // @license      MIT
 // ==/UserScript==
 
-(()=>{
-
 //unsafeWindow
 unsafeWindow.GM_addStyle = GM_addStyle;
 unsafeWindow.GM_getValue = GM_getValue;
@@ -213,5 +211,3 @@ GM_registerMenuCommand('⚙️ 设置', () => {
     });
 
 });
-
-})();
