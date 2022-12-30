@@ -9,7 +9,7 @@
 | 去他の微软必应搜索 | [安装](https://scriptcat.org/scripts/code/604/%E5%8E%BB%E4%BB%96%E3%81%AE%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2.user.js) | [安裝](https://greasyfork.org/scripts/451125-%E5%8E%BB%E4%BB%96%E3%81%AE%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2/code/%E5%8E%BB%E4%BB%96%E3%81%AE%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2.user.js) | [备用](https://gitee.com/s757129/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2.user.js) | [備用](https://github.com/s757129/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2.user.js) |
 | 去他の腾讯视频 | [安装](https://scriptcat.org/scripts/code/688/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [安裝](https://greasyfork.org/scripts/453699-%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91/code/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [备用](https://gitee.com/s757129/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [備用](https://github.com/s757129/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) |
 
-> 以下脚本已归档，不再维护😊
+> **以下脚本已归档，不再维护😇**
 
 | UserScript Name | Why??? |
 |:---:|:---:|
