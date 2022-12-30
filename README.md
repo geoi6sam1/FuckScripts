@@ -2,7 +2,7 @@
 
 > **🔥🔥油猴脚本开发指南教程🔥🔥**
 >
-> 👉[**`图文教程`**](https://bbs.tampermonkey.net.cn/thread-184-1-1.html)👈&nbsp;&nbsp;👉[**`视频教程`**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
+> 👉[**`图文教程`**](https://bbs.tampermonkey.net.cn/thread-184-1-1.html)👈&nbsp;&nbsp;&nbsp;👉[**`视频教程`**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
 
 | UserScript Name | Script Cat | Greasy Fork | Gitee | GitHub |
 |:---:|:---:|:---:|:---:|:---:|
