@@ -28,23 +28,18 @@ unsafeWindow.GM_getResourceText = GM_getResourceText;
 unsafeWindow.GM_registerMenuCommand = GM_registerMenuCommand;
 
 
-/*** 主要函数 ***/
+/*** 主要部分 ***/
 let main = {
-
     //隐藏部分已知广告
     hide_ad() {
-        //主要广告
         GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #ev_talkbox_wrapper, #b_opalpers, #b_notificationContainer_bop, #bnp_rich_div { display: none !important; }`);
-
-        //旧版广告
         let old_ad = document.querySelectorAll(".b_algo");
         for (let i = 0; i < old_ad.length; ++i) {
             if (old_ad[i].firstChild.getAttribute("class") === null) {
                 old_ad[i].style.display = "none";
             }
         }
-
-        //必应翻译
+        //必应翻译下载
         let bingApp_pc = document.querySelector("#bingApp_area");
         let bingApp_m = document.querySelector(".bingApp_area_m");
         if (bingApp_pc !== null) {
@@ -53,17 +48,7 @@ let main = {
         if (bingApp_m !== null) {
             bingApp_m.parentNode.parentNode.style.display = "none";
         }
-
     },
-
-    //隐藏最新相关信息(资讯)
-    hide_news() {
-        let news_info = document.querySelector("#ans_nws");
-        if (news_info !== null) {
-            news_info.parentNode.style.display = "none";
-        }
-    },
-
     //隐藏部分相关视频
     hide_vids() {
         let vids_pc = document.querySelector("#serpvidans");
@@ -75,7 +60,6 @@ let main = {
             vids_m.parentNode.parentNode.style.display = "none";
         }
     },
-
     //隐藏人们还会问
     hide_faq() {
         let btm_faq = document.querySelector("#df_listaa");
@@ -87,12 +71,6 @@ let main = {
             }
         }
     },
-
-    //隐藏底部最近的搜索
-    hide_recs() {
-        GM_addStyle(`#b_recSQ { display: none; }`);
-    },
-
     //隐藏底部相关搜索
     hide_rels() {
         let btm_search = document.querySelector(".b_rs");
@@ -100,15 +78,23 @@ let main = {
             btm_search.parentNode.style.display = "none";
         }
     },
-
+    //隐藏底部最近的搜索
+    hide_recs() {
+        GM_addStyle(`#b_recSQ { display: none; }`);
+    },
+    //隐藏最新相关信息(资讯)
+    hide_news() {
+        let news_info = document.querySelector("#ans_nws");
+        if (news_info !== null) {
+            news_info.parentNode.style.display = "none";
+        }
+    },
 };
+
 
 /*** 判断配置 ***/
 if (GM_getValue("setting_hide_ad")) {
     main.hide_ad();
-}
-if (GM_getValue("setting_hide_news")) {
-    main.hide_news();
 }
 if (GM_getValue("setting_hide_vids")) {
     main.hide_vids();
@@ -116,11 +102,14 @@ if (GM_getValue("setting_hide_vids")) {
 if (GM_getValue("setting_hide_faq")) {
     main.hide_faq();
 }
+if (GM_getValue("setting_hide_rels")) {
+    main.hide_rels();
+}
 if (GM_getValue("setting_hide_recs")) {
     main.hide_recs();
 }
-if (GM_getValue("setting_hide_rels")) {
-    main.hide_rels();
+if (GM_getValue("setting_hide_news")) {
+    main.hide_news();
 }
 
 
@@ -129,19 +118,19 @@ let storage = [{
     key: "setting_hide_ad",
     value: true
 }, {
-    key: "setting_hide_news",
-    value: true
-}, {
     key: "setting_hide_vids",
     value: true
 }, {
     key: "setting_hide_faq",
     value: true
 }, {
+    key: "setting_hide_rels",
+    value: true
+}, {
     key: "setting_hide_recs",
     value: true
 }, {
-    key: "setting_hide_rels",
+    key: "setting_hide_news",
     value: true
 }];
 storage.forEach((s) => {
@@ -151,7 +140,6 @@ storage.forEach((s) => {
 
 /*** 菜单设置 ***/
 GM_registerMenuCommand("⚙️ 设置", () => {
-
     //style
     let style = `
 .swal2-popup.swal2-modal { width:410px; }
@@ -161,7 +149,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 .switch-btn:checked { border-color:none; background-color:#7066e0; transition:background-color ease .3s; }
 .switch-btn:checked:before { left:29px; transition:left .2s; }
     `;
-
     //html
     let html = `
 <label class="switch-txt">隐藏已知广告
@@ -183,7 +170,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 <input id="hide_news" ${GM_getValue("setting_hide_news") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
     `;
-
     //footer
     let footer = `
 <div style="text-align: center;font-size: 0.9687em;">一起学习
@@ -191,11 +177,9 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 吧😇，此脚本免费开源<br>Powered by
 <a href="https://github.com/s757129" target="_blank" style="color:#7066e0;font-weight:bold;">柒伍七</a></div>
     `;
-
     //载入资源
     GM_addStyle(GM_getResourceText("SwalStyle"));
     GM_addStyle(style);
-
     //SweetAlert2
     Swal.fire({
         icon: "info",
@@ -217,13 +201,9 @@ GM_registerMenuCommand("⚙️ 设置", () => {
             });
         }
     });
-
     //交互监听
     document.querySelector("#hide_ad").addEventListener("change", (e) => {
         GM_setValue("setting_hide_ad", e.target.checked);
-    });
-    document.querySelector("#hide_news").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_news", e.target.checked);
     });
     document.querySelector("#hide_vids").addEventListener("change", (e) => {
         GM_setValue("setting_hide_vids", e.target.checked);
@@ -231,11 +211,13 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     document.querySelector("#hide_faq").addEventListener("change", (e) => {
         GM_setValue("setting_hide_faq", e.target.checked);
     });
-    document.querySelector("#hide_recs").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_recs", e.target.checked);
-    });
     document.querySelector("#hide_rels").addEventListener("change", (e) => {
         GM_setValue("setting_hide_rels", e.target.checked);
     });
-
+    document.querySelector("#hide_recs").addEventListener("change", (e) => {
+        GM_setValue("setting_hide_recs", e.target.checked);
+    });
+    document.querySelector("#hide_news").addEventListener("change", (e) => {
+        GM_setValue("setting_hide_news", e.target.checked);
+    });
 });
