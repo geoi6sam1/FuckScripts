@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他の腾讯视频
 // @namespace    https://github.com/s757129
-// @version      0.61
+// @version      0.71
 // @description  屏蔽腾讯视频广告加菊部美化
 // @author       柒伍七
 // @match        *://v.qq.com/*
@@ -38,7 +38,7 @@ GM_addStyle(`
 
 .video-card-wrap
 {
-    margin: 0.25rem !important;
+    margin: 0.33rem !important;
 }
 
 .gray-style-remembrance
