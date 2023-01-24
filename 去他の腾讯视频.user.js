@@ -7,6 +7,7 @@
 // @match        *://v.qq.com/*
 // @match        *://film.qq.com/*
 // @match        *://iwan.qq.com/*
+// @match        *://gamer.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
 // @supportURL   https://github.com/s757129/FuckScripts/issues
 // @run-at       document-start
