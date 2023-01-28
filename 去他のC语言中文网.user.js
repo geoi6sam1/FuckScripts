@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         去他のC语言中文网
-// @namespace    https://github.com/s757129
+// @namespace    geoi6sam1
 // @version      1.1.6
 // @description  屏蔽C语言中文网广告加菊部美化
 // @author       柒伍七
@@ -8,7 +8,7 @@
 // @match        *://m.biancheng.net/*
 // @match        *://vip.biancheng.net/*
 // @icon         http://c.biancheng.net/favicon.ico
-// @supportURL   https://github.com/s757129/FuckScripts/issues
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @require      https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.js
 // @resource     SwalCSS https://unpkg.com/sweetalert2@11.4.30/dist/sweetalert2.min.css
 // @run-at       document-start
