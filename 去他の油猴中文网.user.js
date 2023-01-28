@@ -6,7 +6,7 @@
 // @author       柒伍七
 // @match        *://bbs.tampermonkey.net.cn/*
 // @icon         https://bbs.tampermonkey.net.cn/favicon.ico
-// @supportURL   https://geoi6sam1/s757129/FuckScripts/issues
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
