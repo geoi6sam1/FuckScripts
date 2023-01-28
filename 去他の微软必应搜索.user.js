@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         去他の微软必应搜索
-// @namespace    https://github.com/s757129
+// @namespace    geoi6sam1
 // @version      0.7
 // @description  屏蔽微软必应搜索广告加菊部美化
 // @author       柒伍七
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
-// @supportURL   https://github.com/s757129/FuckScripts/issues
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @require      https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.js
 // @resource     SwalStyle https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.css
 // @run-at       document-idle
