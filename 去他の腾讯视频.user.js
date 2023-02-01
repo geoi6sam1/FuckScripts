@@ -28,9 +28,10 @@ GM_addStyle(`
 [dt-params*="ad_"],
 .tip_download,
 #ad_container,
+[class*="_ad_"],
 [data-role*="ad-"],
-[class*="txp_ad_"],
 [data-role*="watermark"],
+[data-role*="creative-player-pause"],
 .barrage-control,
 .thumbplayer-barrage
 {
