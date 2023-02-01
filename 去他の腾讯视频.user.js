@@ -9,7 +9,7 @@
 // @match        *://iwan.qq.com/*
 // @match        *://gamer.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
-// @supportURL   https://geoi6sam1/s757129/FuckScripts/issues
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_addStyle
