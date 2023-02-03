@@ -6,6 +6,7 @@
 // @author       柒伍七
 // @match        *://v.qq.com/*
 // @match        *://film.qq.com/*
+// @match        *://m.film.qq.com/*
 // @match        *://iwan.qq.com/*
 // @match        *://gamer.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
@@ -32,6 +33,7 @@ GM_addStyle(`
 [data-role*="ad-"],
 [data-role*="watermark"],
 [data-role*="creative-player-pause"],
+#iwan-game-switch-page,
 .barrage-control,
 .thumbplayer-barrage
 {
