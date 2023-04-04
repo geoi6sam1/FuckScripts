@@ -8,13 +8,10 @@
 // @icon         https://bbs.tampermonkey.net.cn/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
-// @grant        unsafeWindow
 // @grant        GM_addStyle
 // @license      MIT
 // ==/UserScript==
 
-//unsafeWindow
-unsafeWindow.GM_addStyle = GM_addStyle;
 
 //隐藏已知广告
 GM_addStyle('.comiis_nv_pop, .a_f, .a_p { display: none !important; }');
