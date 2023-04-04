@@ -2,7 +2,7 @@
 // @name         去他の微软必应搜索
 // @namespace    geoi6sam1
 // @version      0.7
-// @description  屏蔽微软必应搜索广告加菊部美化
+// @description  屏蔽微软必应搜索广告
 // @author       柒伍七
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
@@ -10,7 +10,6 @@
 // @require      https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.js
 // @resource     SwalStyle https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.css
 // @run-at       document-idle
-// @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -18,14 +17,6 @@
 // @grant        GM_registerMenuCommand
 // @license      MIT
 // ==/UserScript==
-
-
-/*** unsafeWindow ***/
-unsafeWindow.GM_addStyle = GM_addStyle;
-unsafeWindow.GM_getValue = GM_getValue;
-unsafeWindow.GM_setValue = GM_setValue;
-unsafeWindow.GM_getResourceText = GM_getResourceText;
-unsafeWindow.GM_registerMenuCommand = GM_registerMenuCommand;
 
 
 /*** 主要部分 ***/
