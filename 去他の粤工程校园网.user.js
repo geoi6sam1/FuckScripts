@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他の粤工程校园网
 // @namespace    geoi6sam1
-// @version      0.1
+// @version      0.2
 // @description  自动登录粤工程宿舍校园网
 // @author       柒伍七
 // @match        *://10.10.0.76/*
