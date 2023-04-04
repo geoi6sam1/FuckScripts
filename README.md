@@ -6,4 +6,8 @@
 
 | UserScript Name | Script Cat | Greasy Fork | Gitee | GitHub |
 |:---:|:---:|:---:|:---:|:---:|
+| 去他のC语言中文网 | × | × |  |  |
+| 去他の油猫网 | × | × |  |  |
+| 去他の粤工程校园网 | × | × |  |  |
+| 去他の微软必应搜索 | × | × |  |  |
 | 去他の腾讯视频 | [安装](https://scriptcat.org/scripts/code/688/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [安裝](https://greasyfork.org/scripts/453699-%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91/code/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [备用](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) | [備用](https://github.com/geoi6sam1/FuckScripts/raw/main/%E5%8E%BB%E4%BB%96%E3%81%AE%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91.user.js) |
