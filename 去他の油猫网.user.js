@@ -2,7 +2,7 @@
 // @name         去他の油猫网
 // @namespace    geoi6sam1
 // @version      1.0.5
-// @description  屏蔽油猴中文网和脚本猫广告加菊部优化
+// @description  屏蔽油猴中文网和脚本猫广告
 // @author       柒伍七
 // @match        *://bbs.tampermonkey.net.cn/*
 // @icon         https://bbs.tampermonkey.net.cn/favicon.ico
