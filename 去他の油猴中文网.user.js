@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         去他の油猴中文网
+// @name         去他の油猫网
 // @namespace    geoi6sam1
-// @version      1.0.4
-// @description  屏蔽油猴中文网广告加菊部美化
+// @version      1.0.5
+// @description  屏蔽油猴中文网和脚本猫广告加菊部优化
 // @author       柒伍七
 // @match        *://bbs.tampermonkey.net.cn/*
 // @icon         https://bbs.tampermonkey.net.cn/favicon.ico
@@ -14,14 +14,14 @@
 
 
 //隐藏已知广告
-GM_addStyle('.comiis_nv_pop, .a_f, .a_p { display: none !important; }');
+GM_addStyle('.comiis_nv_pop, .a_f, .a_p, .a_mu, .ad { display: none !important; }');
 
 //去除复制链接尾缀
 //原创：李恒道
 //原文：https://bbs.tampermonkey.net.cn/thread-1788-1-1.html
 setTimeout(function () {
-    let oldcopy = unsafeWindow.setCopy;
-    unsafeWindow.setCopy = function (text, msg) {
+    let oldcopy = window.setCopy;
+    window.setCopy = function (text, msg) {
         return oldcopy.call(this, text.replace('\n(出处: 油猴中文网)\n', ""), msg)
     }
 }, 1000);
