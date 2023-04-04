@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         去他の油猫网
 // @namespace    geoi6sam1
-// @version      1.0.5
+// @version      0.3
 // @description  屏蔽油猴中文网和脚本猫广告
 // @author       柒伍七
 // @match        *://bbs.tampermonkey.net.cn/*
+// @match        *://scriptcat.org/*
 // @icon         https://bbs.tampermonkey.net.cn/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
