@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去他のC语言中文网
 // @namespace    geoi6sam1
-// @version      1.1.6
+// @version      0.6
 // @description  屏蔽C语言中文网广告
 // @author       柒伍七
 // @match        *://c.biancheng.net/*
