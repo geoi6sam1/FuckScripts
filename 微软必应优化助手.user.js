@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         去他の微软必应搜索
+// @name         微软必应优化助手
 // @namespace    geoi6sam1
 // @version      0.7
 // @description  屏蔽微软必应搜索广告
-// @author       柒伍七
+// @author       钜森
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
