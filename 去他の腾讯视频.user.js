@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         去他の腾讯视频
+// @name         腾讯视频网页优化
 // @namespace    geoi6sam1
-// @version      0.7
+// @version      0.8
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请使用VIP
 // @author       柒伍七
 // @match        *://v.qq.com/*
@@ -16,7 +16,6 @@
 
 
 GM_addStyle(`
-#iwan-gamependant-page,
 .quick_vip,
 .quick_games,
 .quick_upload,
@@ -25,12 +24,17 @@ GM_addStyle(`
 [dt-params*="ad_"],
 .tip_download,
 #ad_container,
+.txp_none,
+[id*="iwan-game"],
 [class*="_ad_"],
+[class*="ad-"],
 [class*="-ad"],
+[class*="watermark"],
+[class*="txp_full_screen_pause"],
 [data-role*="ad-"],
+[data-role*="-ad"],
 [data-role*="watermark"],
 [data-role*="creative-player-pause"],
-#iwan-game-switch-page,
 .barrage-control,
 .thumbplayer-barrage
 {
