@@ -18,10 +18,7 @@
 // @license      MIT
 // ==/UserScript==
 
-
-/*** 主要部分 ***/
 let main = {
-    //隐藏部分已知广告
     hide_ad() {
         GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #ev_talkbox_wrapper, #b_opalpers, #b_notificationContainer_bop, #bnp_rich_div { display: none !important; }`);
         let old_ad = document.querySelectorAll(".b_algo");
@@ -30,7 +27,6 @@ let main = {
                 old_ad[i].style.display = "none";
             }
         }
-        //必应翻译下载
         let bingApp_pc = document.querySelector("#bingApp_area");
         let bingApp_m = document.querySelector(".bingApp_area_m");
         if (bingApp_pc !== null) {
@@ -40,7 +36,7 @@ let main = {
             bingApp_m.parentNode.parentNode.style.display = "none";
         }
     },
-    //隐藏部分相关视频
+    
     hide_vids() {
         let vids_pc = document.querySelector("#serpvidans");
         let vids_m = document.querySelector("#vidans2");
@@ -51,7 +47,7 @@ let main = {
             vids_m.parentNode.parentNode.style.display = "none";
         }
     },
-    //隐藏人们还会问
+
     hide_faq() {
         let btm_faq = document.querySelector("#df_listaa");
         if (btm_faq !== null) {
@@ -62,18 +58,18 @@ let main = {
             }
         }
     },
-    //隐藏底部相关搜索
+
     hide_rels() {
         let btm_search = document.querySelector(".b_rs");
         if (btm_search !== null) {
             btm_search.parentNode.style.display = "none";
         }
     },
-    //隐藏底部最近的搜索
+
     hide_recs() {
         GM_addStyle(`#b_recSQ { display: none; }`);
     },
-    //隐藏最新相关信息(资讯)
+
     hide_news() {
         let news_info = document.querySelector("#ans_nws");
         if (news_info !== null) {
@@ -82,8 +78,6 @@ let main = {
     },
 };
 
-
-/*** 判断配置 ***/
 if (GM_getValue("setting_hide_ad")) {
     main.hide_ad();
 }
@@ -103,8 +97,6 @@ if (GM_getValue("setting_hide_news")) {
     main.hide_news();
 }
 
-
-/*** 默认配置 ***/
 let storage = [{
     key: "setting_hide_ad",
     value: true
@@ -128,10 +120,7 @@ storage.forEach((s) => {
     GM_getValue(s.key) === undefined && GM_setValue(s.key, s.value);
 });
 
-
-/*** 菜单设置 ***/
 GM_registerMenuCommand("⚙️ 设置", () => {
-    //style
     let style = `
 .swal2-popup.swal2-modal { width:410px; }
 .switch-txt { display:flex; align-items:center; justify-content:space-between; letter-spacing:2px; padding:5px; }
@@ -139,8 +128,8 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 .switch-btn:before {content:""; width:25px; height:25px; position:absolute; border-radius:19px; background-color:#fff; box-shadow:0 1px 3px rgba(0, 0, 0, .5); transition:left .2s; }
 .switch-btn:checked { border-color:none; background-color:#7066e0; transition:background-color ease .3s; }
 .switch-btn:checked:before { left:29px; transition:left .2s; }
-    `;
-    //html
+`;
+
     let html = `
 <label class="switch-txt">隐藏已知广告
 <input id="hide_ad" ${GM_getValue("setting_hide_ad") ? "checked" : ""} type="checkbox" class="switch-btn" />
@@ -160,18 +149,18 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 <label class="switch-txt">隐藏最新相关信息(资讯)
 <input id="hide_news" ${GM_getValue("setting_hide_news") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
-    `;
-    //footer
+`;
+
     let footer = `
 <div style="text-align: center;font-size: 0.9687em;">一起学习
 <a href="https://bbs.tampermonkey.net.cn/thread-184-1-1.html" target="_blank" style="color:#7066e0;">油猴脚本开发</a>
 吧😇，此脚本免费开源<br>Powered by
 <a href="https://github.com/s757129" target="_blank" style="color:#7066e0;font-weight:bold;">柒伍七</a></div>
-    `;
-    //载入资源
+`;
+
     GM_addStyle(GM_getResourceText("SwalStyle"));
     GM_addStyle(style);
-    //SweetAlert2
+
     Swal.fire({
         icon: "info",
         title: "自定义配置",
@@ -192,7 +181,7 @@ GM_registerMenuCommand("⚙️ 设置", () => {
             });
         }
     });
-    //交互监听
+
     document.querySelector("#hide_ad").addEventListener("change", (e) => {
         GM_setValue("setting_hide_ad", e.target.checked);
     });
