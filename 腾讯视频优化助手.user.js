@@ -14,7 +14,6 @@
 // @license      MIT
 // ==/UserScript==
 
-
 GM_addStyle(`
 .quick_vip,
 .quick_games,
