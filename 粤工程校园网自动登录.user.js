@@ -12,23 +12,23 @@
 // @license      MIT
 // ==/UserScript==
 
-let uid = ''; // 学号
-let pwd = ''; // 密码
+let uid = ""; // 学号
+let pwd = ""; // 密码
 
 let login = setInterval(() => {
-    let userid = document.querySelector('#userid');
-    let passwd = document.querySelector('#passwd');
+    let userid = document.querySelector("#userid");
+    let passwd = document.querySelector("#passwd");
     if (userid && passwd != null) {
         userid.value = uid;
         passwd.value = pwd;
-        let loginsubmit = document.querySelector('#loginsubmit');
+        let loginsubmit = document.querySelector("#loginsubmit");
         if (loginsubmit != null) {
             loginsubmit.click();
         }
     }
 }, 99);
 
-let logoutsubmit = document.querySelector('#logoutsubmit');
+let logoutsubmit = document.querySelector("#logoutsubmit");
 if (logoutsubmit != null) {
     clearInterval(login);
 }
