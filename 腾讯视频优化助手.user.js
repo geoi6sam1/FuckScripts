@@ -47,3 +47,30 @@ GM_addStyle(`
     filter: grayscale(0) !important;
 }
 `);
+
+window.onkeypress = function (e) {
+    switch (e.keyCode) {
+        case 32:
+            txv();
+            break;
+    }
+}
+
+window.onmousedown = function (e) {
+    switch (e.button) {
+        case 0:
+            txv();
+            break;
+    }
+}
+
+function txv() {
+    let txvctr = document.querySelectorAll("#player video")[0];
+    if (txvctr !== undefined) {
+        if (txvctr.paused == true) {
+            setTimeout(() => {
+                txvctr.setAttribute("style", "top: 0;left: 0;width: 100%;height: 100%;z-index: 0;");
+            }, 99)
+        }
+    }
+}
