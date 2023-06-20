@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    geoi6sam1
-// @version      0.8
+// @version      0.8.1
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请使用VIP
 // @author       钜森
 // @match        *://v.qq.com/*
@@ -65,12 +65,14 @@ window.onmousedown = function (e) {
 }
 
 function txv() {
-    let txvctr = document.querySelectorAll("#player video")[0];
-    if (txvctr !== undefined) {
-        if (txvctr.paused == true) {
-            setTimeout(() => {
-                txvctr.setAttribute("style", "top: 0;left: 0;width: 100%;height: 100%;z-index: 0;");
-            }, 99)
-        }
+    let txplrv = document.querySelectorAll("#player video")[0];
+    if (txplrv !== undefined) {
+        setTimeout(() => {
+            if (txplrv.paused === false) {
+                let txvctr = document.querySelector(".txp_videos_container");
+                txplrv.setAttribute("style", "position: absolute; width: 100%; height: 100%; top: 0; left: 0; object-fit: contain; z-index: 0; visibility: inherit;");
+                txvctr.setAttribute("style", "position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;");
+            }
+        }, 222)
     }
 }
