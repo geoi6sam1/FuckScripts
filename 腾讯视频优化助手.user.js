@@ -48,20 +48,12 @@ GM_addStyle(`
 }
 `);
 
-window.onkeypress = function (e) {
-    switch (e.keyCode) {
-        case 32:
-            txv();
-            break;
-    }
+window.onkeypress = function () {
+    txv();
 }
 
-window.onmousedown = function (e) {
-    switch (e.button) {
-        case 0:
-            txv();
-            break;
-    }
+window.onmousedown = function () {
+    txv();
 }
 
 function txv() {
