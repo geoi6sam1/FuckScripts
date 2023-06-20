@@ -68,11 +68,11 @@ function txv() {
     let txplrv = document.querySelectorAll("#player video")[0];
     if (txplrv !== undefined) {
         setTimeout(() => {
-            if (txplrv.paused === false) {
+            if (txplrv.paused === true) {
                 let txvctr = document.querySelector(".txp_videos_container");
                 txplrv.setAttribute("style", "position: absolute; width: 100%; height: 100%; top: 0; left: 0; object-fit: contain; z-index: 0; visibility: inherit;");
                 txvctr.setAttribute("style", "position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;");
             }
-        }, 222)
+        }, 999)
     }
 }
