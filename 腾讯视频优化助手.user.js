@@ -52,8 +52,12 @@ window.onkeypress = function () {
     txv();
 }
 
-window.onmousedown = function () {
-    txv();
+window.onmousedown = function (e) {
+    switch (e.button) {
+        case 0:
+            txv();
+            break;
+    }
 }
 
 function txv() {
