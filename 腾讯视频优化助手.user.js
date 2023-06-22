@@ -48,13 +48,13 @@ GM_addStyle(`
 }
 `);
 
-window.onkeypress = function (e) {
+window.onkeypress = (e) => {
     if (e.keyCode === 32) {
         txv();
     }
 }
 
-window.onmousedown = function (e) {
+window.onmousedown = (e) => {
     if (e.button === 0) {
         txv();
     }
