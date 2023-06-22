@@ -48,15 +48,15 @@ GM_addStyle(`
 }
 `);
 
-window.onkeypress = function () {
-    txv();
+window.onkeypress = function (e) {
+    if (e.keyCode === 32) {
+        txv();
+    }
 }
 
 window.onmousedown = function (e) {
-    switch (e.button) {
-        case 0:
-            txv();
-            break;
+    if (e.button === 0) {
+        txv();
     }
 }
 
