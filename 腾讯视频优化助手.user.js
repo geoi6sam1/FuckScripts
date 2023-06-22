@@ -18,6 +18,7 @@ GM_addStyle(`
 .quick_vip,
 .quick_games,
 .quick_upload,
+.quick_message,
 #pc_client,
 .left-nav-wrap a[href*="iwan"],
 [dt-params*="ad_"],
