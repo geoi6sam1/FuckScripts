@@ -8,6 +8,12 @@
 // @match        *://10.10.0.253/*
 // @icon         https://www.gdep.edu.cn/__local/1/78/44/67DBBD0E4AF7849771AEBA0A69A_8F5875B0_45D51.jpg
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
+// @antifeature  ads
+// @antifeature  miner
+// @antifeature  payment
+// @antifeature  tracking
+// @antifeature  membership
+// @antifeature  referral-link
 // @run-at       document-start
 // @license      MIT
 // ==/UserScript==
