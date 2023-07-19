@@ -9,6 +9,12 @@
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @require      https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.js
 // @resource     SwalStyle https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.css
+// @antifeature  ads
+// @antifeature  miner
+// @antifeature  payment
+// @antifeature  tracking
+// @antifeature  membership
+// @antifeature  referral-link
 // @run-at       document-idle
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -20,7 +26,7 @@
 
 let main = {
     hide_ad() {
-        GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #ev_talkbox_wrapper, #b_opalpers, #b_notificationContainer_bop, #bnp_rich_div { display: none !important; }`);
+        GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #b_pole, #b_opalpers, #bnp_rich_div, #ev_talkbox_wrapper, #b_notificationContainer_bop { display: none !important; }`);
         let old_ad = document.querySelectorAll(".b_algo");
         for (let i = 0; i < old_ad.length; ++i) {
             if (old_ad[i].firstChild.getAttribute("class") === null) {
