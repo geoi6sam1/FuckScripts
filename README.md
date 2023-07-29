@@ -20,7 +20,7 @@
 
 > **🔥🔥阅读APP相关事项🔥🔥**
 
-| 📕阅读APP | 官网 | 论坛 | 书源 | 酷安 | GitHub | 
+| 📕阅读APP | 官网 | 论坛 | 书源 | 下载 | 历史版本 | 
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| **相关网站👉** | [开源阅读](https://gedoor.github.io) | [更新日志](https://legado.cn/forum-legado-1.html) | [查询](http://www.yckceo.com/yuedu/shuyuan) | [下载](https://www.coolapk.com/apk/256030) | [Releases](https://github.com/gedoor/legado/releases) |
+| **相关网站👉** | [开源阅读](https://gedoor.github.io) | [更新日志](https://legado.cn/forum-legado-1.html) | [查询](http://www.yckceo.com/yuedu/shuyuan) | [酷安](https://www.coolapk.com/apk/256030) | [GitHub](https://github.com/gedoor/legado/releases) |
 
