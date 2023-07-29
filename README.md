@@ -12,8 +12,6 @@
 
 > **🔥🔥阅读APP相关事项🔥🔥**
 
-👉[**阅读APP自用书源.json**](https://geoi6sam1.github.io/pages/booksource/20020129.json)👈
-
 | 版本 | 数量 | 下载 |
 |:---:|:---:|:---:|
 | 20020129 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |
