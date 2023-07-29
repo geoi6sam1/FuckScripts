@@ -12,13 +12,11 @@
 
 ---
 
-<a href="javascript:void(0);" onclick="console.log('我我我我可可可可以以以以')">点我复制</a>
-
 > **🔥🔥阅读APP自用书源🔥🔥**
 
-| 书源版本 | 更新日期 | 数量 | 下载 | 链接 |
+| 书源版本 | 更新日期 | 数量 | 下载 |
 |:---:|:---:|:---:|:---:|:---:|
-| v1.0.0 | 2002-01-29 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |  |
+| v1.0.0 | 2002-01-29 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |
 
 > **🔥🔥阅读APP相关事项🔥🔥**
 
