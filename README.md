@@ -14,7 +14,7 @@
 
 > **🔥🔥阅读APP自用书源🔥🔥**
 
-| 书源版本 | 更新日期 | 数量 | 下载 | 导入 |
+| 书源版本 | 更新日期 | 数量 | 下载 | 一键导入 |
 |:---:|:---:|:---:|:---:|:---:|
 | v1.0.0 | 2002-01-29 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) | [3.x](yuedu://booksource/importonline?src=https://geoi6sam1.github.io/pages/booksource/20020129.json) |
 
