@@ -14,7 +14,7 @@
 
 | 书源 | 版本 | 数量 | 下载 |
 |:---:|:---:|:---:|:---:|
-| 第一版 | 20020129 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |
+| 第1版 | 20020129 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |
 
 | 📕阅读APP | 官网 | 论坛 | 书源 | 酷安 | GitHub | 
 |:---:|:---:|:---:|:---:|:---:|:---:|
