@@ -14,9 +14,9 @@
 
 > **🔥🔥阅读APP自用书源🔥🔥**
 
-| 书源版本 | 更新日期 | 数量 | 下载 |
-|:---:|:---:|:---:|:---:|
-| v1.0.0 | 2002-01-29 | 369 | [预览](https://geoi6sam1.github.io/pages/booksource/20020129.json) |
+| 更新日期 | 分类 | 数量 | Github | Gitee |
+|:---:|:---:|:---:|:---:|:---:|
+| 2023-08-05 | 2 | 199 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json) | [备用](https://gitee.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json)
 
 > **🔥🔥阅读APP相关事项🔥🔥**
 
@@ -24,3 +24,10 @@
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | **相关网站👉** | [开源阅读](https://gedoor.github.io) | [更新日志](https://legado.cn/forum-legado-1.html) | [源仓库](http://www.yckceo.com/yuedu/shuyuan) | [酷安](https://www.coolapk.com/apk/256030) | [GitHub](https://github.com/gedoor/legado/releases) |
 
+---
+
+> **🔥🔥浏览器自用收藏书签🔥🔥**
+
+| 更新日期 | 分类 | 数量 | Github | Gitee |
+|:---:|:---:|:---:|:---:|:---:|
+| 2023-08-05 | 6 | 77 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html) | [备用](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
