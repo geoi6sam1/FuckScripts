@@ -3,7 +3,7 @@
 // @namespace    geoi6sam1
 // @version      0.7
 // @description  屏蔽微软必应搜索广告
-// @author       钜森
+// @author       潘钜森
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
