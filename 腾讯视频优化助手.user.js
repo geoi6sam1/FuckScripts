@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    geoi6sam1
-// @version      0.8.4
+// @version      0.9
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请使用VIP
-// @author       钜森
+// @author       潘钜森
 // @match        *://v.qq.com/*
 // @match        *://film.qq.com/*
 // @match        *://m.film.qq.com/*
