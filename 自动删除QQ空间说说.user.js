@@ -2,7 +2,7 @@
 // @name         自动删除QQ空间说说
 // @namespace    geoi6sam1
 // @version      0.1
-// @description  选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续。
+// @description  选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续
 // @author       潘钜森
 // @match        *://user.qzone.qq.com/*
 // @icon         https://qzone.qq.com/favicon.ico
