@@ -5,7 +5,7 @@
 // @description  屏蔽微软必应搜索广告
 // @author       geoi6sam1
 // @match        *://*.bing.com/search?*
-// @icon         https://cn.bing.com/favicon.ico
+// @icon         https://bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @require      https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.js
 // @resource     SwalStyle https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.css
