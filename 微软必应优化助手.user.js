@@ -30,7 +30,7 @@ var main = {
     hide_ad() {
         GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #b_pole, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #ev_talkbox_wrapper, #b_notificationContainer_bop { display: none !important; }`);
         var old_ad = document.querySelectorAll(".b_algo");
-        for (var i = 0; i < old_ad.length; ++i) {
+        for (var i = 0; i < old_ad.length; i++) {
             if (old_ad[i].firstChild.getAttribute("class") === null) {
                 old_ad[i].style.display = "none";
             }
