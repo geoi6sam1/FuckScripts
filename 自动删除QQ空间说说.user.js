@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动删除QQ空间说说
 // @namespace    https://github.com/geoi6sam1
-// @version      0.1.1
+// @version      0.1.2
 // @description  选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续
 // @author       geoi6sam1
 // @match        *://user.qzone.qq.com/*
