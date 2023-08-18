@@ -14,7 +14,7 @@
 // @antifeature  tracking
 // @antifeature  membership
 // @antifeature  referral-link
-// @run-at       document-start
+// @run-at       document-end
 // @license      MIT
 // ==/UserScript==
 
