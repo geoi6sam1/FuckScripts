@@ -17,7 +17,7 @@
 // @license      MIT
 // ==/UserScript==
 
-setInterval(() => {
+setTimeout(() => {
     var qz_shuoshuo = document.querySelector('.app_canvas_frame');
     if (!qz_shuoshuo) {
         custom_menu_swf('311');
