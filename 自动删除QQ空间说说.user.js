@@ -13,31 +13,35 @@
 // @antifeature  tracking
 // @antifeature  membership
 // @antifeature  referral-link
-// @run-at       document-start
+// @run-at       document-end
 // @license      MIT
 // ==/UserScript==
 
-setTimeout(() => {
-    var shuoshuo = document.querySelector('.app_canvas_frame');
-    if (!shuoshuo) {
+setInterval(() => {
+    var qz_shuoshuo = document.querySelector('.app_canvas_frame');
+    if (!qz_shuoshuo) {
         custom_menu_swf('311');
     }
-}, 2567);
+}, 3000);
 
-setInterval(() => {
+function del_qz_shuoshuo() {
     var choosess = document.querySelectorAll(".del.del_btn")[0];
     if (choosess) {
         choosess.click();
     }
-}, 1567);
+    setTimeout(() => { del_qz_dialog() }, 1500)
+}
 
-setInterval(() => {
-    var deteless = document.querySelectorAll('.qz_dialog_layer_btn.qz_dialog_layer_sub')[0];
-    if (deteless) {
-        deteless.click();
+function del_qz_dialog() {
+    var deletess = document.querySelectorAll('.qz_dialog_layer_btn.qz_dialog_layer_sub')[0];
+    if (deletess) {
+        deletess.click();
     }
-}, 567);
+    setTimeout(() => { del_qz_shuoshuo() }, 1500)
+}
+
+del_qz_shuoshuo()
 
 setInterval(() => {
     window.location.reload();
-}, 34567);
+}, 60000);
