@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         粤工程校园网自动登录
-// @namespace    geoi6sam1
+// @namespace    https://github.com/geoi6sam1
 // @version      0.2
 // @description  自动登录粤工程宿舍校园网
-// @author       潘钜森
+// @author       geoi6sam1
 // @match        *://10.10.0.76/*
 // @match        *://10.10.0.253/*
 // @icon         https://www.gdep.edu.cn/__local/1/78/44/67DBBD0E4AF7849771AEBA0A69A_8F5875B0_45D51.jpg
