@@ -2,13 +2,13 @@
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
 // @version      0.7
-// @description  屏蔽微软必应搜索广告
+// @description  优化微软必应搜索结果，可自行DIY设置
 // @author       geoi6sam1
 // @match        *://*.bing.com/search?*
 // @icon         https://bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @require      https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.js
-// @resource     SwalStyle https://unpkg.com/sweetalert2@11.6.16/dist/sweetalert2.min.css
+// @require      https://cdn.staticfile.org/sweetalert2/11.7.23/sweetalert2.min.js
+// @resource     SwalStyle https://cdn.staticfile.org/sweetalert2/11.7.23/sweetalert2.min.css
 // @antifeature  ads
 // @antifeature  miner
 // @antifeature  payment
@@ -24,39 +24,41 @@
 // @license      MIT
 // ==/UserScript==
 
-let main = {
+GM_getValue("bing_vip") === undefined && GM_setValue("bing_vip", true) && window.location.reload(true);
+
+var main = {
     hide_ad() {
-        GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #b_pole, #b_opalpers, #bnp_rich_div, #ev_talkbox_wrapper, #b_notificationContainer_bop { display: none !important; }`);
-        let old_ad = document.querySelectorAll(".b_algo");
-        for (let i = 0; i < old_ad.length; ++i) {
+        GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #b_pole, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #ev_talkbox_wrapper, #b_notificationContainer_bop { display: none !important; }`);
+        var old_ad = document.querySelectorAll(".b_algo");
+        for (var i = 0; i < old_ad.length; ++i) {
             if (old_ad[i].firstChild.getAttribute("class") === null) {
                 old_ad[i].style.display = "none";
             }
         }
-        let bingApp_pc = document.querySelector("#bingApp_area");
-        let bingApp_m = document.querySelector(".bingApp_area_m");
-        if (bingApp_pc !== null) {
+        var bingApp_pc = document.querySelector("#bingApp_area");
+        var bingApp_m = document.querySelector(".bingApp_area_m");
+        if (bingApp_pc) {
             bingApp_pc.parentNode.parentNode.parentNode.style.display = "none";
         }
-        if (bingApp_m !== null) {
+        if (bingApp_m) {
             bingApp_m.parentNode.parentNode.style.display = "none";
         }
     },
     
     hide_vids() {
-        let vids_pc = document.querySelector("#serpvidans");
-        let vids_m = document.querySelector("#vidans2");
-        if (vids_pc !== null) {
+        var vids_pc = document.querySelector("#serpvidans");
+        var vids_m = document.querySelector("#vidans2");
+        if (vids_pc) {
             vids_pc.parentNode.parentNode.style.display = "none";
         }
-        if (vids_m !== null) {
+        if (vids_m) {
             vids_m.parentNode.parentNode.style.display = "none";
         }
     },
 
     hide_faq() {
-        let btm_faq = document.querySelector("#df_listaa");
-        if (btm_faq !== null) {
+        var btm_faq = document.querySelector("#df_listaa");
+        if (btm_faq) {
             if (navigator.userAgent.indexOf("Mobile") > -1) {
                 btm_faq.parentNode.parentNode.parentNode.parentNode.style.display = "none";
             } else {
@@ -66,8 +68,8 @@ let main = {
     },
 
     hide_rels() {
-        let btm_search = document.querySelector(".b_rs");
-        if (btm_search !== null) {
+        var btm_search = document.querySelector(".b_rs");
+        if (btm_search) {
             btm_search.parentNode.style.display = "none";
         }
     },
@@ -77,8 +79,8 @@ let main = {
     },
 
     hide_news() {
-        let news_info = document.querySelector("#ans_nws");
-        if (news_info !== null) {
+        var news_info = document.querySelector("#ans_nws");
+        if (news_info) {
             news_info.parentNode.style.display = "none";
         }
     },
@@ -103,7 +105,7 @@ if (GM_getValue("setting_hide_news")) {
     main.hide_news();
 }
 
-let storage = [{
+var storage = [{
     key: "setting_hide_ad",
     value: true
 }, {
@@ -111,7 +113,7 @@ let storage = [{
     value: true
 }, {
     key: "setting_hide_faq",
-    value: true
+    value: false
 }, {
     key: "setting_hide_rels",
     value: true
@@ -120,14 +122,14 @@ let storage = [{
     value: true
 }, {
     key: "setting_hide_news",
-    value: true
+    value: false
 }];
 storage.forEach((s) => {
     GM_getValue(s.key) === undefined && GM_setValue(s.key, s.value);
 });
 
 GM_registerMenuCommand("⚙️ 设置", () => {
-    let style = `
+    var style = `
 .swal2-popup.swal2-modal { width:410px; }
 .switch-txt { display:flex; align-items:center; justify-content:space-between; letter-spacing:2px; padding:5px; }
 .switch-btn { cursor:pointer; width:52px; height:25px; position:relative; background-color:#f5f5f5; border-radius:19px; background-clip:content-box; display:inline-block; -webkit-appearance:none; -moz-appearance:none;  transition:background-color ease .3s; }
@@ -136,7 +138,7 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 .switch-btn:checked:before { left:29px; transition:left .2s; }
 `;
 
-    let html = `
+    var html = `
 <label class="switch-txt">隐藏已知广告
 <input id="hide_ad" ${GM_getValue("setting_hide_ad") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
@@ -157,11 +159,12 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 </label>
 `;
 
-    let footer = `
-<div style="text-align: center;font-size: 0.9687em;">一起学习
+    var footer = `
+<div style="text-align: center;font-size: 0.9687em;">推荐使用
+<a href="https://docs.scriptcat.org" target="_blank" style="color:#7066e0;">脚本猫</a>
+安装，一起学习
 <a href="https://learn.scriptcat.org" target="_blank" style="color:#7066e0;">油猴脚本开发</a>
-吧😇，此脚本免费开源<br>Powered by
-<a href="https://github.com/geoi6sam1" target="_blank" style="color:#7066e0;font-weight:bold;">geoi6sam1</a></div>
+吧😇
 `;
 
     GM_addStyle(GM_getResourceText("SwalStyle"));
@@ -173,19 +176,9 @@ GM_registerMenuCommand("⚙️ 设置", () => {
         html: html,
         footer: footer,
         showCloseButton: true,
-        confirmButtonText: "<b>保存配置</b>",
+        confirmButtonText: "<b>保存配置</b>"
     }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                icon: "success",
-                title: "配置保存成功",
-                footer: footer,
-                showConfirmButton: false,
-                timer: 999,
-            }).then((result) => {
-                result.isConfirmed && window.location.reload();
-            });
-        }
+        result.isConfirmed && history.go(0);
     });
 
     document.querySelector("#hide_ad").addEventListener("change", (e) => {
