@@ -183,7 +183,7 @@ GM_registerMenuCommand("⚙️ 设置", () => {
                 showConfirmButton: false,
                 timer: 999,
             }).then((result) => {
-                result.isConfirmed && history.go(0);
+                result.isConfirmed && window.location.reload();
             });
         }
     });
