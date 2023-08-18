@@ -42,15 +42,6 @@ function del_qz_dialog() {
 
 del_qz_shuoshuo();
 
-setInterval(() => {
-    var qz_shuoshuo_prev = document.querySelector("#pager #pager_num_1_1"),
-        qz_shuoshuo_next = document.querySelector("#pager #pager_next_0");
-    if (qz_shuoshuo_next) {
-        qz_shuoshuo_next.click();
-        setTimeout(() => {
-            qz_shuoshuo_prev.click();
-        }, 1234);
-    } else {
-        window.location.reload(true);
-    }
-}, 54321);
+setTimeout(() => {
+    window.location.reload(true);
+}, 56789);
