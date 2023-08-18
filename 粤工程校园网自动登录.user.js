@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         粤工程校园网自动登录
 // @namespace    https://github.com/geoi6sam1
-// @version      0.2
+// @version      0.2.1
 // @description  自动登录粤工程宿舍校园网
 // @author       geoi6sam1
 // @match        *://10.10.0.76/*
@@ -24,17 +24,17 @@ let pwd = ""; // 密码
 let login = setInterval(() => {
     let userid = document.querySelector("#userid");
     let passwd = document.querySelector("#passwd");
-    if (userid && passwd != null) {
+    if (userid && passwd) {
         userid.value = uid;
         passwd.value = pwd;
         let loginsubmit = document.querySelector("#loginsubmit");
-        if (loginsubmit != null) {
+        if (loginsubmit) {
             loginsubmit.click();
         }
     }
 }, 99);
 
 let logoutsubmit = document.querySelector("#logoutsubmit");
-if (logoutsubmit != null) {
+if (logoutsubmit) {
     clearInterval(login);
 }
