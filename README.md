@@ -17,7 +17,7 @@
 
 | 更新日期 | 分类 | 数量 | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| 2023-08-05 | 2 | 199 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json) | [备用](https://gitee.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json)
+| 2023-08-05 | 2 | 199 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/sharebooksource.json)
 
 > **🔥🔥阅读APP相关事项🔥🔥**
 
@@ -31,4 +31,4 @@
 
 | 更新日期 | 分类 | 数量 | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| 2023-08-05 | 6 | 77 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html) | [备用](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
+| 2023-08-05 | 6 | 77 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
