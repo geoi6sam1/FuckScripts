@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      0.7
+// @version      0.6.7
 // @description  优化微软必应搜索结果，可自行DIY设置
 // @author       geoi6sam1
 // @match        *://*.bing.com/search?*
