@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         微软必应优化助手
-// @namespace    geoi6sam1
+// @namespace    https://github.com/geoi6sam1
 // @version      0.7
 // @description  屏蔽微软必应搜索广告
-// @author       潘钜森
+// @author       geoi6sam1
 // @match        *://*.bing.com/search?*
 // @icon         https://cn.bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
@@ -159,9 +159,9 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 
     let footer = `
 <div style="text-align: center;font-size: 0.9687em;">一起学习
-<a href="https://bbs.tampermonkey.net.cn/thread-184-1-1.html" target="_blank" style="color:#7066e0;">油猴脚本开发</a>
+<a href="https://learn.scriptcat.org" target="_blank" style="color:#7066e0;">油猴脚本开发</a>
 吧😇，此脚本免费开源<br>Powered by
-<a href="https://github.com/s757129" target="_blank" style="color:#7066e0;font-weight:bold;">柒伍七</a></div>
+<a href="https://github.com/geoi6sam1" target="_blank" style="color:#7066e0;font-weight:bold;">geoi6sam1</a></div>
 `;
 
     GM_addStyle(GM_getResourceText("SwalStyle"));
