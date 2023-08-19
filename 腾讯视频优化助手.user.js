@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      0.9
+// @version      0.9.1
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请使用VIP
 // @author       geoi6sam1
 // @match        *://v.qq.com/*
@@ -27,9 +27,16 @@ GM_addStyle(`
 .quick_upload,
 .quick_message,
 #pc_client,
-[class*="left-nav"] a[href*="iwan"],
 [dt-params*="ad_"],
 [dt-eid*="ad_"],
+a[href*="9377s."],
+a[href*="qqgame."],
+a[href*="gamer."],
+a[href*="iwan."],
+.video-banner-module:has(a[href*="9377s."]),
+.video-banner-module:has(a[href*="qqgame."]),
+.video-banner-module:has(a[href*="gamer."]),
+.video-banner-module:has(a[href*="iwan."]),
 #iwan-gamependant-page,
 .tip_download,
 .mod_vip_nav .vip_act,
@@ -56,7 +63,8 @@ GM_addStyle(`
 
 .video-card-wrap
 {
-    margin: 0.33rem !important;
+   margin-right: var(--content-big-card-margin);
+   margin-bottom: var(--content-big-card-margin);
 }
 
 .gray-style-remembrance
