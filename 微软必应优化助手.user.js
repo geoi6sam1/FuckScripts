@@ -1,21 +1,21 @@
 // ==UserScript==
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      0.6.7
-// @description  优化微软必应搜索结果，可自行DIY设置
+// @version      1.0.0
+// @description  微软必应（Microsoft Bing）搜索结果优化，可自定义配置【隐藏类似广告、隐藏相关视频、隐藏相关图像、显示相关语境、隐藏人们还会问、隐藏底部相关搜索、隐藏底部最近的搜索、隐藏最新相关信息(资讯)】
 // @author       geoi6sam1
-// @match        *://*.bing.com/search?*
+// @match        *://*.bing.com/*
 // @icon         https://bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @require      https://cdn.staticfile.org/sweetalert2/11.7.23/sweetalert2.min.js
-// @resource     SwalStyle https://cdn.staticfile.org/sweetalert2/11.7.23/sweetalert2.min.css
+// @require      https://cdn.staticfile.org/sweetalert2/11.7.27/sweetalert2.min.js
+// @resource     SwalStyle https://cdn.staticfile.org/sweetalert2/11.7.27/sweetalert2.min.css
 // @antifeature  ads
 // @antifeature  miner
 // @antifeature  payment
 // @antifeature  tracking
 // @antifeature  membership
 // @antifeature  referral-link
-// @run-at       document-idle
+// @run-at       document-start
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -24,104 +24,135 @@
 // @license      MIT
 // ==/UserScript==
 
-GM_getValue("bing_vip") === undefined && GM_setValue("bing_vip", true) && window.location.reload(true);
-
 var main = {
-    hide_ad() {
-        GM_addStyle(`.b_ad, .ad_sc, ul[data-partnertag], #b_pole, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #ev_talkbox_wrapper, #b_notificationContainer_bop { display: none !important; }`);
-        var old_ad = document.querySelectorAll(".b_algo");
-        for (var i = 0; i < old_ad.length; i++) {
-            if (old_ad[i].firstChild.getAttribute("class") === null) {
-                old_ad[i].style.display = "none";
-            }
-        }
-        var bingApp_pc = document.querySelector("#bingApp_area");
-        var bingApp_m = document.querySelector(".bingApp_area_m");
-        if (bingApp_pc) {
-            bingApp_pc.parentNode.parentNode.parentNode.style.display = "none";
-        }
-        if (bingApp_m) {
-            bingApp_m.parentNode.parentNode.style.display = "none";
-        }
+    /*** 类似广告 ***/
+    bing_ad() {
+        GM_addStyle(`
+.b_ad,
+.ad_sc,
+.adsblock,
+#ads_banner,
+li.b_algo:has(.b_attribution[data-partnertag]),
+.b_hPanel:has([class*="bingApp_"]),
+.sidebar:has(.ads_dwn),
+#bgPro,
+#b_pole,
+#suspenBar,
+#b_opalpers,
+#bnp_ttc_div,
+#bnp_rich_div,
+#ev_talkbox_wrapper,
+#idCont [id*="id_qrcode"],
+#b_notificationContainer_bop
+{
+    display: none !important;
+}
+        `);
     },
-    
-    hide_vids() {
-        var vids_pc = document.querySelector("#serpvidans");
-        var vids_m = document.querySelector("#vidans2");
-        if (vids_pc) {
-            vids_pc.parentNode.parentNode.style.display = "none";
-        }
-        if (vids_m) {
-            vids_m.parentNode.parentNode.style.display = "none";
-        }
+    /*** 相关视频 ***/
+    bing_video() {
+        GM_addStyle(`
+li.b_ans:has(#serpvidans)
+{
+    display: none !important;
+}
+        `);
     },
+    /*** 相关图像 ***/
+    bing_image() {
+        GM_addStyle(`
+li.b_ans:has(.img1r)
+{
+    display: none !important;
+}
+        `);
+    },
+    /*** 相关语境 ***/
+    bing_contxt() {
+        GM_addStyle(`
+#b_context [aria-expanded],
+.b_expansion_chevron
+{
+    display: none !important;
+}
 
-    hide_faq() {
-        var btm_faq = document.querySelector("#df_listaa");
-        if (btm_faq) {
-            if (navigator.userAgent.indexOf("Mobile") > -1) {
-                btm_faq.parentNode.parentNode.parentNode.parentNode.style.display = "none";
-            } else {
-                btm_faq.parentNode.parentNode.parentNode.style.display = "none";
-            }
-        }
+#b_context .b_hide
+{
+    display: block !important;
+}
+        `);
     },
-
-    hide_rels() {
-        var btm_search = document.querySelector(".b_rs");
-        if (btm_search) {
-            btm_search.parentNode.style.display = "none";
-        }
+    /*** 相关问题 ***/
+    bing_faq() {
+        GM_addStyle(`
+li.b_ans:has(.df_alaskcarousel)
+{
+    display: none !important;
+}
+        `);
     },
-
-    hide_recs() {
-        GM_addStyle(`#b_recSQ { display: none; }`);
+    /*** 相关搜索 ***/
+    bing_reles() {
+        GM_addStyle(`
+li.b_ans:has(.b_rs)
+{
+    display: none !important;
+}
+        `);
     },
-
-    hide_news() {
-        var news_info = document.querySelector("#ans_nws");
-        if (news_info) {
-            news_info.parentNode.style.display = "none";
-        }
+    /*** 最近搜索 ***/
+    bing_recs() {
+        GM_addStyle(`
+li.b_ans:has(#b_recSQ)
+{
+    display: none !important;
+}
+        `);
+    },
+    /*** 相关资讯 ***/
+    bing_news() {
+        GM_addStyle(`
+li.b_ans:has(#ans_nws)
+{
+    display: none !important;
+}
+        `);
     },
 };
 
-if (GM_getValue("setting_hide_ad")) {
-    main.hide_ad();
-}
-if (GM_getValue("setting_hide_vids")) {
-    main.hide_vids();
-}
-if (GM_getValue("setting_hide_faq")) {
-    main.hide_faq();
-}
-if (GM_getValue("setting_hide_rels")) {
-    main.hide_rels();
-}
-if (GM_getValue("setting_hide_recs")) {
-    main.hide_recs();
-}
-if (GM_getValue("setting_hide_news")) {
-    main.hide_news();
-}
+GM_getValue("bing_vip") !== true && GM_setValue("bing_vip", true) && window.location.reload(true);
+GM_getValue("fuck_bing_ad") && main.bing_ad();
+GM_getValue("fuck_bing_video") && main.bing_video();
+GM_getValue("fuck_bing_image") && main.bing_image();
+GM_getValue("fuck_bing_contxt") && main.bing_contxt();
+GM_getValue("fuck_bing_faq") && main.bing_faq();
+GM_getValue("fuck_bing_reles") && main.bing_reles();
+GM_getValue("fuck_bing_recs") && main.bing_recs();
+GM_getValue("fuck_bing_news") && main.bing_news();
 
 var storage = [{
-    key: "setting_hide_ad",
+    key: "fuck_bing_ad",
     value: true
 }, {
-    key: "setting_hide_vids",
+    key: "fuck_bing_video",
     value: true
 }, {
-    key: "setting_hide_faq",
+    key: "fuck_bing_image",
+    value: true
+}, {
+    key: "fuck_bing_contxt",
+    value: true
+}, {
+    key: "fuck_bing_faq",
     value: false
 }, {
-    key: "setting_hide_rels",
+    key: "fuck_bing_reles",
     value: true
 }, {
-    key: "setting_hide_recs",
+    key: "fuck_bing_recs",
     value: true
 }, {
-    key: "setting_hide_news",
+    key: "fuck_bing_news",
     value: false
 }];
 storage.forEach((s) => {
@@ -130,41 +161,89 @@ storage.forEach((s) => {
 
 GM_registerMenuCommand("⚙️ 设置", () => {
     var style = `
-.swal2-popup.swal2-modal { width:410px; }
-.switch-txt { display:flex; align-items:center; justify-content:space-between; letter-spacing:2px; padding:5px; }
-.switch-btn { cursor:pointer; width:52px; height:25px; position:relative; background-color:#f5f5f5; border-radius:19px; background-clip:content-box; display:inline-block; -webkit-appearance:none; -moz-appearance:none;  transition:background-color ease .3s; }
-.switch-btn:before {content:""; width:25px; height:25px; position:absolute; border-radius:19px; background-color:#fff; box-shadow:0 1px 3px rgba(0, 0, 0, .5); transition:left .2s; }
-.switch-btn:checked { border-color:none; background-color:#7066e0; transition:background-color ease .3s; }
-.switch-btn:checked:before { left:29px; transition:left .2s; }
+.switch-txt
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 2px;
+    padding: 5px;
+}
+
+.switch-btn
+{
+    cursor: pointer;
+    width: 52px;
+    height: 25px;
+    position: relative;
+    background-color: #f5f5f5;
+    border-radius: 19px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: background-color ease .3s;
+}
+
+.switch-btn:before
+{
+    content: "";
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    border-radius: 19px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+    transition: left .2s;
+}
+
+.switch-btn:checked
+{
+    border-color: none;
+    background-color: #7066e0;
+    transition: background-color ease .3s;
+}
+
+.switch-btn:checked:before
+{
+    left: 29px;
+    transition: left .2s;
+}
 `;
 
     var html = `
-<label class="switch-txt">隐藏已知广告
-<input id="hide_ad" ${GM_getValue("setting_hide_ad") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<label class="switch-txt">隐藏类似广告
+<input id="bing_ad" ${GM_getValue("fuck_bing_ad") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏相关视频
-<input id="hide_vids" ${GM_getValue("setting_hide_vids") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<input id="bing_video" ${GM_getValue("fuck_bing_video") ? "checked" : ""} type="checkbox" class="switch-btn" />
+</label>
+<label class="switch-txt">隐藏相关图像
+<input id="bing_image" ${GM_getValue("fuck_bing_image") ? "checked" : ""} type="checkbox" class="switch-btn" />
+</label>
+<label class="switch-txt">显示相关语境
+<input id="bing_contxt" ${GM_getValue("fuck_bing_contxt") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏人们还会问
-<input id="hide_faq" ${GM_getValue("setting_hide_faq") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<input id="bing_faq" ${GM_getValue("fuck_bing_faq") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏底部相关搜索
-<input id="hide_rels" ${GM_getValue("setting_hide_rels") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<input id="bing_reles" ${GM_getValue("fuck_bing_reles") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏底部最近的搜索
-<input id="hide_recs" ${GM_getValue("setting_hide_recs") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<input id="bing_recs" ${GM_getValue("fuck_bing_recs") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏最新相关信息(资讯)
-<input id="hide_news" ${GM_getValue("setting_hide_news") ? "checked" : ""} type="checkbox" class="switch-btn" />
+<input id="bing_news" ${GM_getValue("fuck_bing_news") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 `;
 
     var footer = `
-<div style="text-align: center;font-size: 0.9687em;">推荐使用
+<div style="text-align:center;font-size:0.9687em;">推荐使用
 <a href="https://docs.scriptcat.org" target="_blank" style="color:#7066e0;">脚本猫</a>
 安装，一起学习
-<a href="https://learn.scriptcat.org" target="_blank" style="color:#7066e0;">油猴脚本开发</a>
-吧😇
+<a href="https://learn.scriptcat.org" target="_blank" style="color:#7066e0;">脚本开发</a>
+吧❤️‍🔥
 `;
 
     GM_addStyle(GM_getResourceText("SwalStyle"));
@@ -181,22 +260,29 @@ GM_registerMenuCommand("⚙️ 设置", () => {
         result.isConfirmed && history.go(0);
     });
 
-    document.querySelector("#hide_ad").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_ad", e.target.checked);
+    document.querySelector("#bing_ad").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_ad", e.target.checked);
     });
-    document.querySelector("#hide_vids").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_vids", e.target.checked);
+    document.querySelector("#bing_video").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_video", e.target.checked);
     });
-    document.querySelector("#hide_faq").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_faq", e.target.checked);
+    document.querySelector("#bing_image").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_image", e.target.checked);
     });
-    document.querySelector("#hide_rels").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_rels", e.target.checked);
+    document.querySelector("#bing_contxt").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_contxt", e.target.checked);
     });
-    document.querySelector("#hide_recs").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_recs", e.target.checked);
+    document.querySelector("#bing_faq").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_faq", e.target.checked);
     });
-    document.querySelector("#hide_news").addEventListener("change", (e) => {
-        GM_setValue("setting_hide_news", e.target.checked);
+    document.querySelector("#bing_reles").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_reles", e.target.checked);
     });
+    document.querySelector("#bing_recs").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_recs", e.target.checked);
+    });
+    document.querySelector("#bing_news").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_news", e.target.checked);
+    });
+
 });
