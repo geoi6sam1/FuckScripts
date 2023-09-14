@@ -18,7 +18,7 @@
 // @antifeature  tracking
 // @antifeature  membership
 // @antifeature  referral-link
-// @run-at       document-end
+// @run-at       document-start
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -69,27 +69,27 @@ a[href*="iwan."],
 }
         `);
         // 监听键盘空格
-        window.onkeypress = (e) => {
+        window.onkeypress = () => {
             if (e.keyCode === 32) {
                 txv_ad_float_fuck();
             }
         }
         // 监听鼠标左键
-        window.onmousedown = (e) => {
+        window.onmousedown = () => {
             if (e.button === 0) {
                 txv_ad_float_fuck();
             }
         }
         // 恢复视频窗口大小
         function txv_ad_float_fuck() {
-            var txv_player_choose = document.querySelectorAll("#player video");
+            var txv_player_choose = document.querySelectorAll("#player video")[0];
             if (txv_player_choose) {
                 setTimeout(() => {
                     if (txv_player_choose.paused === true) {
                         var txv_player_win = document.querySelector(".txp_videos_container");
                         txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;");
                     }
-                }, 1500);
+                }, 1234);
             }
         }
     },
@@ -118,12 +118,12 @@ a[href*="iwan."],
     },
     /*** 视频水印 ***/
     wetv_watermark() {
-        GM_addStyle(`
-.txp-watermark
-{
-    display: none !important;
-}
-        `);
+        setTimeout(() => {
+            var wetv_video_watermark = document.querySelector(".txp-watermark");
+            if (wetv_video_watermark) {
+                wetv_video_watermark.remove();
+            }
+        }, 4321);
     },
     /*** 网站灰度 ***/
     wetv_grayscale() {
@@ -163,7 +163,6 @@ var storage = [{
 storage.forEach((s) => {
     GM_getValue(s.key) === undefined && GM_setValue(s.key, s.value);
 });
-
 
 GM_registerMenuCommand("⚙️ 设置", () => {
     var style = `
