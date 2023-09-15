@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.0.1
+// @version      1.1.0
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP使用
 // @author       geoi6sam1
 // @match        *://v.qq.com/*
