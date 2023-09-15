@@ -10,8 +10,8 @@
 // @match        *://m.film.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @require      https://cdn.staticfile.org/sweetalert2/11.7.27/sweetalert2.min.js
-// @resource     SwalStyle https://cdn.staticfile.org/sweetalert2/11.7.27/sweetalert2.min.css
+// @require      https://cdn.staticfile.org/sweetalert2/11.7.28/sweetalert2.min.js
+// @resource     SwalStyle https://cdn.staticfile.org/sweetalert2/11.7.28/sweetalert2.min.css
 // @antifeature  ads
 // @antifeature  miner
 // @antifeature  payment
@@ -31,8 +31,8 @@ var main = {
     /*** 类似广告 ***/
     wetv_ad() {
         GM_addStyle(`
-[dt-params*="ad_"],
-[dt-eid*="ad_"],
+.video-card-module [dt-params*="ad_"],
+.focus-wrap [dt-eid*="ad_poster"],
 a[href*="9377s."],
 a[href*="qqgame."],
 a[href*="gamer."],
@@ -51,6 +51,8 @@ a[href*="iwan."],
 .txp_ad,
 .txp_none,
 .game-switch-ad,
+.player-comment-btn,
+iframe[data-src*="mall."],
 [class*="txp_full_screen_pause"],
 [data-role*="creative-player-pause"],
 #ad_m-site,
@@ -69,13 +71,13 @@ a[href*="iwan."],
 }
         `);
         // 监听键盘空格
-        window.onkeypress = () => {
+        window.onkeypress = (e) => {
             if (e.keyCode === 32) {
                 txv_ad_float_fuck();
             }
         }
         // 监听鼠标左键
-        window.onmousedown = () => {
+        window.onmousedown = (e) => {
             if (e.button === 0) {
                 txv_ad_float_fuck();
             }
@@ -226,10 +228,10 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 <label class="switch-txt">隐藏视频弹幕
 <input id="wetv_barrage" ${GM_getValue("fuck_wetv_barrage") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
-<label class="switch-txt">隐藏视频水印
+<label class="switch-txt">移除右上视频水印
 <input id="wetv_watermark" ${GM_getValue("fuck_wetv_watermark") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
-<label class="switch-txt">禁止网站灰度
+<label class="switch-txt">禁止网站灰度转换
 <input id="wetv_grayscale" ${GM_getValue("fuck_wetv_grayscale") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 `;
@@ -237,7 +239,7 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     var footer = `
 <div style="text-align:center;font-size:0.9687em;">🔥🔥强烈建议使用
 <a href="https://docs.scriptcat.org" target="_blank" style="color:#7066e0;">脚本猫</a>
-安装🔥🔥
+安装🔥🔥</div>
 `;
 
     GM_addStyle(GM_getResourceText("SwalStyle"));
