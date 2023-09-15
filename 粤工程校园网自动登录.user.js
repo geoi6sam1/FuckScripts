@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         粤工程校园网自动登录
 // @namespace    https://github.com/geoi6sam1
-// @version      0.2.1
+// @version      0.0.1
 // @description  自动登录粤工程宿舍校园网
 // @author       geoi6sam1
 // @match        *://10.10.0.76/*
