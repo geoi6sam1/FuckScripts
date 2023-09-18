@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.0.0
+// @version      1.1.1
 // @description  微软必应（Microsoft Bing）搜索结果优化，可自定义配置【隐藏类似广告、隐藏相关视频、隐藏相关图像、显示相关语境、隐藏人们还会问、隐藏底部相关搜索、隐藏底部最近的搜索、隐藏最新相关信息(资讯)】
 // @author       geoi6sam1
 // @match        *://*.bing.com/*
@@ -41,6 +41,7 @@ li.b_algo:has(.b_attribution[data-partnertag]),
 #b_opalpers,
 #bnp_ttc_div,
 #bnp_rich_div,
+#b_ims_bza_pole,
 #ev_talkbox_wrapper,
 #idCont [id*="id_qrcode"],
 #b_notificationContainer_bop
@@ -48,6 +49,22 @@ li.b_algo:has(.b_attribution[data-partnertag]),
     display: none !important;
 }
         `);
+
+        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+        var bing_header = document.querySelector("#b_header");
+        var observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type == "attributes") {
+                    bing_header.style.backgroundColor = "";
+                    bing_header.style.borderBottom = "1px solid #ececec";
+                }
+            });
+        });
+        
+        observer.observe(bing_header, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
     },
     /*** 相关视频 ***/
     bing_video() {
@@ -61,24 +78,9 @@ li.b_ans:has(#serpvidans)
     /*** 相关图像 ***/
     bing_image() {
         GM_addStyle(`
-li.b_ans:has(.img1r)
+li.b_ans:has(.imgPart)
 {
     display: none !important;
-}
-        `);
-    },
-    /*** 相关语境 ***/
-    bing_contxt() {
-        GM_addStyle(`
-#b_context [aria-expanded],
-.b_expansion_chevron
-{
-    display: none !important;
-}
-
-#b_context .b_hide
-{
-    display: block !important;
 }
         `);
     },
@@ -109,6 +111,15 @@ li.b_ans:has(#b_recSQ)
 }
         `);
     },
+    /*** 相关位置 ***/
+    bing_maps() {
+        GM_addStyle(`
+li.b_ans:has(#lMapContainer)
+{
+    display: none !important;
+}
+        `);
+    },
     /*** 相关资讯 ***/
     bing_news() {
         GM_addStyle(`
@@ -124,10 +135,10 @@ GM_getValue("bing_vip") !== true && GM_setValue("bing_vip", true) && window.loca
 GM_getValue("fuck_bing_ad") && main.bing_ad();
 GM_getValue("fuck_bing_video") && main.bing_video();
 GM_getValue("fuck_bing_image") && main.bing_image();
-GM_getValue("fuck_bing_contxt") && main.bing_contxt();
 GM_getValue("fuck_bing_faq") && main.bing_faq();
 GM_getValue("fuck_bing_reles") && main.bing_reles();
 GM_getValue("fuck_bing_recs") && main.bing_recs();
+GM_getValue("fuck_bing_maps") && main.bing_maps();
 GM_getValue("fuck_bing_news") && main.bing_news();
 
 var storage = [{
@@ -140,9 +151,6 @@ var storage = [{
     key: "fuck_bing_image",
     value: true
 }, {
-    key: "fuck_bing_contxt",
-    value: true
-}, {
     key: "fuck_bing_faq",
     value: false
 }, {
@@ -150,6 +158,9 @@ var storage = [{
     value: true
 }, {
     key: "fuck_bing_recs",
+    value: true
+}, {
+    key: "fuck_bing_maps",
     value: true
 }, {
     key: "fuck_bing_news",
@@ -221,9 +232,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 <label class="switch-txt">隐藏相关图像
 <input id="bing_image" ${GM_getValue("fuck_bing_image") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
-<label class="switch-txt">显示相关语境
-<input id="bing_contxt" ${GM_getValue("fuck_bing_contxt") ? "checked" : ""} type="checkbox" class="switch-btn" />
-</label>
 <label class="switch-txt">隐藏人们还会问
 <input id="bing_faq" ${GM_getValue("fuck_bing_faq") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
@@ -233,17 +241,18 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 <label class="switch-txt">隐藏底部最近的搜索
 <input id="bing_recs" ${GM_getValue("fuck_bing_recs") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
+<label class="switch-txt">隐藏附近相关店铺位置
+<input id="bing_maps" ${GM_getValue("fuck_bing_maps") ? "checked" : ""} type="checkbox" class="switch-btn" />
+</label>
 <label class="switch-txt">隐藏最新相关信息(资讯)
 <input id="bing_news" ${GM_getValue("fuck_bing_news") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 `;
 
     var footer = `
-<div style="text-align:center;font-size:0.9687em;">推荐使用
+<div style="text-align:center;font-size:0.9687em;">🔥🔥强烈建议使用
 <a href="https://docs.scriptcat.org" target="_blank" style="color:#7066e0;">脚本猫</a>
-安装，一起学习
-<a href="https://learn.scriptcat.org" target="_blank" style="color:#7066e0;">脚本开发</a>
-吧❤️‍🔥
+安装🔥🔥</div>
 `;
 
     GM_addStyle(GM_getResourceText("SwalStyle"));
@@ -269,9 +278,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     document.querySelector("#bing_image").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_image", e.target.checked);
     });
-    document.querySelector("#bing_contxt").addEventListener("change", (e) => {
-        GM_setValue("fuck_bing_contxt", e.target.checked);
-    });
     document.querySelector("#bing_faq").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_faq", e.target.checked);
     });
@@ -280,6 +286,9 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     });
     document.querySelector("#bing_recs").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_recs", e.target.checked);
+    });
+    document.querySelector("#bing_maps").addEventListener("change", (e) => {
+        GM_setValue("fuck_bing_maps", e.target.checked);
     });
     document.querySelector("#bing_news").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_news", e.target.checked);
