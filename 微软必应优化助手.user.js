@@ -155,7 +155,7 @@ var storage = [{
     value: false
 }, {
     key: "fuck_bing_reles",
-    value: true
+    value: false
 }, {
     key: "fuck_bing_recs",
     value: true
