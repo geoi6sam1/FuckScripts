@@ -38,6 +38,6 @@
 
 | 更新日期 | 分类 | 数量 | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| 2023-08-05 | 6 | 77 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
+| 2023-10-16 | 6 | 76 | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
 
 ---
