@@ -17,6 +17,16 @@
 
 ---
 
+### \#\# 广告过滤
+
+> **🔥🔥🔥浏览器广告过滤规则🔥🔥🔥**
+
+| Title | Version | Expires | Github | Gitee |
+|:---:|:---:|:---:|:---:|:---:|
+| My AdFilters | 2023102218 | 24 hours | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+
+---
+
 ### \#\# 阅读APP
 
 > **🔥🔥阅读APP自用书源🔥🔥**
