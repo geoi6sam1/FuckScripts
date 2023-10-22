@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: My AdFilters
-! Version: 202310221820
+! Version: 2023102218
 ! Expires: 24 hours
 ! 本规则合并自乘风视频广告过滤规则，并补充了一些过滤规则
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
