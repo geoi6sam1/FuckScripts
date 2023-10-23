@@ -2,7 +2,7 @@
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
 // @version      1.1.1
-// @description  微软必应（Microsoft Bing）搜索结果优化，可自定义配置【隐藏类似广告、隐藏相关视频、隐藏相关图像、显示相关语境、隐藏人们还会问、隐藏底部相关搜索、隐藏底部最近的搜索、隐藏最新相关信息(资讯)】
+// @description  微软必应（Microsoft Bing）搜索结果优化，可自定义配置隐藏选项
 // @author       geoi6sam1
 // @match        *://*.bing.com/*
 // @icon         https://bing.com/favicon.ico
@@ -24,10 +24,9 @@
 // @license      MIT
 // ==/UserScript==
 
-var main = {
-    /*** 类似广告 ***/
-    bing_ad() {
-        GM_addStyle(`
+
+/*** 类似广告 ***/
+GM_addStyle(`
 .b_ad,
 .ad_sc,
 .adsblock,
@@ -50,22 +49,24 @@ li.b_algo:has(.b_attribution[data-partnertag]),
 }
         `);
 
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-        var bing_header = document.querySelector("#b_header");
-        var observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type == "attributes") {
-                    bing_header.style.backgroundColor = "";
-                    bing_header.style.borderBottom = "1px solid #ececec";
-                }
-            });
-        });
-        
-        observer.observe(bing_header, {
-            attributes: true,
-            attributeFilter: ['style']
-        });
-    },
+var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+var bing_header = document.querySelector("#b_header");
+var observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type == "attributes") {
+            bing_header.style.backgroundColor = "";
+            bing_header.style.borderBottom = "1px solid #ececec";
+        }
+    });
+});
+
+observer.observe(bing_header, {
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+var main = {
     /*** 相关视频 ***/
     bing_video() {
         GM_addStyle(`
@@ -102,15 +103,6 @@ li.b_ans:has(.b_rs)
 }
         `);
     },
-    /*** 最近搜索 ***/
-    bing_recs() {
-        GM_addStyle(`
-li.b_ans:has(#b_recSQ)
-{
-    display: none !important;
-}
-        `);
-    },
     /*** 相关位置 ***/
     bing_maps() {
         GM_addStyle(`
@@ -132,19 +124,14 @@ li.b_ans:has(#ans_nws)
 };
 
 GM_getValue("bing_vip") !== true && GM_setValue("bing_vip", true) && window.location.reload(true);
-GM_getValue("fuck_bing_ad") && main.bing_ad();
 GM_getValue("fuck_bing_video") && main.bing_video();
 GM_getValue("fuck_bing_image") && main.bing_image();
 GM_getValue("fuck_bing_faq") && main.bing_faq();
 GM_getValue("fuck_bing_reles") && main.bing_reles();
-GM_getValue("fuck_bing_recs") && main.bing_recs();
 GM_getValue("fuck_bing_maps") && main.bing_maps();
 GM_getValue("fuck_bing_news") && main.bing_news();
 
 var storage = [{
-    key: "fuck_bing_ad",
-    value: true
-}, {
     key: "fuck_bing_video",
     value: true
 }, {
@@ -156,9 +143,6 @@ var storage = [{
 }, {
     key: "fuck_bing_reles",
     value: false
-}, {
-    key: "fuck_bing_recs",
-    value: true
 }, {
     key: "fuck_bing_maps",
     value: true
@@ -223,9 +207,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 `;
 
     var html = `
-<label class="switch-txt">隐藏类似广告
-<input id="bing_ad" ${GM_getValue("fuck_bing_ad") ? "checked" : ""} type="checkbox" class="switch-btn" />
-</label>
 <label class="switch-txt">隐藏相关视频
 <input id="bing_video" ${GM_getValue("fuck_bing_video") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
@@ -237,9 +218,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
 </label>
 <label class="switch-txt">隐藏底部相关搜索
 <input id="bing_reles" ${GM_getValue("fuck_bing_reles") ? "checked" : ""} type="checkbox" class="switch-btn" />
-</label>
-<label class="switch-txt">隐藏底部最近的搜索
-<input id="bing_recs" ${GM_getValue("fuck_bing_recs") ? "checked" : ""} type="checkbox" class="switch-btn" />
 </label>
 <label class="switch-txt">隐藏附近相关店铺位置
 <input id="bing_maps" ${GM_getValue("fuck_bing_maps") ? "checked" : ""} type="checkbox" class="switch-btn" />
@@ -269,9 +247,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
         result.isConfirmed && history.go(0);
     });
 
-    document.querySelector("#bing_ad").addEventListener("change", (e) => {
-        GM_setValue("fuck_bing_ad", e.target.checked);
-    });
     document.querySelector("#bing_video").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_video", e.target.checked);
     });
@@ -283,9 +258,6 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     });
     document.querySelector("#bing_reles").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_reles", e.target.checked);
-    });
-    document.querySelector("#bing_recs").addEventListener("change", (e) => {
-        GM_setValue("fuck_bing_recs", e.target.checked);
     });
     document.querySelector("#bing_maps").addEventListener("change", (e) => {
         GM_setValue("fuck_bing_maps", e.target.checked);
