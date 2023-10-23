@@ -5,7 +5,6 @@
 ! 👇👇过滤规则推荐👇👇
 ! 乘风 广告过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt
 ! 乘风 视频过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt
-! EasyList：https://easylist.to
 ! AdGuard 过滤器：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
