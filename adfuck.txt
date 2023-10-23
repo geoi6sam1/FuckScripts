@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: My AdFilters
-! Version: 2023102318
+! Version: 2023102322
 ! Expires: 24 hours
 ! 👇👇过滤规则推荐👇👇
 ! 乘风 广告过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt
@@ -14,7 +14,7 @@
 bing.com##.b_ad,.ad_sc,.adsblock,#ads_banner,li.b_algo:has(.b_attribution[data-partnertag]),.b_hPanel:has([class*="bingApp_"]),.sidebar:has(.ads_dwn),#bgPro,#b_pole,#suspenBar,#b_opalpers,#bnp_ttc_div,#bnp_rich_div,#b_ims_bza_pole,#ev_talkbox_wrapper,#idCont [id*="id_qrcode"],#b_notificationContainer_bop
 
 ! ---------腾讯视频---------
-v.qq.com,film.qq.com##.quick_games,.video-card-module [dt-params*="ad_"],.focus-wrap [dt-eid*="ad_poster"],a[href*="9377s."],a[href*="qqgame."],a[href*="gamer."],a[href*="iwan."],.video-banner-module:has(a[href*="9377s."]),.video-banner-module:has(a[href*="qqgame."]),.video-banner-module:has(a[href*="gamer."]),.video-banner-module:has(a[href*="iwan."]),#iwan-gamependant-page,.tip_download,.vip_act,.fixed_box,#ad_container,#iwan-game,.banner-ad,.txp_ad,.txp_none,.game-switch-ad,.player-comment-btn,iframe[data-src*="mall."],[class*="txp_full_screen_pause"],[data-role*="creative-player-pause"],#ad_m-site,.open-app.old-open,[dt-eid="openbanner"],.bottom-wrapper,.at-app-banner
+v.qq.com,film.qq.com##.txp-watermark,.gray-style-remembrance,.quick_games,.video-card-module [dt-params*="ad_"],.focus-wrap [dt-eid*="ad_poster"],a[href*="9377s."],a[href*="qqgame."],a[href*="gamer."],a[href*="iwan."],.video-banner-module:has(a[href*="9377s."]),.video-banner-module:has(a[href*="qqgame."]),.video-banner-module:has(a[href*="gamer."]),.video-banner-module:has(a[href*="iwan."]),#iwan-gamependant-page,.tip_download,.vip_act,.fixed_box,#ad_container,#iwan-game,.banner-ad,.txp_ad,.txp_none,.game-switch-ad,.player-comment-btn,iframe[data-src*="mall."],[class*="txp_full_screen_pause"],[data-role*="creative-player-pause"],#ad_m-site,.open-app.old-open,[dt-eid="openbanner"],.bottom-wrapper,.at-app-banner
 
 ! ---------123云盘---------
 123pan.com##.advBanner,.ant-carousel
@@ -22,11 +22,9 @@ v.qq.com,film.qq.com##.quick_games,.video-card-module [dt-params*="ad_"],.focus-
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
 
-! ---------百度搜索---------
+! ---------百度联盟---------
 ||dup.baidustatic.com^
 ||ubmcmm.baidustatic.com^
-baidu.com#@#.bds-list-ads
-m.baidu.com##div[class^="mkt-ball-wrapper__"],div[srcid="mkt_entrance_ball"]
-m.baidu.com##div[data-tpl="jr_stock_open_account"] > div.c-result-content,.c-line-bottom > div.c-row > div[class^="ad-layout-"],.c-line-bottom > div.c-row > div[class^="ad-layout-"] + div[class]
-m.baidu.com##.c-touchable-feedback[rl-node][rl-highlight-self][style^="padding-bottom:"]:not([data-module]) > a[href^="https://m.baidu.com/from"][target="_self"][data-log]
-m.baidu.com#?#.c-list > div.c-list-item:has(> div[class] > p[class] ~ div > span[class^="new-ad-label"])
+m.baidu.com###navs ~ div[style],#page-relative .c-line-clamp1,.c-recomm-wrap .c-line-clamp1,.c-result[tpl="recommend_list_san"] .cos-line-clamp-1,.direct-new.sug-improve
+m.baidu.com##.c-result[tpl="note_lead"],.c-result[tpl="xcx_multi"],.c-result[tpl="guanfanghao"],.c-result[tpl="app_mobile_simple_safety"],.c-result[tpl="app_mobile_simple"]
+baidu.com##.c-container[tpl="bjh_addressing"],.c-container[tpl="pc-soft-app"]
