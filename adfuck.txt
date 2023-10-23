@@ -16,9 +16,17 @@ bing.com##.b_ad,.ad_sc,.adsblock,#ads_banner,li.b_algo:has(.b_attribution[data-p
 ! ---------腾讯视频---------
 v.qq.com,film.qq.com##.quick_games,.video-card-module [dt-params*="ad_"],.focus-wrap [dt-eid*="ad_poster"],a[href*="9377s."],a[href*="qqgame."],a[href*="gamer."],a[href*="iwan."],.video-banner-module:has(a[href*="9377s."]),.video-banner-module:has(a[href*="qqgame."]),.video-banner-module:has(a[href*="gamer."]),.video-banner-module:has(a[href*="iwan."]),#iwan-gamependant-page,.tip_download,.vip_act,.fixed_box,#ad_container,#iwan-game,.banner-ad,.txp_ad,.txp_none,.game-switch-ad,.player-comment-btn,iframe[data-src*="mall."],[class*="txp_full_screen_pause"],[data-role*="creative-player-pause"],#ad_m-site,.open-app.old-open,[dt-eid="openbanner"],.bottom-wrapper,.at-app-banner
 
+! ---------123云盘---------
+123pan.com##.advBanner,.ant-carousel
+
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
 
-! ---------百度联盟---------
+! ---------百度搜索---------
 ||dup.baidustatic.com^
 ||ubmcmm.baidustatic.com^
+baidu.com#@#.bds-list-ads
+m.baidu.com##div[class^="mkt-ball-wrapper__"],div[srcid="mkt_entrance_ball"]
+m.baidu.com##div[data-tpl="jr_stock_open_account"] > div.c-result-content,.c-line-bottom > div.c-row > div[class^="ad-layout-"],.c-line-bottom > div.c-row > div[class^="ad-layout-"] + div[class]
+m.baidu.com##.c-touchable-feedback[rl-node][rl-highlight-self][style^="padding-bottom:"]:not([data-module]) > a[href^="https://m.baidu.com/from"][target="_self"][data-log]
+m.baidu.com#?#.c-list > div.c-list-item:has(> div[class] > p[class] ~ div > span[class^="new-ad-label"])
