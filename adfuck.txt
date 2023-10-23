@@ -3,6 +3,8 @@
 ! Version: 2023102318
 ! Expires: 24 hours
 ! 👇👇过滤规则推荐👇👇
+! 乘风 广告过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt
+! 乘风 视频过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt
 ! EasyList：https://easylist.to/easylist/easylist.txt
 ! EasyList China：https://raw.githubusercontent.com/easylist/easylistchina/master/easylistchina.txt
 ! AdGuard移动广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
@@ -21,16 +23,6 @@ v.qq.com,film.qq.com##.quick_games,.video-card-module [dt-params*="ad_"],.focus-
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
 
-! ---------百度贴吧---------
-tieba.baidu.com###pagelet_entertainment-liveshow\/pagelet\/video_head
-tiebac.baidu.com,tieba.baidu.com,jump.bdimg.com,jump2.bdimg.com###thread_list>li:not(.j_thread_list):not(.thread_top_list_folder),div[data-rank],div[ad-dom-img],a.j_click_stats
-@@||tb1.bdstatic.com/??/tb/_/*/ad_$script
-
 ! ---------百度联盟---------
-||baidustatic.com^
-||adscdn.baidu.com^
-
-! ---------优惠券返利---------
-||jd.com^$removeparam=/^utm_/
-||taobao.com^$removeparam=/^utm_/
-||tmall.com^$removeparam=/^utm_/
+||dup.baidustatic.com^
+||ubmcmm.baidustatic.com^
