@@ -1,0 +1,36 @@
+[Adblock Plus 2.0]
+! Title: My AdFilters
+! Version: 2023102318
+! Expires: 24 hours
+! 👇👇过滤规则推荐👇👇
+! EasyList：https://easylist.to/easylist/easylist.txt
+! EasyList China：https://raw.githubusercontent.com/easylist/easylistchina/master/easylistchina.txt
+! AdGuard移动广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
+! AdGuard弹出窗口过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
+! AdGuard移动横幅程序广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! AdGuard解除搜索广告和自我推销过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
+
+
+! ---------必应搜索---------
+bing.com##.b_ad,.ad_sc,.adsblock,#ads_banner,li.b_algo:has(.b_attribution[data-partnertag]),.b_hPanel:has([class*="bingApp_"]),.sidebar:has(.ads_dwn),#bgPro,#b_pole,#suspenBar,#b_opalpers,#bnp_ttc_div,#bnp_rich_div,#b_ims_bza_pole,#ev_talkbox_wrapper,#idCont [id*="id_qrcode"],#b_notificationContainer_bop
+
+! ---------腾讯视频---------
+v.qq.com,film.qq.com##.quick_games,.video-card-module [dt-params*="ad_"],.focus-wrap [dt-eid*="ad_poster"],a[href*="9377s."],a[href*="qqgame."],a[href*="gamer."],a[href*="iwan."],.video-banner-module:has(a[href*="9377s."]),.video-banner-module:has(a[href*="qqgame."]),.video-banner-module:has(a[href*="gamer."]),.video-banner-module:has(a[href*="iwan."]),#iwan-gamependant-page,.tip_download,.vip_act,.fixed_box,#ad_container,#iwan-game,.banner-ad,.txp_ad,.txp_none,.game-switch-ad,.player-comment-btn,iframe[data-src*="mall."],[class*="txp_full_screen_pause"],[data-role*="creative-player-pause"],#ad_m-site,.open-app.old-open,[dt-eid="openbanner"],.bottom-wrapper,.at-app-banner
+
+! ---------APKMirror---------
+apkmirror.com##.ezo_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
+
+! ---------百度贴吧---------
+tieba.baidu.com###pagelet_entertainment-liveshow\/pagelet\/video_head
+tiebac.baidu.com,tieba.baidu.com,jump.bdimg.com,jump2.bdimg.com###thread_list>li:not(.j_thread_list):not(.thread_top_list_folder),div[data-rank],div[ad-dom-img],a.j_click_stats
+@@||tb1.bdstatic.com/??/tb/_/*/ad_$script
+
+! ---------百度联盟---------
+||baidustatic.com^
+||adscdn.baidu.com^
+
+! ---------优惠券返利---------
+||jd.com^$removeparam=/^utm_/
+||taobao.com^$removeparam=/^utm_/
+||tmall.com^$removeparam=/^utm_/
