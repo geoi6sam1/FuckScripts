@@ -12,7 +12,7 @@
 |:---:|:---:|:---:|:---:|
 | **粤工程校园网自动登录** | v0.1.0 | [安装](https://github.com/geoi6sam1/FuckScripts/raw/main/%E7%B2%A4%E5%B7%A5%E7%A8%8B%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E7%B2%A4%E5%B7%A5%E7%A8%8B%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js) |
 | **微软必应优化助手** | v1.1.1 | [安装](https://github.com/geoi6sam1/FuckScripts/raw/main/%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) |
-| **腾讯视频优化助手** | v1.1.0 | [安装](https://github.com/geoi6sam1/FuckScripts/raw/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) |
+| **腾讯视频优化助手** | v1.0.1 | [安装](https://github.com/geoi6sam1/FuckScripts/raw/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js) |
 | **自动删除QQ空间说说** | v0.0.1 | [安装](https://github.com/geoi6sam1/FuckScripts/raw/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js)
 
 ---
@@ -23,7 +23,7 @@
 
 | Title | Version | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| My AdFilters | 2023102218 | 24 hours | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+| My AdFilters | 2023102318 | 24 hours | [下载](https://github.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
 
 ---
 
