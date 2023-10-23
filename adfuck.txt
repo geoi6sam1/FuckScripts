@@ -5,12 +5,8 @@
 ! 👇👇过滤规则推荐👇👇
 ! 乘风 广告过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt
 ! 乘风 视频过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt
-! EasyList：https://easylist.to/easylist/easylist.txt
-! EasyList China：https://raw.githubusercontent.com/easylist/easylistchina/master/easylistchina.txt
-! AdGuard移动广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
-! AdGuard弹出窗口过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
-! AdGuard移动横幅程序广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
-! AdGuard解除搜索广告和自我推销过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! EasyList：https://easylist.to
+! AdGuard 过滤器：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
 
