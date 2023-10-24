@@ -1,11 +1,14 @@
 [Adblock Plus 2.0]
-! Title: My AdFilters
-! Version: 2023102322
+! Title: ADFUCK
+! Version: 2023102420
 ! Expires: 24 hours
 ! 👇👇过滤规则推荐👇👇
-! 乘风 广告过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt
-! 乘风 视频过滤规则：https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt
-! AdGuard 过滤器：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
+! 防跟踪过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_3_Spyware/filter.txt
+! 搜索结果广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! 移动设备广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
+! 弹窗广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
+! 程序推广过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! 中文网站广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
 
@@ -14,16 +17,50 @@ bing.com##.b_ad,.ad_sc,.adsblock,#ads_banner,li.b_algo:has(.b_attribution[data-p
 
 ! ---------腾讯视频---------
 v.qq.com,film.qq.com##.txp-watermark,.gray-style-remembrance,.quick_games,.video-card-module [dt-params*="ad_"],.focus-wrap [dt-eid*="ad_poster"],a[href*="9377s."],a[href*="qqgame."],a[href*="gamer."],a[href*="iwan."],.video-banner-module:has(a[href*="9377s."]),.video-banner-module:has(a[href*="qqgame."]),.video-banner-module:has(a[href*="gamer."]),.video-banner-module:has(a[href*="iwan."]),#iwan-gamependant-page,.tip_download,.vip_act,.fixed_box,#ad_container,#iwan-game,.banner-ad,.txp_ad,.txp_none,.game-switch-ad,.player-comment-btn,iframe[data-src*="mall."],[class*="txp_full_screen_pause"],[data-role*="creative-player-pause"],#ad_m-site,.open-app.old-open,[dt-eid="openbanner"],.bottom-wrapper,.at-app-banner
+v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_DESTROY', '')
+v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_LOAD_START', '')
+
+! ---------优酷---------
+youku.com##[class*="kui-watermark"],.vip_vip_wrap,.newswiper_sub_item_box:has(a[href*="tg.602."]),.ad-wrap,.fee-wrap-new.full-mode,.youku-advertise,.youku-advertise-layer,.youku-advertise-tip,.kui-vip-entrance-0,.ad-banner-wrapper,.callEnd_box,.callEnd_fixed_box
+m.youku.com##.clipboard.h5-detail-guide,.clipboard.h5-detail-vip-guide
+youku.com#%#//scriptlet('adjust-setTimeout', 'e-', '', '0.02')
+youku.com#%#//scriptlet('adjust-setTimeout', 'r--', '', '0.02')
+||cibntv.net/youku/*.mp4?$media,redirect=empty,domain=youku.com,important
+
+! ---------爱奇艺---------
+iqiyi.com##.iqp-logo-box,.panel-item:has(a[href*="668wan."]),.panel-item:has(a[href*="game."]),.qy20-h-carousel__ad,.ad-ef,.ad-seed,.ad-screen,.ad-tl,.qy-mod-li:has([class*="vipact"]),.iqp-top-item:has(.tipWrap),.iqp-top-item.iqp-client-launcher,.meta-hot ~ .cont,.side-cont .btn-wrap,.header-sideItem.header-vip,.header-sideItem:has(#nav_game),.qy-plist-ad
+m.iqiyi.com##.m-iqyGuide-layer,#home_tongyong,.m-box[name="m-recList"],#player_bottom,.m-iqylink-diversion,[class^="ChannelHomeBanner_"]
+iqiyi.com#%#//scriptlet('set-constant', 'QiyiPlayerProphetData.a.data.showResponse.slots', 'emptyObj')
+iqiyi.com#%#//scriptlet("set-constant", "Object.prototype.blackscreenDuration", "1")
+||cupid.iqiyi.com/mixer?$domain=iqiyi.com
+
+! ---------芒果TV---------
+mgtv.com###sideFloatbtn,.rightnav .openvip,.proright .m-search-source,.vip-button.vip-button-padding,.sidebar-download
+m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mgui-btn-nowelt,.mg-down-btn,.m-vip-list,.m-vip-list + div
+||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com##.advBanner,.ant-carousel
+123pan.com##.advBanner,.ant-carousel,.appHeader:has(#xxl)
 
 ! ---------APKMirror---------
-apkmirror.com##.ezo_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
+apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
 
-! ---------百度联盟---------
+! ---------百度搜索---------
 ||dup.baidustatic.com^
 ||ubmcmm.baidustatic.com^
 m.baidu.com###navs ~ div[style],#page-relative .c-line-clamp1,.c-recomm-wrap .c-line-clamp1,.c-result[tpl="recommend_list_san"] .cos-line-clamp-1,.direct-new.sug-improve
 m.baidu.com##.c-result[tpl="note_lead"],.c-result[tpl="xcx_multi"],.c-result[tpl="guanfanghao"],.c-result[tpl="app_mobile_simple_safety"],.c-result[tpl="app_mobile_simple"]
-baidu.com##.c-container[tpl="bjh_addressing"],.c-container[tpl="pc-soft-app"]
+baidu.com###copyright ~ div,.c-container[tpl="bjh_addressing"],.c-container[tpl="pc-soft-app"]
+
+! ---------百度网盘---------
+pan.baidu.com,yun.baidu.com##.download-app,.wp-s-header .gameEntry,.wp-s-header .wp-s-header__right-item:has(.web-header-ad-item),.wp-s-header .wp-s-header__right-item:has([status="svipline"]),.nd-codeReader .btn-container,.vp-ad-video-container__svip-center,.vp-header .vp-vip-btn,.vp-aside .vp-vip-guide,.vp-aside .vp-vip-pri
+
+! ---------百度贴吧---------
+tieba.baidu.com##.app_download_box,.nav-bar-v2 .nav-bar-bottom,.img-sudoku .w-row:has(.more-image-desc),#replySwitch .only-lz,#replySwitch ~ .cmt-large-cut-guide,.recommend-title-open-app
+
+! ---------百度文库---------
+wenku.baidu.com##.vip-privilege,.vip-activity-wrap-new,.pay-layer-wrapper,.vip-member-pop-content,.vip-rec-mask,.user-info-wrap span
+wk.baidu.com##.n-card-wrap-exp .card-box,.foldpagewg-root .middle-banner-guide-card,.foldpagewg-root .guide-app-pop-wrap,#viewBarTop ~ .wk-student-defense,.pager + div[style]
+
+! ---------百度地图---------
+map.baidu.com###message-panel,#pano-logo,.index-widget-guidebanner.styleguide,.styleguide.common-widget-bottom-banner-changeId,#downloadnativepopup,.xiaoduVoiceCardList
