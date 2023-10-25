@@ -1,13 +1,16 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2023102420
+! Version: 2023102500
 ! Expires: 24 hours
 ! 👇👇过滤规则推荐👇👇
-! 中文网站广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
-! 程序推广过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
-! 弹窗广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
-! 移动设备广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
-! 搜索结果广告过滤：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! AdGuard 过滤器：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
+! 英文过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
+! 中文过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
+! 搜索结果过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! Cookie 通知过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_18_Annoyances_Cookies/filter.txt
+! 弹出窗口过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
+! 横幅程序广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! 移动广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
 
@@ -39,27 +42,23 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 ||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com##.advBanner,.ant-carousel,.appHeader:has(#xxl)
+123pan.com##.advBanner,.adv-container-pc,.adv-container-h5,#banner_container,.ant-carousel,.appHeader:has(#xxl),.rightInfo .qrcode
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
 
-! ---------百度搜索---------
-||dup.baidustatic.com^
-||ubmcmm.baidustatic.com^
-m.baidu.com###navs ~ div[style],#page-relative .c-line-clamp1,.c-recomm-wrap .c-line-clamp1,.c-result[tpl="recommend_list_san"] .cos-line-clamp-1,.direct-new.sug-improve
-m.baidu.com##.c-result[tpl="note_lead"],.c-result[tpl="xcx_multi"],.c-result[tpl="guanfanghao"],.c-result[tpl="app_mobile_simple_safety"],.c-result[tpl="app_mobile_simple"]
-baidu.com###copyright ~ div,.c-container[tpl="bjh_addressing"],.c-container[tpl="pc-soft-app"]
-
 ! ---------百度网盘---------
-pan.baidu.com,yun.baidu.com##.download-app,.wp-s-header .gameEntry,.wp-s-header .wp-s-header__right-item:has(.web-header-ad-item),.wp-s-header .wp-s-header__right-item:has([status="svipline"]),.nd-codeReader .btn-container,.vp-ad-video-container__svip-center,.vp-header .vp-vip-btn,.vp-aside .vp-vip-guide,.vp-aside .vp-vip-pri
-
-! ---------百度贴吧---------
-tieba.baidu.com##.app_download_box,.nav-bar-v2 .nav-bar-bottom,.img-sudoku .w-row:has(.more-image-desc),#replySwitch .only-lz,#replySwitch ~ .cmt-large-cut-guide,.recommend-title-open-app
-
-! ---------百度文库---------
-wenku.baidu.com##.vip-privilege,.vip-activity-wrap-new,.pay-layer-wrapper,.vip-member-pop-content,.vip-rec-mask,.user-info-wrap span
-wk.baidu.com##.n-card-wrap-exp .card-box,.foldpagewg-root .middle-banner-guide-card,.foldpagewg-root .guide-app-pop-wrap,#viewBarTop ~ .wk-student-defense,.pager + div[style]
+pan.baidu.com,yun.baidu.com##.ad-platform-tips,.ad-multi-tips,.download-app,.wp-s-header .gameEntry,.wp-s-header .wp-s-header__right-item:has(.web-header-ad-item),.wp-s-header .wp-s-header__right-item:has([status="svipline"]),.nd-codeReader .btn-container,.vp-ad-video-container__svip-center,.vp-header .vp-vip-btn,.vp-aside .vp-vip-guide,.vp-aside .vp-vip-pri
 
 ! ---------百度地图---------
 map.baidu.com###message-panel,#pano-logo,.index-widget-guidebanner.styleguide,.styleguide.common-widget-bottom-banner-changeId,#downloadnativepopup,.xiaoduVoiceCardList
+
+! ---------屏蔽P2P---------
+||tracker.$xhr,websocket,script,ping
+||p2p.$xhr,websocket,script,ping
+
+! ---------去返利链接---------
+||jd.com^$removeparam=/^utm_/
+||tmall.com^$removeparam=/^utm_/
+||taobao.com^$removeparam=/^utm_/
+||pinduoduo.com^$removeparam=/^utm_/
