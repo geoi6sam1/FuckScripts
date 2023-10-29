@@ -23,7 +23,7 @@
 
 | Title | Version | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| My AdFilters | 2023102318 | 24 hours | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+| My AdFilters | 2023102918 | 24 hours | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
 
 ---
 
@@ -48,6 +48,6 @@
 
 | 更新日期 | 分类 | 数量 | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| 2023-10-24 | 7 | 101 | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
+| 2023-10-29 | 7 | 108 | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
 
 ---
