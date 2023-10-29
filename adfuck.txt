@@ -42,7 +42,7 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 ||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com##.advBanner,.adv-container-pc,.adv-container-h5,#banner_container,.ant-carousel,.appHeader:has(#xxl),.rightInfo .qrcode
+123pan.com##.advBanner,.adv-container-pc,.adv-container-h5,#banner_container,.ant-carousel,.appHeader:has(#xxl),.rightInfo .qrcode,.ant-modal-root
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
