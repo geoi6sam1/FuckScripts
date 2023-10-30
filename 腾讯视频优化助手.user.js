@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.0.1
+// @version      1.0.2
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP使用
 // @author       geoi6sam1
 // @match        *://v.qq.com/*
@@ -26,74 +26,6 @@
 // @grant        GM_registerMenuCommand
 // @license      MIT
 // ==/UserScript==
-
-
-/*** 类似广告 ***/
-GM_addStyle(`
-.quick_games,
-.video-card-module [dt-params*="ad_"],
-.focus-wrap [dt-eid*="ad_poster"],
-a[href*="9377s."],
-a[href*="qqgame."],
-a[href*="gamer."],
-a[href*="iwan."],
-.video-banner-module:has(a[href*="9377s."]),
-.video-banner-module:has(a[href*="qqgame."]),
-.video-banner-module:has(a[href*="gamer."]),
-.video-banner-module:has(a[href*="iwan."]),
-#iwan-gamependant-page,
-.tip_download,
-.vip_act,
-.fixed_box,
-#ad_container,
-#iwan-game,
-.banner-ad,
-.txp_ad,
-.txp_none,
-.game-switch-ad,
-.player-comment-btn,
-iframe[data-src*="mall."],
-[class*="txp_full_screen_pause"],
-[data-role*="creative-player-pause"],
-#ad_m-site,
-.open-app.old-open,
-[dt-eid="openbanner"],
-.bottom-wrapper,
-.at-app-banner
-{
-    display: none !important;
-}
-
-.video-card-wrap
-{
-   margin-right: var(--content-big-card-margin);
-   margin-bottom: var(--content-big-card-margin);
-}
-        `);
-// 监听键盘空格
-window.onkeypress = (e) => {
-    if (e.keyCode === 32) {
-        txv_ad_float_fuck();
-    }
-}
-// 监听鼠标左键
-window.onmousedown = (e) => {
-    if (e.button === 0) {
-        txv_ad_float_fuck();
-    }
-}
-// 恢复视频窗口大小
-function txv_ad_float_fuck() {
-    var txv_player_choose = document.querySelectorAll("#player video")[0];
-    if (txv_player_choose) {
-        setTimeout(() => {
-            if (txv_player_choose.paused === true) {
-                var txv_player_win = document.querySelector(".txp_videos_container");
-                txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;");
-            }
-        }, 1234);
-    }
-}
 
 
 var main = {
@@ -264,3 +196,71 @@ GM_registerMenuCommand("⚙️ 设置", () => {
     });
 
 });
+
+
+/*** 类似广告 ***/
+GM_addStyle(`
+.quick_games,
+.video-card-module [dt-params*="ad_"],
+.focus-wrap [dt-eid*="ad_poster"],
+a[href*="9377s."],
+a[href*="qqgame."],
+a[href*="gamer."],
+a[href*="iwan."],
+.video-banner-module:has(a[href*="9377s."]),
+.video-banner-module:has(a[href*="qqgame."]),
+.video-banner-module:has(a[href*="gamer."]),
+.video-banner-module:has(a[href*="iwan."]),
+#iwan-gamependant-page,
+.tip_download,
+.vip_act,
+.fixed_box,
+#ad_container,
+#iwan-game,
+.banner-ad,
+.txp_ad,
+.txp_none,
+.game-switch-ad,
+.player-comment-btn,
+iframe[data-src*="mall."],
+[class*="txp_full_screen_pause"],
+[data-role*="creative-player-pause"],
+#ad_m-site,
+.open-app.old-open,
+[dt-eid="openbanner"],
+.bottom-wrapper,
+.at-app-banner
+{
+    display: none !important;
+}
+
+.video-card-wrap
+{
+   margin-right: var(--content-big-card-margin);
+   margin-bottom: var(--content-big-card-margin);
+}
+        `);
+// 监听键盘空格
+window.onkeypress = (e) => {
+    if (e.keyCode === 32) {
+        txv_ad_float_fuck();
+    }
+}
+// 监听鼠标左键
+window.onmousedown = (e) => {
+    if (e.button === 0) {
+        txv_ad_float_fuck();
+    }
+}
+// 恢复视频窗口大小
+function txv_ad_float_fuck() {
+    var txv_player_choose = document.querySelectorAll("#player video")[0];
+    if (txv_player_choose) {
+        setTimeout(() => {
+            if (txv_player_choose.paused === true) {
+                var txv_player_win = document.querySelector(".txp_videos_container");
+                txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;");
+            }
+        }, 1234);
+    }
+}
