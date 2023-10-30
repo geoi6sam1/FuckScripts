@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.1.1
+// @version      1.1.2
 // @description  微软必应（Microsoft Bing）搜索结果优化，可自定义配置隐藏选项
 // @author       geoi6sam1
 // @match        *://*.bing.com/*
@@ -23,47 +23,6 @@
 // @grant        GM_registerMenuCommand
 // @license      MIT
 // ==/UserScript==
-
-
-/*** 类似广告 ***/
-GM_addStyle(`
-.b_ad,
-.ad_sc,
-.adsblock,
-#ads_banner,
-li.b_algo:has(.b_attribution[data-partnertag]),
-.b_hPanel:has([class*="bingApp_"]),
-.sidebar:has(.ads_dwn),
-#bgPro,
-#b_pole,
-#suspenBar,
-#b_opalpers,
-#bnp_ttc_div,
-#bnp_rich_div,
-#b_ims_bza_pole,
-#ev_talkbox_wrapper,
-#idCont [id*="id_qrcode"],
-#b_notificationContainer_bop
-{
-    display: none !important;
-}
-        `);
-
-var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-var bing_header = document.querySelector("#b_header");
-var observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        if (mutation.type == "attributes") {
-            bing_header.style.backgroundColor = "";
-            bing_header.style.borderBottom = "1px solid #ececec";
-        }
-    });
-});
-
-observer.observe(bing_header, {
-    attributes: true,
-    attributeFilter: ['style']
-});
 
 
 var main = {
@@ -266,4 +225,45 @@ GM_registerMenuCommand("⚙️ 设置", () => {
         GM_setValue("fuck_bing_news", e.target.checked);
     });
 
+});
+
+
+/*** 类似广告 ***/
+GM_addStyle(`
+.b_ad,
+.ad_sc,
+.adsblock,
+#ads_banner,
+li.b_algo:has(.b_attribution[data-partnertag]),
+.b_hPanel:has([class*="bingApp_"]),
+.sidebar:has(.ads_dwn),
+#bgPro,
+#b_pole,
+#suspenBar,
+#b_opalpers,
+#bnp_ttc_div,
+#bnp_rich_div,
+#b_ims_bza_pole,
+#ev_talkbox_wrapper,
+#idCont [id*="id_qrcode"],
+#b_notificationContainer_bop
+{
+    display: none !important;
+}
+        `);
+
+var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+var bing_header = document.querySelector("#b_header");
+var observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type == "attributes") {
+            bing_header.style.backgroundColor = "";
+            bing_header.style.borderBottom = "1px solid #ececec";
+        }
+    });
+});
+
+observer.observe(bing_header, {
+    attributes: true,
+    attributeFilter: ['style']
 });
