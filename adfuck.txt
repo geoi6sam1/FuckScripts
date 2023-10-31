@@ -46,6 +46,7 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
+apkmirror.com#$#html body { padding-top: 0 !important; }
 
 ! ---------百度网盘---------
 pan.baidu.com,yun.baidu.com##.ad-platform-tips,.ad-multi-tips,.download-app,.wp-s-header .gameEntry,.wp-s-header .wp-s-header__right-item:has(.web-header-ad-item),.wp-s-header .wp-s-header__right-item:has([status="svipline"]),.nd-codeReader .btn-container,.vp-ad-video-container__svip-center,.vp-header .vp-vip-btn,.vp-aside .vp-vip-guide,.vp-aside .vp-vip-pri
