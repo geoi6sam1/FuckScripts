@@ -1,7 +1,7 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
 ! Version: 2023102500
-! Expires: 24 hours
+! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! AdGuard 过滤器：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
 ! 英文过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
