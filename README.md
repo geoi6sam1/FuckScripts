@@ -19,11 +19,11 @@
 
 ### \#\# 广告过滤
 
-> **🔥🔥🔥浏览器广告过滤规则🔥🔥🔥**
+> **🔥🔥🔥网页广告过滤规则🔥🔥🔥**
 
 | Title | Version | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| My AdFilters | 2023110520 | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+| ADFUCK | 2023110723 | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
 
 ---
 
