@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2023110723
+! Version: 2023110814
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! EasyList：https://easylist-downloads.adblockplus.org/easylist.txt
