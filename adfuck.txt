@@ -3,15 +3,19 @@
 ! Version: 2023110723
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
-! AdGuard过滤规则汇总：https://adguard.com/kb/zh-CN/general/ad-filtering/adguard-filters
-! 广告拦截警告过滤规则：https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
-! 英文网站过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
-! 中文网站过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
-! 搜索结果过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
-! Cookie通知过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_18_Annoyances_Cookies/filter.txt
-! 弹出窗口过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
-! 横幅程序广告过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
-! 移动端广告过滤规则：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
+! EasyList：https://easylist-downloads.adblockplus.org/easylist.txt
+! Easylist China：https://easylist-downloads.adblockplus.org/easylistchina.txt
+! EasyPrivacy：https://easylist-downloads.adblockplus.org/easyprivacy.txt
+! Adblock Warning Removal List：https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
+! CJX's Annoyance List：https://raw.githubusercontent.com/cjx82630/cjxlist/master/cjx-annoyance.txt
+! CJX's uBlock List：https://raw.githubusercontent.com/cjx82630/cjxlist/master/cjx-ublock.txt
+! AdGuard Base filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
+! AdGuard Chinese filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
+! AdGuard Filter unblocking search ads and self-promotions：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! AdGuard Popups：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
+! AdGuard Mobile App Banners：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! AdGuard Cookie Notices：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_18_Annoyances_Cookies/filter.txt
+! AdGuard Mobile ads filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
 
@@ -47,8 +51,10 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 123pan.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
 123pan.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
 ||tui.buff.vip^
+||pos.baidu.com^
 ||cpro.baidu.com^
 ||union.baidu.com^
+||bdad.123pan.cn^
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
