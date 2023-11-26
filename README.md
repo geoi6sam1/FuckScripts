@@ -23,7 +23,7 @@
 
 | Title | Version | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| ADFUCK | 2023111917 | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+| ADFUCK | 2023112620 | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
 
 | 文件名称 | 扩展版本 | Github | Gitee |
 |:---:|:---:|:---:|:---:|
@@ -52,6 +52,6 @@
 
 | 更新日期 | 分类 | 数量 | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| 2023-11-13 | 7 | 78 | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
+| 2023-11-26 | 6 | 75 | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/bookmarks.html) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/bookmarks.html)
 
 ---
