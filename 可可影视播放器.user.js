@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.2.1
+// @version      0.2.2
 // @description  使用 DPlayer 来播放影片, 支持任意倍速调整(双击恢复正常速度), 支持热键操作(未弄), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -18,7 +18,6 @@
 // @antifeature  membership
 // @antifeature  referral-link
 // @grant        unsafeWindow
-// @grant        GM_addStyle
 // ==/UserScript==
 
 
@@ -40,9 +39,6 @@
     var obj = {
         dpAutoMemory: true,
     }
-
-    unsafeWindow.GM_addStyle = GM_addStyle
-    GM_addStyle(`#video-loading-wrapper, .dplayer-menu .dplayer-menu-item:nth-last-child(1), .dplayer-menu .dplayer-menu-item:nth-last-child(2) { display: none !important; }`)
 
     /*
     let originalAddEventListener = EventTarget.prototype.addEventListener;
@@ -132,17 +128,23 @@
             ],
             theme: '#F5F5F5',
         }
-
         try {
             var player = new window.DPlayer(options);
+            obj.initPlayer(player)
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u6210\u529F");
-            obj.dPlayerCustomSpeed(player)
         } catch (error) {
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u5931\u8D25");
             //player.destroy()
         }
-
     }
+
+    obj.initPlayer = function (player) {
+        var $ = obj.getJquery();
+        $("#video-loading-wrapper").css("display", "none");
+        $(".dplayer-menu .dplayer-menu-item:nth-last-child(1)").css("display", "none");
+        $(".dplayer-menu .dplayer-menu-item:nth-last-child(2)").css("display", "none");
+        obj.dPlayerCustomSpeed(player);
+    };
 
     obj.dPlayerCustomSpeed = function (player) {
         var $ = obj.getJquery();
