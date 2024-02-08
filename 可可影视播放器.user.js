@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.2.2
-// @description  使用 DPlayer 来播放影片, 支持显示标题和时间, 支持任意倍速调整(双击恢复正常速度), 支持热键操作(未弄), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
+// @version      0.2.5
+// @description  使用 DPlayer 来播放影片, 支持快捷键(W、F)全屏播放，支持显示标题和时间(时:分), 支持任意倍速调整(双击恢复正常), 支持热键操作(自行设置), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
@@ -38,24 +38,13 @@
     */
 
     var obj = {
-        dpAutoMemory: true,
+        volume: 1, // 默认音量100%，值为 1，静音快捷键：M、F2
+        volumeCALC: 0.05, // 默认音量加减5%，值为 0.05，加减快捷键：F4、F3
+        playtimeCALC: 5, // 默认播放时间进退5秒，值为 5，进退快捷键：F9、F8
     }
 
-    /*
-        let originalAddEventListener = EventTarget.prototype.addEventListener;
-        let hookAddEventListener = function (...args) {
-            if (args[0] != "keydown" && args[0] != "keyup" && args[0] != "keypress") {
-                return originalAddEventListener.apply(this, args);
-            }
-        }
-    
-        EventTarget.prototype.addEventListener = hookAddEventListener;
-        document.addEventListener = hookAddEventListener;
-        document.documentElement.addEventListener = hookAddEventListener;
-    */
-
     unsafeWindow.GM_addStyle = GM_addStyle
-    GM_addStyle(`#my-video,.play-box-main [class*="tip"],.play-box-main [id*="tip"],.play-box-main .video-animation,.dplayer-menu .dplayer-menu-item:nth-last-child(1),.dplayer-menu .dplayer-menu-item:nth-last-child(2) {display: none !important;}`)
+    GM_addStyle(`.play-box-main [class*="tip"],.play-box-main [id*="tip"],.play-box-main .video-animation,.dplayer-menu .dplayer-menu-item:nth-last-child(1),.dplayer-menu .dplayer-menu-item:nth-last-child(2) {display: none !important;}`)
 
     function Toast(msg, duration) {
         let d = document.createElement("div");
@@ -100,8 +89,9 @@
         obj.dPlayerUrl()
         var dPlayerSrc, dPlayerNode, videoNode = document.querySelector("#my-video")
         if (videoNode) {
-            dPlayerSrc = sessionStorage.getItem("dplayer-url")
+            document.querySelector("#my-video_html5_api").remove()
             dPlayerNode = document.querySelector("#dplayer");
+            dPlayerSrc = sessionStorage.getItem("dplayer-url")
             if (!dPlayerNode) {
                 dPlayerNode = document.createElement("div");
                 dPlayerNode.setAttribute("id", "dplayer");
@@ -118,8 +108,7 @@
             container: dPlayerNode,
             screenshot: true,
             autoplay: true,
-            hotkey: true,
-            volume: 1.0,
+            volume: obj.volume,
             playbackSpeed: [0.25, 0.5, 1, 2, 3],
             video: {
                 url: dPlayerSrc,
@@ -160,6 +149,7 @@
         obj.dPlayerCustomSpeed(player)
         obj.dPlayerSelections(player)
         obj.dPlayerAutoMP(player)
+        obj.dPlayerSetting(player)
     };
 
     obj.dPlayerTitle = function (player) {
@@ -168,29 +158,41 @@
         var playEpisode = $(".play-box-side-main .episode-list .episode-item-active span")
         var playTitle = playSeason.text() + " (" + playEpisode.text() + ")"
         playSeason.text(playTitle)
-        var nowdate = new Date()
-        var nowtime = nowdate.getHours() + ":" + nowdate.getSeconds()
-        var html = "<div class='dplayer-show-top dplayer-title' style='display: none;pointer-events: none;position: absolute;left: 40px;top: 20px;font-size: 30px;color: #F5F5F5;'><strong>" + playTitle + "</strong></div>"
-        html += "<div class='dplayer-show-top dplayer-time' style='display: none;pointer-events: none;position: absolute;right: 40px;top: 20px;font-size: 30px;color: #F5F5F5;'><strong>" + nowtime + "</strong></div>"
+        var html = `<div id="dplayer-title" class="dplayer-show-top" style="display: none;pointer-events: none;position: absolute;left: 33px;top: 22px;font-size: 32px;color: #F5F5F5;"><strong>` + playTitle + `</strong></div>`
+        html += `<div id="dplayer-time" class="dplayer-show-top" style="display: none;pointer-events: none;position: absolute;right: 33px;top: 22px;font-size: 32px;color: #F5F5F5;"><strong>00:00</strong></div>`
         $(".dplayer-video-wrap").append(html)
-        player.on('pause', function (e) {
-            $(".dplayer-show-top").css("display", "block")
-        })
+        setInterval(() => {
+            var nowDate = new Date()
+            var nowHs = nowDate.getHours()
+            var nowMs = nowDate.getMinutes()
+            var nowtime = (nowHs > 10 ? nowHs : "0" + nowHs) + ":" + (nowMs > 10 ? nowMs : "0" + nowMs)
+            $("#dplayer-time strong").text(nowtime)
+        }, 1000)
+        var dstop = $(".dplayer-show-top")
+        var dtimer1;
         player.on('play', function (e) {
-            $('#dplayer').mouseenter(function () {
-                $(".dplayer-show-top").css("display", "block")
-            })
+            clearTimeout(dtimer1);
+            dtimer1 = setTimeout(function () {
+                dstop.css("display", "none")
+            }, 3000);
             $('#dplayer').mouseleave(function () {
-                $(".dplayer-show-top").css("display", "none")
+                if (player.video.paused == false) {
+                    dstop.css("display", "none")
+                }
             })
-            var dtimer;
+            var dtimer2;
             $("#dplayer").mousemove(function () {
-                clearTimeout(dtimer);
-                $(".dplayer-show-top").css("display", "block")
-                dtimer = setTimeout(function () {
-                    $(".dplayer-show-top").css("display", "none")
-                }, 3000);
+                clearTimeout(dtimer2);
+                dstop.css("display", "block")
+                if (player.video.paused == false) {
+                    dtimer2 = setTimeout(function () {
+                        dstop.css("display", "none")
+                    }, 3000);
+                }
             })
+        })
+        player.on('pause', function (e) {
+            dstop.css("display", "block")
         })
     }
 
@@ -246,31 +248,50 @@
     obj.dPlayerSelections = function (player) {
         var $ = obj.getJquery();
         var html = '<button class="dplayer-icon prev-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg></span></button>';
-        html += '<button id="btn-select-episode" class="dplayer-icon dplayer-quality-icon"><span style="opacity: 0.8;">选集</span></button>';
+        html += '<button id="btn-select-episode" class="dplayer-icon dplayer-quality-icon"><span style="opacity: 0.8;font-weight: bold;">选集</span></button>';
         html += '<button class="dplayer-icon next-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg></span></button>';
         $(".dplayer-icons-right").prepend(html);
-        $('.prev-icon span').mouseenter(function () {
-            $(".prev-icon span").css("opacity", "1")
-        })
-        $('.prev-icon span').mouseleave(function () {
-            $(".prev-icon span").css("opacity", "0.8")
-        })
-        $('.next-icon span').mouseenter(function () {
-            $(".next-icon span").css("opacity", "1")
-        })
-        $('.next-icon span').mouseleave(function () {
-            $(".next-icon span").css("opacity", "0.8")
-        })
-        $('.dplayer-quality-icon span').mouseenter(function () {
-            $(".dplayer-quality-icon span").css("opacity", "1")
-            $(".dplayer-quality-icon span").css("font-weight", "bold")
-        })
-        $('.dplayer-quality-icon span').mouseleave(function () {
-            $(".dplayer-quality-icon span").css("opacity", "0.8")
-            $(".dplayer-quality-icon span").css("font-weight", "normal")
-        })
+        var charr = [".prev-icon", ".next-icon", ".dplayer-quality-icon"];
+        charr.forEach(function (icon) {
+            $(icon).mouseenter(function () {
+                $(icon + " span").css("opacity", "1")
+            })
+            $(icon).mouseleave(function () {
+                $(icon + " span").css("opacity", "0.8")
+            })
+        });
     }
 
-    obj.dPlayerSetting = function (player) { }
+    obj.dPlayerSetting = function (player) {
+        var $ = obj.getJquery();
+        var dplayerVolume = localStorage.getItem("dplayer-volume")
+        $(document).keydown(function (event) {
+            var e = event || window.event;
+            var k = e.keyCode || e.which;
+            switch (k) {
+                case 70: player.fullScreen.request('browser');
+                    break;
+                case 77: player.video.volume == 0 ? dplayerVolume ? player.volume(Number(Number(dplayerVolume).toFixed(2)), true, false) : player.volume(obj.volume, true, false) : player.volume(0, true, false)
+                    break;
+                case 87: player.fullScreen.request('web');
+                    break;
+                case 113: player.video.volume == 0 ? dplayerVolume ? player.volume(Number(Number(dplayerVolume).toFixed(2)), true, false) : player.volume(obj.volume, true, false) : player.volume(0, true, false)
+                    break;
+                case 114: player.volume(player.video.volume - obj.volumeCALC)
+                    break;
+                case 115: player.volume(player.video.volume + obj.volumeCALC)
+                    break;
+                case 119: player.video.currentTime -= obj.playtimeCALC
+                    player.notice("快退5秒")
+                    break;
+                case 120: player.video.currentTime += obj.playtimeCALC
+                    player.notice("快进5秒")
+                    break;
+                case 121: player.toggle()
+                    break;
+            }
+            return false;
+        });
+    }
 
 })();
