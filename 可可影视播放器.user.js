@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.2.5
+// @version      0.3.0
 // @description  使用 DPlayer 来播放影片, 支持快捷键(W、F)全屏播放，支持显示标题和时间(时:分), 支持任意倍速调整(双击恢复正常), 支持热键操作(自行设置), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -17,7 +17,6 @@
 // @antifeature  tracking
 // @antifeature  membership
 // @antifeature  referral-link
-// @grant        unsafeWindow
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -25,46 +24,28 @@
 (function () {
     'use strict';
 
-    /*
-        Function.prototype.__constructor_back = Function.prototype.constructor;
-        Function.prototype.constructor = function () {
-            if (arguments && typeof arguments[0] === 'string') {
-                if ("debugger" === arguments[0]) {
-                    return
-                }
-            }
-            return Function.prototype.__constructor_back.apply(this, arguments);
-        }
-    */
-
-    var obj = {
-        volume: 1, // 默认音量100%，值为 1，静音快捷键：M、F2
-        volumeCALC: 0.05, // 默认音量加减5%，值为 0.05，加减快捷键：F4、F3
-        playtimeCALC: 5, // 默认播放时间进退5秒，值为 5，进退快捷键：F9、F8
+    const $ = window.jQuery;
+    const config = {
+        screenshot: true, // (类型: boolean) 默认显示截图按钮, 值为: true
+        autoplay: true, // (类型: boolean) 默认自动播放视频, 值为: true
+        volume: 1, // (类型: number) 默认音量: 100%, 值为: 1, 静音快捷键: M
+        theme: "#f5f5f5", // (类型: string) 默认主题颜色: White Smoke, 值为: #f5f5f5
     }
 
-    unsafeWindow.GM_addStyle = GM_addStyle
-    GM_addStyle(`.play-box-main [class*="tip"],.play-box-main [id*="tip"],.play-box-main .video-animation,.dplayer-menu .dplayer-menu-item:nth-last-child(1),.dplayer-menu .dplayer-menu-item:nth-last-child(2) {display: none !important;}`)
+    GM_addStyle(`.play-box-main [class*="-tip"],.play-box-main [id*="-tip"],.dplayer-menu .dplayer-menu-item:nth-last-child(1),.dplayer-menu .dplayer-menu-item:nth-last-child(2) {display: none !important;}`)
 
     function Toast(msg, duration) {
-        let d = document.createElement("div");
-        let text = decodeURIComponent(encodeURIComponent(msg))
-        d.style.cssText = `background-color: rgba(18, 18, 18, .9);bottom: 0.9em;left: 50%;position: fixed;padding:10px 15px;z-index: 999999;width: 250px;max-height: 70%;overflow: auto; color: #F5F5F5;word-break: break-all;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;line-height: 1.5;box-sizing: border-box;`;
-        d.innerHTML = text;
-        document.body.appendChild(d);
+        var text = decodeURIComponent(encodeURIComponent(msg))
+        var html = "<div id='dToast' style='opacity: 0.9;background-color: #222222;position: absolute; bottom: 50%; left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;font-weight: bold;box-sizing: border-box;'>" + text + "</div>"
+        $("body").append(html);
         setTimeout(() => {
-            d.style.transition = "all 0.3s ease"
-            d.style.opacity = "0"
-            d.remove()
-        }, duration ? duration : 2000);
+            $("#dToast").css({ "transition": "all 0.3s ease", "opacity": "0" })
+            $("#dToast").remove()
+        }, duration ? duration : 2e3);
         console.log(text)
     }
 
-    obj.getJquery = function () {
-        return unsafeWindow.jQuery || window.jQuery;
-    };
-
-    obj.dPlayerUrl = function () {
+    config.dPlayerUrl = function () {
         var __url = window.location.href;
         var __xhr = new XMLHttpRequest();
         __xhr.open('GET', __url, true);
@@ -76,7 +57,7 @@
                 var __src = __script.match(/(http|https):\/\/([\w.]+\/?)\S*?(\.m3u8)/)[0]
                 if (__src == null || __src == undefined) {
                     sessionStorage.setItem("dplayer-url", "")
-                    Toast("\u89C6\u9891\u94FE\u63A5\u83B7\u53D6\u5931\u8D25", 5000)
+                    Toast("\u89C6\u9891\u94FE\u63A5\u83B7\u53D6\u5931\u8D25", 5e3)
                 } else {
                     sessionStorage.setItem("dplayer-url", __src)
                     console.log(__src)
@@ -85,8 +66,8 @@
         }
     }
 
-    obj.dPlayerStart = function () {
-        obj.dPlayerUrl()
+    config.dPlayerStart = function () {
+        config.dPlayerUrl()
         var dPlayerSrc, dPlayerNode, videoNode = document.querySelector("#my-video")
         if (videoNode) {
             document.querySelector("#my-video_html5_api").remove()
@@ -96,19 +77,19 @@
                 dPlayerNode = document.createElement("div");
                 dPlayerNode.setAttribute("id", "dplayer");
                 dPlayerNode.setAttribute("style", "width: 100%; height: 100%;");
-                obj.videoNode = videoNode.parentNode.replaceChild(dPlayerNode, videoNode);
+                config.videoNode = videoNode.parentNode.replaceChild(dPlayerNode, videoNode);
             }
         }
         else {
             console.log("\u5C1D\u8BD5\u518D\u6B21\u83B7\u53D6\u64AD\u653E\u5668\u5BB9\u5668");
-            return setTimeout(obj.dPlayerStart, 500);
+            return setTimeout(config.dPlayerStart, 500);
         }
 
         var options = {
             container: dPlayerNode,
-            screenshot: true,
-            autoplay: true,
-            volume: obj.volume,
+            screenshot: config.screenshot,
+            autoplay: config.autoplay,
+            volume: config.volume,
             playbackSpeed: [0.25, 0.5, 1, 2, 3],
             video: {
                 url: dPlayerSrc,
@@ -130,30 +111,33 @@
                     link: "https://github.com/geoi6sam1/FuckScripts/issues",
                 },
             ],
-            theme: '#F5F5F5',
+            theme: config.theme,
         }
         try {
             var player = new window.DPlayer(options);
-            obj.initPlayer(player)
+            config.initPlayer(player)
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u6210\u529F");
         } catch (error) {
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u5931\u8D25");
             //player.destroy()
         }
     }
-    obj.dPlayerStart()
+    config.dPlayerStart()
 
-    obj.initPlayer = function (player) {
+    config.initPlayer = function (player) {
+        const { options: { contextmenu } } = player;
         GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
-        obj.dPlayerTitle(player)
-        obj.dPlayerCustomSpeed(player)
-        obj.dPlayerSelections(player)
-        obj.dPlayerAutoMP(player)
-        obj.dPlayerSetting(player)
+        config.dPlayerTitle(player)
+        config.dPlayerCustomSpeed(player)
+        config.dPlayerSelections(player)
+        config.dPlayerAutoMP(player)
+        config.dPlayerSetting(player)
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
+
     };
 
-    obj.dPlayerTitle = function (player) {
-        var $ = obj.getJquery();
+    config.dPlayerTitle = function (player) {
+        const { options: { contextmenu } } = player;
         var playSeason = $(".play-box-side-header .detail-title a")
         var playEpisode = $(".play-box-side-main .episode-list .episode-item-active span")
         var playTitle = playSeason.text() + " (" + playEpisode.text() + ")"
@@ -165,39 +149,44 @@
             var nowDate = new Date()
             var nowHs = nowDate.getHours()
             var nowMs = nowDate.getMinutes()
-            var nowtime = (nowHs > 10 ? nowHs : "0" + nowHs) + ":" + (nowMs > 10 ? nowMs : "0" + nowMs)
+            var nowtime = (nowHs > 9 ? nowHs : "0" + nowHs) + ":" + (nowMs > 9 ? nowMs : "0" + nowMs)
             $("#dplayer-time strong").text(nowtime)
-        }, 1000)
-        var dstop = $(".dplayer-show-top")
-        var dtimer1;
-        player.on('play', function (e) {
-            clearTimeout(dtimer1);
-            dtimer1 = setTimeout(function () {
-                dstop.css("display", "none")
-            }, 3000);
-            $('#dplayer').mouseleave(function () {
-                if (player.video.paused == false) {
-                    dstop.css("display", "none")
+        }, 1e3)
+        var dplayerCT = $(".dplayer-show-top")
+        var dplayer = $("#dplayer")
+        var dTimer1, dTimer2;
+        player.on("playing", () => {
+            dplayer.on("mousemove", () => {
+                if (player.paused == false) {
+                    clearTimeout(dTimer1)
+                    dplayerCT.show()
+                    dTimer1 = setTimeout(() => {
+                        dplayerCT.hide()
+                    }, 3e3)
                 }
             })
-            var dtimer2;
-            $("#dplayer").mousemove(function () {
-                clearTimeout(dtimer2);
-                dstop.css("display", "block")
-                if (player.video.paused == false) {
-                    dtimer2 = setTimeout(function () {
-                        dstop.css("display", "none")
-                    }, 3000);
-                }
+            dplayer.on("mouseleave", () => {
+                player.paused == false ? dplayerCT.hide() : dplayerCT.show()
             })
         })
-        player.on('pause', function (e) {
-            dstop.css("display", "block")
+        player.on("pause", () => {
+            clearTimeout(dTimer1)
+            clearTimeout(dTimer2)
+            dplayerCT.show()
         })
+        player.on("play", () => {
+            if (player.video.played.length && player.paused == false) {
+                dplayerCT.show()
+                dTimer2 = setTimeout(() => {
+                    dplayerCT.hide()
+                }, 3e3)
+            }
+        })
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
     }
 
-    obj.dPlayerCustomSpeed = function (player) {
-        var $ = obj.getJquery();
+    config.dPlayerCustomSpeed = function (player) {
+        const { options: { contextmenu } } = player;
         var localSpeed = localStorage.getItem("dplayer-speed");
         localSpeed && player.speed(localSpeed);
         $(".dplayer-setting-speed-panel").append('<div class="dplayer-setting-speed-item" data-speed="自定义"><span class="dplayer-label">自定义</span></div>');
@@ -217,7 +206,7 @@
             player.notice("播放速度：" + playbackRate);
             localStorage.setItem("dplayer-speed", playbackRate);
             input.val(playbackRate);
-            setTimeout(() => { obj.appreciation(player) }, duration / 10 / playbackRate * 1000);
+            setTimeout(() => { config.appreciation(player) }, duration / 10 / playbackRate * 1e3);
         });
         $("#dplayer").dblclick(function () {
             input.val(1);
@@ -231,10 +220,16 @@
         player.template.mask.addEventListener("click", function () {
             custombox.css("display", "none");
         });
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
     };
 
-    obj.dPlayerAutoMP = function (player) {
-        var $ = obj.getJquery();
+    config.dPlayerLoop = function (player) {
+        const { options: { contextmenu } } = player;
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
+    }
+
+    config.dPlayerAutoMP = function (player) {
+        const { options: { contextmenu } } = player;
         var html = '<div class="dplayer-setting-item dplayer-setting-automp"><span class="dplayer-label">自动记忆播放</span><div class="dplayer-toggle"><input class="dplayer-toggle-setting-input dplayer-toggle-setting-input-automp" type="checkbox" name="dplayer-toggle"><label for="dplayer-toggle"></label></div></div>';
         $(".dplayer-setting-origin-panel").append(html);
         localStorage.getItem("automp") && ($(".dplayer-toggle-setting-input-automp").get(0).checked = true);
@@ -242,11 +237,14 @@
             var toggle = $(".dplayer-toggle-setting-input-automp");
             var checked = !toggle.is(":checked");
             toggle.get(0).checked = checked, localStorage.setItem("automp", Number(checked))
-        });
+            player.template.settingBox.classList.remove("dplayer-setting-box-open")
+            player.template.mask.classList.remove("dplayer-mask-show")
+        })
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
     }
 
-    obj.dPlayerSelections = function (player) {
-        var $ = obj.getJquery();
+    config.dPlayerSelections = function (player) {
+        const { options: { contextmenu } } = player;
         var html = '<button class="dplayer-icon prev-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg></span></button>';
         html += '<button id="btn-select-episode" class="dplayer-icon dplayer-quality-icon"><span style="opacity: 0.8;font-weight: bold;">选集</span></button>';
         html += '<button class="dplayer-icon next-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg></span></button>';
@@ -259,35 +257,42 @@
             $(icon).mouseleave(function () {
                 $(icon + " span").css("opacity", "0.8")
             })
-        });
+            $(".prev-icon").on("click", () => {
+                Toast("播放上一集")
+            })
+            $(".next-icon").on("click", () => {
+                Toast("播放下一集")
+            })
+        })
+        JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
     }
 
-    obj.dPlayerSetting = function (player) {
-        var $ = obj.getJquery();
-        var dplayerVolume = localStorage.getItem("dplayer-volume")
+    config.dPlayerSetting = function (player) {
         $(document).keydown(function (event) {
-            var e = event || window.event;
-            var k = e.keyCode || e.which;
+            let e = event || window.event;
+            let k = e.keyCode || e.which;
+            if (k >= 112 && k <= 123) {
+                e.stopNativePropagation();
+            }
+        });
+        $(document).keydown(function (event) {
+            let e = event || window.event;
+            let k = e.keyCode || e.which;
             switch (k) {
+                // 快捷键: F
                 case 70: player.fullScreen.request('browser');
                     break;
-                case 77: player.video.volume == 0 ? dplayerVolume ? player.volume(Number(Number(dplayerVolume).toFixed(2)), true, false) : player.volume(obj.volume, true, false) : player.volume(0, true, false)
+                // 快捷键: M
+                case 77: player.video.muted == true ? (player.video.muted = false, player.notice("恢复声音")) : (player.video.muted = true, player.notice("静音"))
                     break;
+                // 快捷键: N
+                case 78: Toast("播放下一集")
+                    break;
+                // 快捷键: P
+                case 80: Toast("播放上一集")
+                    break;
+                // 快捷键: W
                 case 87: player.fullScreen.request('web');
-                    break;
-                case 113: player.video.volume == 0 ? dplayerVolume ? player.volume(Number(Number(dplayerVolume).toFixed(2)), true, false) : player.volume(obj.volume, true, false) : player.volume(0, true, false)
-                    break;
-                case 114: player.volume(player.video.volume - obj.volumeCALC)
-                    break;
-                case 115: player.volume(player.video.volume + obj.volumeCALC)
-                    break;
-                case 119: player.video.currentTime -= obj.playtimeCALC
-                    player.notice("快退5秒")
-                    break;
-                case 120: player.video.currentTime += obj.playtimeCALC
-                    player.notice("快进5秒")
-                    break;
-                case 121: player.toggle()
                     break;
             }
             return false;
