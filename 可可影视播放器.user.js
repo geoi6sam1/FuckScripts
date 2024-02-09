@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.3.0
-// @description  使用 DPlayer 来播放影片, 支持快捷键(W、F)全屏播放，支持显示标题和时间(时:分), 支持任意倍速调整(双击恢复正常), 支持热键操作(自行设置), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
+// @version      0.2.5
+// @description  使用 DPlayer 来播放影片, 支持更多快捷键(静音: M, 网页全屏: W, 视频全屏: F, 播放上集: <, 播放下集: >, 搜索选集: S, 减速播放: [, 加速播放: ])，支持显示标题和时间(时:分), 支持任意倍速调整(0.1-16), 支持记忆、连续播放(未弄), 支持搜索选集(未弄)
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
@@ -36,7 +36,7 @@
 
     function Toast(msg, duration) {
         var text = decodeURIComponent(encodeURIComponent(msg))
-        var html = "<div id='dToast' style='opacity: 0.9;background-color: #222222;position: absolute; bottom: 50%; left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;font-weight: bold;box-sizing: border-box;'>" + text + "</div>"
+        var html = "<div id='dToast' style='opacity: 0.9;background-color: #222222;position: absolute; bottom: 50%; left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;box-sizing: border-box;'>" + text + "</div>"
         $("body").append(html);
         setTimeout(() => {
             $("#dToast").css({ "transition": "all 0.3s ease", "opacity": "0" })
@@ -50,7 +50,7 @@
         var __xhr = new XMLHttpRequest();
         __xhr.open('GET', __url, true);
         __xhr.send();
-        __xhr.onreadystatechange = function () {
+        __xhr.onreadystatechange = () => {
             if (__xhr.readyState == 4 && __xhr.status == 200) {
                 var __html = __xhr.responseText
                 var __script = __html.match(/<script type="module">[\s\S]*<\/script>/)[0]
@@ -119,7 +119,7 @@
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u6210\u529F");
         } catch (error) {
             Toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u5931\u8D25");
-            //player.destroy()
+            player.destroy()
         }
     }
     config.dPlayerStart()
@@ -128,10 +128,10 @@
         const { options: { contextmenu } } = player;
         GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
         config.dPlayerTitle(player)
-        config.dPlayerCustomSpeed(player)
-        config.dPlayerSelections(player)
         config.dPlayerAutoMP(player)
         config.dPlayerSetting(player)
+        config.dPlayerSelections(player)
+        config.dPlayerCustomSpeed(player)
         JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
 
     };
@@ -175,8 +175,7 @@
             dplayerCT.show()
         })
         player.on("play", () => {
-            if (player.video.played.length && player.paused == false) {
-                dplayerCT.show()
+            if (player.video.played.length) {
                 dTimer2 = setTimeout(() => {
                     dplayerCT.hide()
                 }, 3e3)
@@ -188,37 +187,36 @@
     config.dPlayerCustomSpeed = function (player) {
         const { options: { contextmenu } } = player;
         var localSpeed = localStorage.getItem("dplayer-speed");
-        localSpeed && player.speed(localSpeed);
+        (localSpeed > 0, localSpeed <= 16) ? player.speed(localSpeed) : localStorage.setItem("dplayer-speed", Number(1))
         $(".dplayer-setting-speed-panel").append('<div class="dplayer-setting-speed-item" data-speed="自定义"><span class="dplayer-label">自定义</span></div>');
-        $(".dplayer-setting").append('<div class="dplayer-setting-custom-speed" title="双击恢复正常速度" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #eee;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放速度：</span><input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;border: 1px solid #fff;border-radius: 3px;text-align: center;" max="16" min="0.1" maxlength="6" placeholder="0.1~16"></div></div>');
+        $(".dplayer-setting").append('<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" max="16" min=".1" maxlength="6" placeholder="0.1~16"> x</span></div></div>');
         var custombox = $(".dplayer-setting-custom-speed");
         var input = $(".dplayer-setting-custom-speed input");
         input.val(localSpeed || 1);
-        input.on("input propertychange", function (e) {
+        input.on("input propertychange", () => {
             var val = input.val();
             if (val != 0) {
                 input.val(val)
                 player.speed(val)
             }
         });
-        player.on("ratechange", function () {
-            const { video: { playbackRate, duration } } = player;
-            player.notice("播放速度：" + playbackRate);
+        player.on("ratechange", () => {
+            const { video: { playbackRate } } = player;
+            player.notice("正以 " + playbackRate + "x 倍速播放");
             localStorage.setItem("dplayer-speed", playbackRate);
             input.val(playbackRate);
-            setTimeout(() => { config.appreciation(player) }, duration / 10 / playbackRate * 1e3);
         });
-        $("#dplayer").dblclick(function () {
+        $("#dplayer").dblclick(() => {
             input.val(1);
             player.speed(1);
         });
-        $(".dplayer-setting-speed-item[data-speed='自定义']").on("click", function () {
-            custombox.css("display") == "block" ? (custombox.css("display", "none"), player.setting.hide()) : custombox.css("display", "block")
-        }).prevAll().on("click", function () {
-            custombox.css("display", "none");
+        $(".dplayer-setting-speed-item[data-speed='自定义']").on("click", () => {
+            custombox.css("display") == "block" ? (custombox.hide(), player.setting.hide()) : custombox.show()
+        }).prevAll().on("click", () => {
+            custombox.hide()
         });
-        player.template.mask.addEventListener("click", function () {
-            custombox.css("display", "none");
+        player.template.mask.addEventListener("click", () => {
+            custombox.hide()
         });
         JSON.stringify(contextmenu).includes("geoi6sam1") || player.destroy();
     };
@@ -233,7 +231,7 @@
         var html = '<div class="dplayer-setting-item dplayer-setting-automp"><span class="dplayer-label">自动记忆播放</span><div class="dplayer-toggle"><input class="dplayer-toggle-setting-input dplayer-toggle-setting-input-automp" type="checkbox" name="dplayer-toggle"><label for="dplayer-toggle"></label></div></div>';
         $(".dplayer-setting-origin-panel").append(html);
         localStorage.getItem("automp") && ($(".dplayer-toggle-setting-input-automp").get(0).checked = true);
-        $(".dplayer-setting-automp").on("click", function () {
+        $(".dplayer-setting-automp").on("click", () => {
             var toggle = $(".dplayer-toggle-setting-input-automp");
             var checked = !toggle.is(":checked");
             toggle.get(0).checked = checked, localStorage.setItem("automp", Number(checked))
@@ -250,11 +248,11 @@
         html += '<button class="dplayer-icon next-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg></span></button>';
         $(".dplayer-icons-right").prepend(html);
         var charr = [".prev-icon", ".next-icon", ".dplayer-quality-icon"];
-        charr.forEach(function (icon) {
-            $(icon).mouseenter(function () {
+        charr.forEach((icon) => {
+            $(icon).mouseenter(() => {
                 $(icon + " span").css("opacity", "1")
             })
-            $(icon).mouseleave(function () {
+            $(icon).mouseleave(() => {
                 $(icon + " span").css("opacity", "0.8")
             })
             $(".prev-icon").on("click", () => {
@@ -268,35 +266,45 @@
     }
 
     config.dPlayerSetting = function (player) {
-        $(document).keydown(function (event) {
-            let e = event || window.event;
-            let k = e.keyCode || e.which;
-            if (k >= 112 && k <= 123) {
+        $(document).keydown((event) => {
+            var e = event || window.event;
+            var k = e.keyCode || e.which;
+            if (k != 70 && k != 77 && k != 83 && k != 87 && k != 188 && k != 190 && k != 219 && k != 221) {
                 e.stopNativePropagation();
             }
-        });
-        $(document).keydown(function (event) {
-            let e = event || window.event;
-            let k = e.keyCode || e.which;
+        })
+        $(document).keydown((event) => {
+            var e = event || window.event;
+            var k = e.keyCode || e.which;
+            var localSpeed = Number(localStorage.getItem("dplayer-speed"))
             switch (k) {
-                // 快捷键: F
+                // 快捷键：F（视频全屏）
                 case 70: player.fullScreen.request('browser');
                     break;
-                // 快捷键: M
+                // 快捷键：M（静音/恢复）
                 case 77: player.video.muted == true ? (player.video.muted = false, player.notice("恢复声音")) : (player.video.muted = true, player.notice("静音"))
                     break;
-                // 快捷键: N
-                case 78: Toast("播放下一集")
+                // 快捷键：S（搜索选集）
+                case 83: Toast("搜索选集")
                     break;
-                // 快捷键: P
-                case 80: Toast("播放上一集")
-                    break;
-                // 快捷键: W
+                // 快捷键：W（网页全屏）
                 case 87: player.fullScreen.request('web');
+                    break;
+                // 快捷键：<.（播放上集）
+                case 188: Toast("播放上集")
+                    break;
+                // 快捷键：>,（播放下集）
+                case 190: Toast("播放下集")
+                    break;
+                // 快捷键：[{（减速播放）
+                case 219: (localSpeed - 0.25 > 0) ? player.speed((localSpeed - 0.25).toFixed(2)) : player.speed(0.1)
+                    break;
+                // 快捷键：]}（加速播放）
+                case 221: (localSpeed + 0.25 < 16) ? player.speed((localSpeed + 0.25).toFixed(2)) : player.speed(16)
                     break;
             }
             return false;
-        });
+        })
     }
 
-})();
+})()
