@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.4.0
+// @version      0.4.1
 // @description  使用DPlayer插件播放影片，支持更多快捷键，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持显示标题和时间，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -43,7 +43,9 @@
         ["Space", "播放/暂停"],
         ["Esc", "退出全屏"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.3.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700; background: #36282b; padding: 5px 0;", "background: #ffd700; padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.4.1").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700; background: #36282b; padding: 5px 0;", "background: #ffd700; padding: 5px 0;")
+    const isSvip = localStorage.getItem("svip")
+    isSvip || (localStorage.setItem("svip", true), window.location.reload())
     console.table(shortcutKey)
 
     function toast(msg, type, dus, bgc) {
@@ -142,56 +144,37 @@
     }
 
     obj.initPlayer = function (player) {
-        obj.playerReady(player, function (player) {
-            const { options: { contextmenu } } = player
-            $("#video-loading-wrapper").hide()
-            $("[class*='install-tip']").hide()
-            player.pause()
-            obj.dPlayerTitle(player)
-            obj.dPlayerSelections(player)
-            obj.dPlayerSetting(player)
-            obj.dPlayerCustomSpeed(player)
-            obj.dPlayerLoop(player)
-            obj.dPlayerAutoMemoryPlay(player)
-            if (isMobile) {
-                player.on('fullscreen', () => {
-                    screen.orientation.lock("landscape")
-                })
-                player.on('fullscreen_cancel', () => {
-                    screen.orientation.unlock()
-                })
-            }
-            JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
-            JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
-            $(".dplayer-menu .dplayer-menu-item:nth-last-child(1)").hide()
-            $(".dplayer-menu .dplayer-menu-item:nth-last-child(2)").hide()
-            $("#video-loading-wrapper").remove()
-            $("[class*='install-tip']").remove()
-        })
-    }
-
-    obj.playerReady = function (player, callback) {
-        if (player.isReady) {
-            callback && callback(player)
+        const { options: { contextmenu } } = player
+        $("#video-loading-wrapper").hide()
+        $("[class*='install-tip']").hide()
+        player.pause()
+        obj.dPlayerTitle(player)
+        obj.dPlayerSelections(player)
+        obj.dPlayerSetting(player)
+        obj.dPlayerCustomSpeed(player)
+        obj.dPlayerLoop(player)
+        obj.dPlayerAutoMemoryPlay(player)
+        if (isMobile) {
+            player.on('fullscreen', () => {
+                screen.orientation.lock("landscape")
+            })
+            player.on('fullscreen_cancel', () => {
+                screen.orientation.unlock()
+            })
         }
-        else if (player.video.duration > 0 || player.video.readyState > 2) {
-            player.isReady = true
-            callback && callback(player)
-        }
-        else {
-            player.video.ondurationchange = function () {
-                player.video.ondurationchange = null
-                player.isReady = true
-                callback && callback(player)
-            }
-        }
+        JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
+        JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
+        $(".dplayer-menu .dplayer-menu-item:nth-last-child(1)").hide()
+        $(".dplayer-menu .dplayer-menu-item:nth-last-child(2)").hide()
+        $("#video-loading-wrapper").remove()
+        $("[class*='install-tip']").remove()
     }
 
     obj.dPlayerTitle = function (player) {
-        if ($(".dplayer-controller-top").length) return
         var playSeason = $(".play-box-side-header .detail-title strong")
         var playEpisode = $(".episode-list .episode-item-active span")
         var playTitle = playSeason.text() + " (" + playEpisode.text() + ")"
+        isSvip ? playTitle = playTitle : playTitle = ""
         let html = `<div class="dplayer-controller-top" style="display: none;opacity: 0.9;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">`
         html += `<span class="dplayer-title" style="position: absolute;top: 26px;left: 26px;font-size: 32px;"><strong>${playTitle}</strong></span>`
         html += `<span class="dplayer-time" style="position: absolute;top: 32px;right: 32px;font-size: 26px;"><strong>00:00</strong></span></div>`
@@ -201,7 +184,7 @@
             let hours = getDate.getHours()
             let minutes = getDate.getMinutes()
             let nowTime = (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes)
-            $(".dplayer-time strong").text(nowTime)
+            isSvip ? $(".dplayer-time strong").text(nowTime) : $(".dplayer-time").hide()
         }, 1e3)
         var dplayerCT = $(".dplayer-controller-top")
         var autoHideTimer, autoHideCT = () => {
@@ -230,13 +213,13 @@
     }
 
     obj.dPlayerCustomSpeed = function (player) {
-        if ($(".dplayer-setting-speed-item[data-speed='自定义']").length) return
         var localSpeed = localStorage.getItem("dplayer-speed")
         localSpeed ? player.speed(localSpeed) : localStorage.setItem("dplayer-speed", 1)
         $(".dplayer-setting-speed-panel").append(`<div class="dplayer-setting-speed-item" data-speed="自定义"><span class="dplayer-label">自定义</span></div>`)
         $(".dplayer-setting").append(`<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" max="16" min=".1" maxlength="6" placeholder="0.1~16"> x</span></div></div>`)
         var custombox = $(".dplayer-setting-custom-speed")
         var input = $(".dplayer-setting-custom-speed input")
+        isSvip || $(".dplayer-setting-speed-item[data-speed='自定义']").hide()
         input.val(localSpeed || 1)
         input.on("input propertychange", () => {
             var val = input.val()
@@ -266,13 +249,11 @@
     }
 
     obj.dPlayerAutoMemoryPlay = function (player) {
-        if (this.hasMemoryDisplay) return
-        this.hasMemoryDisplay = true
         let html = '<div class="dplayer-setting-item dplayer-setting-automp"><span class="dplayer-label">自动记忆播放</span><div class="dplayer-toggle"><input class="dplayer-toggle-setting-input" type="checkbox" name="dplayer-toggle"><label for="dplayer-toggle"></label></div></div>'
         $(".dplayer-setting-origin-panel").append(html)
         var automp = localStorage.getItem("dplayer-automp")
         var memoryTime = localStorage.getItem(`tcplayer-lpt-${obj.url}`)
-        automp || localStorage.setItem("dplayer-automp", Number(0))
+        isSvip && !automp && localStorage.setItem("dplayer-automp", Number(0))
         automp == 1 && ($(".dplayer-setting-automp input").get(0).checked = true)
         $(".dplayer-setting-automp").on("click", () => {
             let toggle = $(".dplayer-setting-automp input")
@@ -282,12 +263,12 @@
             player.template.mask.classList.remove("dplayer-mask-show")
         })
         player.on("durationchange", () => {
-            if (player.video.duration > 0) {
+            if (isSvip && player.video.duration > 0) {
                 if (memoryTime && parseInt(memoryTime)) {
                     var formatTime = formatVideoTime(memoryTime)
                     if (automp == 1) {
                         player.seek(memoryTime)
-                        player.play()
+                        player.video.duration - player.video.currentTime < 15 || player.play()
                     } else {
                         $(player.container).append(`<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 15px;padding: 7px;border-radius: 3px;color: #f5f5f5;z-index:100;background: rgba(0,0,0,.8);">上次播放到：${formatTime}&nbsp;<a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">&nbsp;点击跳转&nbsp;</a><em class="close-btn" style="display: inline-block;width: 15px;height: 15px;vertical-align: middle;cursor: pointer;background: url(https://nd-static.bdstatic.com/m-static/disk-share/widget/pageModule/share-file-main/fileType/video/img/video-flash-closebtn_15f0e97.png) no-repeat;"></em></div>`)
                         var memoryTimeout = setTimeout(() => {
@@ -311,7 +292,7 @@
         })
         obj.maskCurrentTime = function (player) {
             let currentTime = player.video.currentTime
-            !player.video.played.length || currentTime < 10 || localStorage.setItem(`tcplayer-lpt-${obj.url}`, Number(player.video.currentTime))
+            currentTime && localStorage.setItem(`tcplayer-lpt-${obj.url}`, Number(player.video.currentTime))
         }
         document.onvisibilitychange = function () {
             if (document.visibilityState === "hidden") {
@@ -333,7 +314,6 @@
     }
 
     obj.dPlayerSelections = function (player) {
-        if ($("#btn-select-episode").length) return
         let html = `<button class="dplayer-icon download-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg></span></button>`
         html += '<button class="dplayer-icon prev-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg></span></button>'
         html += '<button id="btn-select-episode" class="dplayer-icon dplayer-quality-icon"><span style="opacity: 0.8;font-weight: bold;">选集</span></button>'
@@ -349,32 +329,32 @@
             })
         })
         $(".download-icon").on("click", () => {
-            window.open(`http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=${obj.url}`, "_blank")
+            !isSvip || window.open(`http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=${obj.url}`, "_blank")
         })
         var episodeTotal = $(".episode-list:has(.episode-item-active) a").length
         var episodeNow = $("a.episode-item-active").attr("data-index")
         var episodeNext = Number(episodeNow) + 1
         var episodePrevious = Number(episodeNow) - 1
         $(".prev-icon").on("click", () => {
-            if (episodePrevious > 0) {
-                player.notice("即将播放上一集")
+            if (isSvip && episodePrevious > 0) {
+                player.notice("\u5373\u5C06\u64AD\u653E\u4E0A\u4E00\u96C6")
                 let aPrev = $(`.episode-list:has(.episode-item-active) a[data-index="${episodePrevious}"]`).attr("href")
                 setTimeout(() => {
                     window.open(aPrev, "_self")
-                }, 1e3)
+                }, 1.5e3)
             } else {
-                player.notice("没有上一集了")
+                isSvip ? player.notice("\u6CA1\u6709\u4E0A\u4E00\u96C6\u4E86") : player.notice("\u6682\u672A\u89E3\u9501")
             }
         })
         $(".next-icon").on("click", () => {
-            if (episodeNext <= episodeTotal) {
-                player.notice("即将播放下一集")
+            if (isSvip && episodeNext <= episodeTotal) {
+                player.notice("\u5373\u5C06\u64AD\u653E\u4E0B\u4E00\u96C6")
                 let aNext = $(`.episode-list:has(.episode-item-active) a[data-index="${episodeNext}"]`).attr("href")
                 setTimeout(() => {
                     window.open(aNext, "_self")
-                }, 1e3)
+                }, 1.5e3)
             } else {
-                player.notice("没有下一集了")
+                isSvip ? player.notice("\u6CA1\u6709\u4E0B\u4E00\u96C6\u4E86") : player.notice("\u6682\u672A\u89E3\u9501")
             }
         })
         $("#btn-select-episode").on("click", () => {
