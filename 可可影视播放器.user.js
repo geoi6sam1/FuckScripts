@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.5.1
+// @version      0.5.2
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -30,7 +30,6 @@
         ["F", "切换全屏"],
         ["M", "开启/关闭静音"],
         ["N", "恢复正常 1x 倍速"],
-        ["S", "搜索选集播放"],
         ["W", "切换网页全屏"],
         [",", "播放上集"],
         [".", "播放下集"],
@@ -42,11 +41,9 @@
         ["→", "快进5秒"],
         ["Space", "播放/暂停"],
         ["Esc", "退出全屏"],
-        ["双击左侧区域", "快退30秒"],
-        ["双击右侧区域", "快进30秒"],
         ["长按视频", "临时 3x 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.5.0").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.5.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
 
     function toast(msg, type, dus, bgc) {
@@ -153,17 +150,16 @@
         $("#video-loading-wrapper").hide()
         $("[class*='install-tip']").hide()
         player.pause()
-        obj.gestureInit(player)
         obj.longPressInit(player)
         obj.hotKeyPanel()
         isMobile || obj.dPlayerTitle(player)
         obj.dPlayerSelections(player)
         obj.dPlayerSetting(player)
         obj.dPlayerCustomSpeed(player)
-        obj.dPlayerLoop(player)
         obj.dPlayerAutoMemoryPlay(player)
+        obj.dPlayerLoop(player)
         if (isMobile) {
-            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
+            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
             arr.forEach((icon) => {
                 $(icon).hide()
             })
@@ -303,7 +299,7 @@
         $(".dplayer-setting-origin-panel").append(html)
         var automp = localStorage.getItem("dplayer-automp")
         var memoryTime = localStorage.getItem(`tcplayer-lpt-${obj.url}`)
-        automp || localStorage.setItem("dplayer-automp", Number(0))
+        automp || localStorage.setItem("dplayer-automp", 0)
         automp == 1 && ($(".dplayer-setting-automp input").get(0).checked = true)
         $(".dplayer-setting-automp").on("click", () => {
             let toggle = $(".dplayer-setting-automp input")
@@ -317,7 +313,7 @@
                 if (memoryTime && parseInt(memoryTime)) {
                     var formatTime = formatVideoTime(memoryTime)
                     if (automp == 1) {
-                        (player.video.duration - player.video.currentTime > 15) ? player.seek(memoryTime) : player.seek(memoryTime - 15)
+                        (player.video.duration - player.video.currentTime < 15) ? player.seek(memoryTime - 15) : player.seek(memoryTime)
                         player.play()
                     } else {
                         let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
@@ -337,7 +333,7 @@
                             player.play()
                         })
                         $(".memory-play-wrap .play-jump").on("click", () => {
-                            player.seek(memoryTime)
+                            (player.video.duration - player.video.currentTime < 15) ? player.seek(memoryTime - 15) : player.seek(memoryTime)
                             clearTimeout(memoryTimeout)
                             $(".memory-play-wrap").remove()
                             player.play()
@@ -372,7 +368,10 @@
     }
 
     obj.dPlayerSelections = function (player) {
-        let html = `<button class="dplayer-icon download-icon">
+        let html = `<button class="dplayer-icon dplayer-quality-icon btn-select-source">
+    <span style="opacity: 0.8;font-weight: bold;">切换线路</span>
+</button>
+<button class="dplayer-icon download-icon">
     <span style="opacity: 0.8;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg>
     </span>
@@ -391,7 +390,7 @@
     </span>
 </button>`
         $(".dplayer-icons-right").prepend(html)
-        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
+        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
         arr.forEach((icon) => {
             $(icon).mouseenter(() => {
                 $(`${icon} span`).css("opacity", "1")
@@ -432,11 +431,34 @@
         $(".btn-select-episode").on("click", () => {
             toast("搜索选集播放")
         })
+        $(".btn-select-source").on("click", () => {
+            toast("切换播放线路")
+        })
     }
 
     obj.dPlayerLoop = function (player) {
+        let html = `<div class="dplayer-setting-item dplayer-setting-autonext">
+    <span class="dplayer-label">自动播放下集</span>
+    <div class="dplayer-toggle">
+        <input class="dplayer-toggle-setting-input" type="checkbox" name="dplayer-toggle">
+        <label for="dplayer-toggle"></label>
+    </div>
+</div>`
+        $(".dplayer-setting-origin-panel").append(html)
+        var autonext = localStorage.getItem("dplayer-autonext")
+        autonext || localStorage.setItem("dplayer-autonext", 0)
+        autonext == 1 && ($(".dplayer-setting-autonext input").get(0).checked = true)
+        $(".dplayer-setting-autonext").on("click", () => {
+            let toggle = $(".dplayer-setting-autonext input")
+            let checked = !toggle.is(":checked")
+            toggle.get(0).checked = checked, localStorage.setItem("dplayer-autonext", Number(checked))
+            player.template.settingBox.classList.remove("dplayer-setting-box-open")
+            player.template.mask.classList.remove("dplayer-mask-show")
+        })
         player.on("ended", function () {
-            $(".dplayer-setting-loop input").get(0).checked == true ? player.seek(0) : $(".next-icon").click()
+            var isNext = $(".dplayer-setting-autonext input").get(0).checked
+            let isLoop = $(".dplayer-setting-loop input").get(0).checked
+            isLoop == true ? player.seek(0) : isNext == true ? $(".next-icon").click() : player.pause()
         })
     }
 
@@ -445,7 +467,7 @@
             var e = event || window.event
             var k = e.keyCode || e.which
             var localSpeed = Number(localStorage.getItem("dplayer-speed"))
-            let arr = [70, 77, 83, 87, 188, 19, 219, 221]
+            let arr = [70, 77, 87, 188, 19, 219, 221]
             arr.forEach((n) => {
                 if (k != n) {
                     e.stopPropagation()
@@ -460,9 +482,6 @@
                     break
                 // 快捷键：N（恢复正常 1x 倍速）
                 case 78: player.speed(1)
-                    break
-                // 快捷键：S（搜索选集播放）
-                case 83: toast("搜索选集播放")
                     break
                 // 快捷键：W（切换网页全屏）
                 case 87: player.fullScreen.toggle('web')
@@ -481,104 +500,6 @@
                     break
             }
         })
-    }
-
-    obj.gestureInit = function (player) {
-        const { video, videoWrap, playedBarWrap } = player.template
-        let isDroging = false, startX = 0, startY = 0, startCurrentTime = 0, startVolume = 0, startBrightness = "100%", lastDirection = 0
-        const onTouchStart = (event) => {
-            if (event.touches.length === 1) {
-                isDroging = true
-                const { clientX, clientY } = event.touches[0]
-                startX = clientX
-                startY = clientY
-                startCurrentTime = video.currentTime
-                startVolume = video.volume
-                startBrightness = (/brightness\((\d+%?)\)/.exec(video.style.filter) || [])[1] || "100%"
-            }
-        }
-        const onTouchMove = (event) => {
-            if (event.touches.length === 1 && isDroging) {
-                const { clientX, clientY } = event.touches[0]
-                const client = player.isRotate ? clientY : clientX
-                const { width, height } = video.getBoundingClientRect()
-                const ratioX = clamp((clientX - startX) / width, -1, 1)
-                const ratioY = clamp((clientY - startY) / height, -1, 1)
-                const ratio = player.isRotate ? ratioY : ratioX
-                const direction = getDirection(startX, startY, clientX, clientY)
-                if (direction != lastDirection) {
-                    lastDirection = direction
-                    return
-                }
-                if (direction == 1 || direction == 2) {
-                    if (!lastDirection) lastDirection = direction
-                    if (lastDirection > 2) return
-                    const middle = player.isRotate ? height / 2 : width / 2
-                    if (client < middle) {
-                        const currentBrightness = clamp(+((/\d+/.exec(startBrightness) || [])[0] || 100) + 200 * ratio * 10, 50, 200)
-                        video.style.cssText += "filter: brightness(" + currentBrightness.toFixed(0) + "%)"
-                        player.notice(`亮度调节 ${currentBrightness.toFixed(0)}%`)
-                    }
-                    else if (client > middle) {
-                        const currentVolume = clamp(startVolume + ratio * 10, 0, 1)
-                        player.volume(currentVolume)
-                    }
-                }
-                else if (direction == 3 || direction == 4) {
-                    if (!lastDirection) lastDirection = direction
-                    if (lastDirection < 3) return
-                    const currentTime = clamp(startCurrentTime + video.duration * ratio * 0.5, 0, video.duration)
-                    player.seek(currentTime)
-                }
-            }
-        }
-        const onTouchEnd = () => {
-            if (isDroging) {
-                startX = 0
-                startY = 0
-                startCurrentTime = 0
-                startVolume = 0
-                lastDirection = 0
-                isDroging = false
-            }
-        }
-        videoWrap.addEventListener('touchstart', (event) => {
-            onTouchStart(event)
-        })
-        playedBarWrap.addEventListener('touchstart', (event) => {
-            onTouchStart(event)
-        })
-        videoWrap.addEventListener('touchmove', onTouchMove)
-        playedBarWrap.addEventListener('touchmove', onTouchMove)
-        document.addEventListener('touchend', onTouchEnd)
-        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
-            if (window.orientation === 180 || window.orientation === 0) {
-                player.isRotate = true
-            }
-            else if (window.orientation === 90 || window.orientation === -90) {
-                player.isRotate = false
-            }
-        }, false)
-        function clamp(num, a, b) {
-            return Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b))
-        }
-        function getDirection(startx, starty, endx, endy) {
-            var angx = endx - startx
-            var angy = endy - starty
-            var result = 0
-            if (Math.abs(angx) < 2 && Math.abs(angy) < 2) return result
-            var angle = Math.atan2(angy, angx) * 180 / Math.PI
-            if (angle >= -135 && angle <= -45) {
-                result = 1
-            } else if (angle > 45 && angle < 135) {
-                result = 2
-            } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
-                result = 3
-            } else if (angle >= -45 && angle <= 45) {
-                result = 4
-            }
-            return result
-        }
     }
 
     obj.longPressInit = function (player) {
@@ -609,7 +530,7 @@
                     isLongPress = true
                     player.speed(speed * 3)
                     player.contextmenu.hide()
-                }, 1000)
+                }, 1e3)
             }
         }
         const onTouchMove = (event) => {
