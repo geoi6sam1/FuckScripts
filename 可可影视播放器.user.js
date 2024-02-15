@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.5.0
+// @version      0.5.1
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -24,7 +24,7 @@
     'use strict'
 
     const obj = {}
-    const isMobile = !!navigator.userAgent.match(/AppleWebKit.*Mobile.*/)
+    const isMobile = /Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)
     const $ = unsafeWindow.jQuery || window.jQuery
     const shortcutKey = [
         ["F", "切换全屏"],
@@ -83,7 +83,7 @@
             if (xhr.readyState == 4 && xhr.status == 200) {
                 var html = xhr.responseText
                 var script = html.match(/<script type="module">[\s\S]*<\/script>/)[0]
-                var url = script.match(/(http|https):\/\/([\w.]+\/?)\S*?(\.m3u8)/i)[0]
+                var url = script.match(/(http|https):\/\/([\w.]+\/?)\S*?(\.m3u8)/)[0]
                 if (url == null || url == undefined) {
                     console.log(xhr)
                 } else {
@@ -155,7 +155,6 @@
         player.pause()
         obj.gestureInit(player)
         obj.longPressInit(player)
-        obj.dblclickInit(player)
         obj.hotKeyPanel()
         isMobile || obj.dPlayerTitle(player)
         obj.dPlayerSelections(player)
@@ -164,7 +163,7 @@
         obj.dPlayerLoop(player)
         obj.dPlayerAutoMemoryPlay(player)
         if (isMobile) {
-            var arr = [".dplayer-controller-top", ".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
+            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
             arr.forEach((icon) => {
                 $(icon).hide()
             })
@@ -642,23 +641,6 @@
         videoWrap.addEventListener('touchend', onTouchEnd)
         videoWrap.addEventListener('mousedown', onMouseDown)
         videoWrap.addEventListener('mouseup', onMouseUp)
-    }
-
-    obj.dblclickInit = function (player) {
-        const { video, videoWrap } = player.template
-        videoWrap.addEventListener('dblclick', (event) => {
-            const currentTime = video.currentTime
-            const { offsetX, offsetY } = event
-            const { width, height } = video.getBoundingClientRect()
-            const client = player.isRotate ? offsetY : offsetX
-            const middle = player.isRotate ? height / 2 : width / 2
-            if (client < middle) {
-                player.seek(currentTime - 30)
-            }
-            else if (client > middle) {
-                player.seek(currentTime + 30)
-            }
-        })
     }
 
     if (window.DPlayer) return obj.dPlayerStart()
