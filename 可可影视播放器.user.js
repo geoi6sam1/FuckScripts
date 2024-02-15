@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.4.1
-// @description  使用DPlayer插件播放影片，支持更多快捷键，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持显示标题和时间，支持任意倍速调整（0.1-16）
+// @version      0.5.0
+// @description  使用DPlayer插件播放影片，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
@@ -42,10 +42,11 @@
         ["→", "快进5秒"],
         ["Space", "播放/暂停"],
         ["Esc", "退出全屏"],
+        ["双击左侧区域", "快退30秒"],
+        ["双击右侧区域", "快进30秒"],
+        ["长按视频", "临时 3x 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.4.1").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700; background: #36282b; padding: 5px 0;", "background: #ffd700; padding: 5px 0;")
-    const isSvip = localStorage.getItem("svip")
-    isSvip || (localStorage.setItem("svip", true), window.location.reload())
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.5.0").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
 
     function toast(msg, type, dus, bgc) {
@@ -64,7 +65,7 @@
             default: bgc = "#36282b" // 苍蝇灰
                 break
         }
-        let html = `<div id='cToast' style='opacity: 0.9;background-color: ${bgc};position: absolute; bottom: 50%; left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;box-sizing: border-box;'>${text}</div>`
+        let html = `<div id='cToast' style='opacity: 0.9;background-color: ${bgc};position: absolute;bottom: 50%;left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;box-sizing: border-box;'>${text}</div>`
         $("body").append(html)
         setTimeout(() => {
             $("#cToast").css({ "transition": "all 0.3s ease", "opacity": "0" })
@@ -102,7 +103,7 @@
             if (!container) {
                 container = document.createElement("div")
                 container.setAttribute("id", "dplayer")
-                container.setAttribute("style", "width: 100%; height: 100%;")
+                container.setAttribute("style", "width: 100%;height: 100%;")
                 videoNode.parentNode.replaceChild(container, videoNode)
             }
         }
@@ -131,6 +132,10 @@
                     link: "http://mtw.so/69sMaz",
                     click: () => { return false },
                 },
+                {
+                    text: "快捷键说明",
+                    click: () => { isMobile ? player.notice("\u5F53\u524D\u8BBE\u5907\u4E0D\u652F\u6301\u5FEB\u6377\u952E") : $(".dplayer-hotkey-panel").show() },
+                },
             ],
             theme: "#f5f5f5",
         }
@@ -148,20 +153,35 @@
         $("#video-loading-wrapper").hide()
         $("[class*='install-tip']").hide()
         player.pause()
-        obj.dPlayerTitle(player)
+        obj.gestureInit(player)
+        obj.longPressInit(player)
+        obj.dblclickInit(player)
+        obj.hotKeyPanel()
+        isMobile || obj.dPlayerTitle(player)
         obj.dPlayerSelections(player)
         obj.dPlayerSetting(player)
         obj.dPlayerCustomSpeed(player)
         obj.dPlayerLoop(player)
         obj.dPlayerAutoMemoryPlay(player)
         if (isMobile) {
+            var arr = [".dplayer-controller-top", ".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
+            arr.forEach((icon) => {
+                $(icon).hide()
+            })
             player.on('fullscreen', () => {
+                arr.forEach((icon) => {
+                    $(icon).show()
+                })
                 screen.orientation.lock("landscape")
             })
             player.on('fullscreen_cancel', () => {
+                arr.forEach((icon) => {
+                    $(icon).hide()
+                })
                 screen.orientation.unlock()
             })
         }
+        $("body").css({ "-webkit-font-smoothing": "antialiased", "-moz-font-smoothing": "antialiased", "font-smoothing": "antialiased", })
         JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
         JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
         $(".dplayer-menu .dplayer-menu-item:nth-last-child(1)").hide()
@@ -170,21 +190,56 @@
         $("[class*='install-tip']").remove()
     }
 
+    obj.hotKeyPanel = function () {
+        let html = `<div class="dplayer-hotkey-panel" style="display: none;background-color: rgba(33,33,33,.9);border-radius: 5px;color: #f5f5f5;left: 50%;position: absolute;text-align: center;top: 50%;transform: translate(-50%,-50%);width: 400px;user-select: none;z-index: 10;">
+    <div class="dplayer-hotkey-panel-title" style="border-bottom: 1px solid hsla(0,0%,100%,.1);font-size: 18px;line-height: 45px;text-align: center;"><strong>快捷键说明</strong>
+        <span class="dplayer-hotkey-panel-close" style="fill: #f5f5f5;color: #f5f5f5;cursor: pointer;height: 24px;line-height: 24px;position: absolute;right: 12px;top: 12px;width: 22px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
+        </span>
+    </div>
+    <div class="dplayer-hotkey-panel-area" style="margin: 10px 0;max-height: 300px;overflow: hidden auto;">
+        <div class="dplayer-hotkey-panel-content" style="padding: 0 20px;transform: translate(0px, 0px) scale(1) translateZ(0px);">
+            <div class="dplayer-hotkey-panel-content-item" style="font-size: 14px;height: 28px;line-height: 28px;min-width: 360px;text-align: center;">
+                <span class="dplayer-hotkey-panel-content-name" style="display: inline-block;width: 120px;">N</span>
+                <span class="dplayer-hotkey-panel-content-desc" style="color: #969696;display: inline-block;width: 190px;">恢复正常 1x 倍速</span>
+            </div>
+        </div>
+    </div>
+</div>`
+        $("#dplayer").append(html)
+        shortcutKey.forEach((val) => {
+            let html = `<div class="dplayer-hotkey-panel-content" style="padding: 0 20px;transform: translate(0px, 0px) scale(1) translateZ(0px);">
+            <div class="dplayer-hotkey-panel-content-item" style="font-size: 14px;height: 28px;line-height: 28px;min-width: 360px;text-align: center;">
+                <span class="dplayer-hotkey-panel-content-name" style="display: inline-block;width: 120px;">${val[0]}</span>
+                <span class="dplayer-hotkey-panel-content-desc" style="color: #969696;display: inline-block;width: 190px;">${val[1]}</span>
+            </div>
+        </div>`
+            $(".dplayer-hotkey-panel-area").append(html)
+
+        })
+        $("::-webkit-scrollbar").css("width", "9px")
+        $("::-webkit-scrollbar-thumb").css({ "background": "#ccc", "border-radius": "5px" })
+        $("::-webkit-scrollbar-thumb:hover").css("background", "#f40")
+        $(".dplayer-hotkey-panel-close").on("click", () => {
+            $(".dplayer-hotkey-panel").hide()
+        })
+    }
+
     obj.dPlayerTitle = function (player) {
         var playSeason = $(".play-box-side-header .detail-title strong")
         var playEpisode = $(".episode-list .episode-item-active span")
         var playTitle = playSeason.text() + " (" + playEpisode.text() + ")"
-        isSvip ? playTitle = playTitle : playTitle = ""
-        let html = `<div class="dplayer-controller-top" style="display: none;opacity: 0.9;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">`
-        html += `<span class="dplayer-title" style="position: absolute;top: 26px;left: 26px;font-size: 32px;"><strong>${playTitle}</strong></span>`
-        html += `<span class="dplayer-time" style="position: absolute;top: 32px;right: 32px;font-size: 26px;"><strong>00:00</strong></span></div>`
+        let html = `<div class="dplayer-controller-top" style="display: none;opacity: 0.9;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">
+            <span class="dplayer-title" style="position: absolute;top: 26px;left: 26px;font-size: 32px;"><strong>${playTitle}</strong></span>
+            <span class="dplayer-time" style="position: absolute;top: 32px;right: 32px;font-size: 26px;"><strong>00:00</strong></span>
+        </div>`
         $(".dplayer-video-wrap").append(html)
         setInterval(() => {
             let getDate = new Date()
             let hours = getDate.getHours()
             let minutes = getDate.getMinutes()
             let nowTime = (hours > 9 ? hours : "0" + hours) + ":" + (minutes > 9 ? minutes : "0" + minutes)
-            isSvip ? $(".dplayer-time strong").text(nowTime) : $(".dplayer-time").hide()
+            $(".dplayer-time strong").text(nowTime)
         }, 1e3)
         var dplayerCT = $(".dplayer-controller-top")
         var autoHideTimer, autoHideCT = () => {
@@ -201,29 +256,19 @@
         $("#dplayer").on("click", autoHideCT)
         player.on("play", autoHideCT)
         player.on("pause", autoHideCT)
-        if (isMobile) {
-            $("#dplayer").off("mousemove", autoHideCT)
-            $("#dplayer").off("click", autoHideCT)
-            clearTimeout(autoHideTimer)
-        }
-        var dplayerCTM = document.querySelector(".dplayer-controller-top")
-        dplayerCTM.addEventListener("touchend", () => {
-            dplayerCTM.style.display == "block" ? dplayerCTM.style.display == "none" : dplayerCTM.style.display == "block"
-        })
     }
 
     obj.dPlayerCustomSpeed = function (player) {
         var localSpeed = localStorage.getItem("dplayer-speed")
         localSpeed ? player.speed(localSpeed) : localStorage.setItem("dplayer-speed", 1)
         $(".dplayer-setting-speed-panel").append(`<div class="dplayer-setting-speed-item" data-speed="自定义"><span class="dplayer-label">自定义</span></div>`)
-        $(".dplayer-setting").append(`<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" max="16" min=".1" maxlength="6" placeholder="0.1~16"> x</span></div></div>`)
+        $(".dplayer-setting").append(`<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" maxlength="6" placeholder="0.1~16"> x</span></div></div>`)
         var custombox = $(".dplayer-setting-custom-speed")
         var input = $(".dplayer-setting-custom-speed input")
-        isSvip || $(".dplayer-setting-speed-item[data-speed='自定义']").hide()
         input.val(localSpeed || 1)
         input.on("input propertychange", () => {
             var val = input.val()
-            if (val != 0) {
+            if (val > 0.0999) {
                 input.val(val)
                 player.speed(val)
             }
@@ -234,7 +279,7 @@
             localStorage.setItem("dplayer-speed", playbackRate)
             input.val(playbackRate)
         })
-        $("#dplayer").dblclick(() => {
+        $(".dplayer-setting-custom-speed").dblclick(() => {
             input.val(1)
             player.speed(1)
         })
@@ -249,11 +294,17 @@
     }
 
     obj.dPlayerAutoMemoryPlay = function (player) {
-        let html = '<div class="dplayer-setting-item dplayer-setting-automp"><span class="dplayer-label">自动记忆播放</span><div class="dplayer-toggle"><input class="dplayer-toggle-setting-input" type="checkbox" name="dplayer-toggle"><label for="dplayer-toggle"></label></div></div>'
+        let html = `<div class="dplayer-setting-item dplayer-setting-automp">
+    <span class="dplayer-label">自动记忆播放</span>
+    <div class="dplayer-toggle">
+        <input class="dplayer-toggle-setting-input" type="checkbox" name="dplayer-toggle">
+        <label for="dplayer-toggle"></label>
+    </div>
+</div>`
         $(".dplayer-setting-origin-panel").append(html)
         var automp = localStorage.getItem("dplayer-automp")
         var memoryTime = localStorage.getItem(`tcplayer-lpt-${obj.url}`)
-        isSvip && !automp && localStorage.setItem("dplayer-automp", Number(0))
+        automp || localStorage.setItem("dplayer-automp", Number(0))
         automp == 1 && ($(".dplayer-setting-automp input").get(0).checked = true)
         $(".dplayer-setting-automp").on("click", () => {
             let toggle = $(".dplayer-setting-automp input")
@@ -263,27 +314,35 @@
             player.template.mask.classList.remove("dplayer-mask-show")
         })
         player.on("durationchange", () => {
-            if (isSvip && player.video.duration > 0) {
+            if (player.video.duration > 0) {
                 if (memoryTime && parseInt(memoryTime)) {
                     var formatTime = formatVideoTime(memoryTime)
                     if (automp == 1) {
-                        player.seek(memoryTime)
-                        player.video.duration - player.video.currentTime < 15 || player.play()
+                        (player.video.duration - player.video.currentTime > 15) ? player.seek(memoryTime) : player.seek(memoryTime - 15)
+                        player.play()
                     } else {
-                        $(player.container).append(`<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 15px;padding: 7px;border-radius: 3px;color: #f5f5f5;z-index:100;background: rgba(0,0,0,.8);">上次播放到：${formatTime}&nbsp;<a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">&nbsp;点击跳转&nbsp;</a><em class="close-btn" style="display: inline-block;width: 15px;height: 15px;vertical-align: middle;cursor: pointer;background: url(https://nd-static.bdstatic.com/m-static/disk-share/widget/pageModule/share-file-main/fileType/video/img/video-flash-closebtn_15f0e97.png) no-repeat;"></em></div>`)
+                        let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
+    <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;"><strong>点击跳转</strong></a>
+     <span class="close-btn" style="display: inline-block;width: 16px;height: 16px;vertical-align: middle;cursor: pointer;fill: #f5f5f5;color: #f5f5f5;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
+     </span>
+</div>`
+                        $(player.container).append(html)
                         var memoryTimeout = setTimeout(() => {
                             $(".memory-play-wrap").remove()
-                        }, 15e3);
+                            player.play()
+                        }, 15e3)
                         $(".memory-play-wrap .close-btn").on("click", () => {
-                            $(".memory-play-wrap").remove()
                             clearTimeout(memoryTimeout)
-                        });
+                            $(".memory-play-wrap").remove()
+                            player.play()
+                        })
                         $(".memory-play-wrap .play-jump").on("click", () => {
                             player.seek(memoryTime)
-                            player.play()
-                            $(".memory-play-wrap").remove()
                             clearTimeout(memoryTimeout)
-                        });
+                            $(".memory-play-wrap").remove()
+                            player.play()
+                        })
                     }
                 } else {
                     player.play()
@@ -306,20 +365,34 @@
             let secondTotal = Math.round(seconds)
                 , hour = Math.floor(secondTotal / 3600)
                 , minute = Math.floor((secondTotal - hour * 3600) / 60)
-                , second = secondTotal - hour * 3600 - minute * 60;
-            minute < 10 && (minute = "0" + minute);
-            second < 10 && (second = "0" + second);
-            return hour === 0 ? minute + ":" + second : hour + ":" + minute + ":" + second;
+                , second = secondTotal - hour * 3600 - minute * 60
+            minute < 10 && (minute = "0" + minute)
+            second < 10 && (second = "0" + second)
+            return hour === 0 ? minute + ":" + second : hour + ":" + minute + ":" + second
         }
     }
 
     obj.dPlayerSelections = function (player) {
-        let html = `<button class="dplayer-icon download-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg></span></button>`
-        html += '<button class="dplayer-icon prev-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg></span></button>'
-        html += '<button id="btn-select-episode" class="dplayer-icon dplayer-quality-icon"><span style="opacity: 0.8;font-weight: bold;">选集</span></button>'
-        html += '<button class="dplayer-icon next-icon"><span style="opacity: 0.8;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg></span></button>'
+        let html = `<button class="dplayer-icon download-icon">
+    <span style="opacity: 0.8;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg>
+    </span>
+</button>
+<button class="dplayer-icon prev-icon">
+    <span style="opacity: 0.8;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg>
+    </span>
+</button>
+<button class="dplayer-icon dplayer-quality-icon btn-select-episode">
+    <span style="opacity: 0.8;font-weight: bold;">选集</span>
+</button>
+<button class="dplayer-icon next-icon">
+    <span style="opacity: 0.8;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg>
+    </span>
+</button>`
         $(".dplayer-icons-right").prepend(html)
-        let arr = [".download-icon", ".prev-icon", ".next-icon", ".dplayer-quality-icon"]
+        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
         arr.forEach((icon) => {
             $(icon).mouseenter(() => {
                 $(`${icon} span`).css("opacity", "1")
@@ -329,35 +402,35 @@
             })
         })
         $(".download-icon").on("click", () => {
-            !isSvip || window.open(`http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=${obj.url}`, "_blank")
+            window.open(`http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=${obj.url}`, "_blank")
         })
         var episodeTotal = $(".episode-list:has(.episode-item-active) a").length
         var episodeNow = $("a.episode-item-active").attr("data-index")
         var episodeNext = Number(episodeNow) + 1
         var episodePrevious = Number(episodeNow) - 1
         $(".prev-icon").on("click", () => {
-            if (isSvip && episodePrevious > 0) {
+            if (episodePrevious > 0) {
                 player.notice("\u5373\u5C06\u64AD\u653E\u4E0A\u4E00\u96C6")
                 let aPrev = $(`.episode-list:has(.episode-item-active) a[data-index="${episodePrevious}"]`).attr("href")
                 setTimeout(() => {
                     window.open(aPrev, "_self")
-                }, 1.5e3)
+                }, 1e3)
             } else {
-                isSvip ? player.notice("\u6CA1\u6709\u4E0A\u4E00\u96C6\u4E86") : player.notice("\u6682\u672A\u89E3\u9501")
+                player.notice("\u6CA1\u6709\u4E0A\u4E00\u96C6\u4E86")
             }
         })
         $(".next-icon").on("click", () => {
-            if (isSvip && episodeNext <= episodeTotal) {
+            if (episodeNext <= episodeTotal) {
                 player.notice("\u5373\u5C06\u64AD\u653E\u4E0B\u4E00\u96C6")
                 let aNext = $(`.episode-list:has(.episode-item-active) a[data-index="${episodeNext}"]`).attr("href")
                 setTimeout(() => {
                     window.open(aNext, "_self")
-                }, 1.5e3)
+                }, 1e3)
             } else {
-                isSvip ? player.notice("\u6CA1\u6709\u4E0B\u4E00\u96C6\u4E86") : player.notice("\u6682\u672A\u89E3\u9501")
+                player.notice("\u6CA1\u6709\u4E0B\u4E00\u96C6\u4E86")
             }
         })
-        $("#btn-select-episode").on("click", () => {
+        $(".btn-select-episode").on("click", () => {
             toast("搜索选集播放")
         })
     }
@@ -407,6 +480,183 @@
                 // 快捷键：]}（加速播放）
                 case 221: (localSpeed + 0.25 < 16) ? player.speed((localSpeed + 0.25).toFixed(2)) : player.speed(16)
                     break
+            }
+        })
+    }
+
+    obj.gestureInit = function (player) {
+        const { video, videoWrap, playedBarWrap } = player.template
+        let isDroging = false, startX = 0, startY = 0, startCurrentTime = 0, startVolume = 0, startBrightness = "100%", lastDirection = 0
+        const onTouchStart = (event) => {
+            if (event.touches.length === 1) {
+                isDroging = true
+                const { clientX, clientY } = event.touches[0]
+                startX = clientX
+                startY = clientY
+                startCurrentTime = video.currentTime
+                startVolume = video.volume
+                startBrightness = (/brightness\((\d+%?)\)/.exec(video.style.filter) || [])[1] || "100%"
+            }
+        }
+        const onTouchMove = (event) => {
+            if (event.touches.length === 1 && isDroging) {
+                const { clientX, clientY } = event.touches[0]
+                const client = player.isRotate ? clientY : clientX
+                const { width, height } = video.getBoundingClientRect()
+                const ratioX = clamp((clientX - startX) / width, -1, 1)
+                const ratioY = clamp((clientY - startY) / height, -1, 1)
+                const ratio = player.isRotate ? ratioY : ratioX
+                const direction = getDirection(startX, startY, clientX, clientY)
+                if (direction != lastDirection) {
+                    lastDirection = direction
+                    return
+                }
+                if (direction == 1 || direction == 2) {
+                    if (!lastDirection) lastDirection = direction
+                    if (lastDirection > 2) return
+                    const middle = player.isRotate ? height / 2 : width / 2
+                    if (client < middle) {
+                        const currentBrightness = clamp(+((/\d+/.exec(startBrightness) || [])[0] || 100) + 200 * ratio * 10, 50, 200)
+                        video.style.cssText += "filter: brightness(" + currentBrightness.toFixed(0) + "%)"
+                        player.notice(`亮度调节 ${currentBrightness.toFixed(0)}%`)
+                    }
+                    else if (client > middle) {
+                        const currentVolume = clamp(startVolume + ratio * 10, 0, 1)
+                        player.volume(currentVolume)
+                    }
+                }
+                else if (direction == 3 || direction == 4) {
+                    if (!lastDirection) lastDirection = direction
+                    if (lastDirection < 3) return
+                    const currentTime = clamp(startCurrentTime + video.duration * ratio * 0.5, 0, video.duration)
+                    player.seek(currentTime)
+                }
+            }
+        }
+        const onTouchEnd = () => {
+            if (isDroging) {
+                startX = 0
+                startY = 0
+                startCurrentTime = 0
+                startVolume = 0
+                lastDirection = 0
+                isDroging = false
+            }
+        }
+        videoWrap.addEventListener('touchstart', (event) => {
+            onTouchStart(event)
+        })
+        playedBarWrap.addEventListener('touchstart', (event) => {
+            onTouchStart(event)
+        })
+        videoWrap.addEventListener('touchmove', onTouchMove)
+        playedBarWrap.addEventListener('touchmove', onTouchMove)
+        document.addEventListener('touchend', onTouchEnd)
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+            if (window.orientation === 180 || window.orientation === 0) {
+                player.isRotate = true
+            }
+            else if (window.orientation === 90 || window.orientation === -90) {
+                player.isRotate = false
+            }
+        }, false)
+        function clamp(num, a, b) {
+            return Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b))
+        }
+        function getDirection(startx, starty, endx, endy) {
+            var angx = endx - startx
+            var angy = endy - starty
+            var result = 0
+            if (Math.abs(angx) < 2 && Math.abs(angy) < 2) return result
+            var angle = Math.atan2(angy, angx) * 180 / Math.PI
+            if (angle >= -135 && angle <= -45) {
+                result = 1
+            } else if (angle > 45 && angle < 135) {
+                result = 2
+            } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+                result = 3
+            } else if (angle >= -45 && angle <= 45) {
+                result = 4
+            }
+            return result
+        }
+    }
+
+    obj.longPressInit = function (player) {
+        const { video, videoWrap } = player.template
+        let isDroging = false, isLongPress = false, timer = 0, speed = 1
+        const onMouseDown = () => {
+            timer = setTimeout(() => {
+                isLongPress = true
+                speed = video.playbackRate
+                player.speed(speed * 3)
+            }, 1000)
+        }
+        const onMouseUp = () => {
+            clearTimeout(timer)
+            setTimeout(() => {
+                if (isLongPress) {
+                    isLongPress = false
+                    player.speed(speed)
+                    player.play()
+                }
+            })
+        }
+        const onTouchStart = (event) => {
+            if (event.touches.length === 1) {
+                isDroging = true
+                speed = video.playbackRate
+                timer = setInterval(() => {
+                    isLongPress = true
+                    player.speed(speed * 3)
+                    player.contextmenu.hide()
+                }, 1000)
+            }
+        }
+        const onTouchMove = (event) => {
+            if (event.touches.length === 1 && isDroging) {
+                clearInterval(timer)
+                setTimeout(() => {
+                    if (isLongPress) {
+                        isLongPress = false
+                        player.speed(speed)
+                        player.play()
+                    }
+                })
+            }
+        }
+        const onTouchEnd = () => {
+            if (isDroging) {
+                clearInterval(timer)
+                setTimeout(() => {
+                    if (isLongPress) {
+                        isLongPress = false
+                        player.speed(speed)
+                        player.play()
+                    }
+                })
+            }
+        }
+        videoWrap.addEventListener('touchstart', onTouchStart)
+        videoWrap.addEventListener('touchmove', onTouchMove)
+        videoWrap.addEventListener('touchend', onTouchEnd)
+        videoWrap.addEventListener('mousedown', onMouseDown)
+        videoWrap.addEventListener('mouseup', onMouseUp)
+    }
+
+    obj.dblclickInit = function (player) {
+        const { video, videoWrap } = player.template
+        videoWrap.addEventListener('dblclick', (event) => {
+            const currentTime = video.currentTime
+            const { offsetX, offsetY } = event
+            const { width, height } = video.getBoundingClientRect()
+            const client = player.isRotate ? offsetY : offsetX
+            const middle = player.isRotate ? height / 2 : width / 2
+            if (client < middle) {
+                player.seek(currentTime - 30)
+            }
+            else if (client > middle) {
+                player.seek(currentTime + 30)
             }
         })
     }
