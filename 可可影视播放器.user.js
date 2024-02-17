@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.5.2
+// @version      0.6.0
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持搜索选集播放，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -18,6 +18,7 @@
 // @antifeature  membership
 // @antifeature  referral-link
 // @grant        unsafeWindow
+// @grant        GM_addStyle
 // ==/UserScript==
 
 (function () {
@@ -30,6 +31,7 @@
         ["F", "切换全屏"],
         ["M", "开启/关闭静音"],
         ["N", "恢复正常 1x 倍速"],
+        ["S", "搜索选集播放"],
         ["W", "切换网页全屏"],
         [",", "播放上集"],
         [".", "播放下集"],
@@ -41,6 +43,7 @@
         ["→", "快进5秒"],
         ["Space", "播放/暂停"],
         ["Esc", "退出全屏"],
+        ["双击视频", "切换全屏"],
         ["长按视频", "临时 3x 倍速播放"],
     ]
     console.log("\n".concat(" %c 可可影视播放器 v", "0.5.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
@@ -48,7 +51,7 @@
 
     function toast(msg, type, dus, bgc) {
         var cText, text = decodeURIComponent(encodeURIComponent(msg))
-        // 中国传统颜色：https://zhongguose.com
+        // 中国传统颜色：http://zhongguose.com
         switch (type) {
             case "info": bgc = "#2b73af" // 品蓝
                 cText = `[☑️ info] => ${text}`
@@ -147,19 +150,18 @@
 
     obj.initPlayer = function (player) {
         const { options: { contextmenu } } = player
-        $("#video-loading-wrapper").hide()
-        $("[class*='install-tip']").hide()
         player.pause()
         obj.longPressInit(player)
         obj.hotKeyPanel()
         isMobile || obj.dPlayerTitle(player)
+        obj.dPlayerSelectEpisode(player)
         obj.dPlayerSelections(player)
         obj.dPlayerSetting(player)
         obj.dPlayerCustomSpeed(player)
         obj.dPlayerAutoMemoryPlay(player)
         obj.dPlayerLoop(player)
         if (isMobile) {
-            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
             arr.forEach((icon) => {
                 $(icon).hide()
             })
@@ -176,13 +178,30 @@
                 screen.orientation.unlock()
             })
         }
-        $("body").css({ "-webkit-font-smoothing": "antialiased", "-moz-font-smoothing": "antialiased", "font-smoothing": "antialiased", })
+        $("#dplayer video").dblclick(() => {
+            player.fullScreen.toggle("browser")
+        })
         JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
         JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
-        $(".dplayer-menu .dplayer-menu-item:nth-last-child(1)").hide()
-        $(".dplayer-menu .dplayer-menu-item:nth-last-child(2)").hide()
-        $("#video-loading-wrapper").remove()
-        $("[class*='install-tip']").remove()
+        GM_addStyle(`
+body {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-font-smoothing: antialiased !important;
+    font-smoothing: antialiased !important;
+}
+
+.mobile-download-popup,
+#video-loading-wrapper,
+[class*='install-tip'],
+.dplayer-menu .dplayer-menu-item:nth-last-child(1),
+.dplayer-menu .dplayer-menu-item:nth-last-child(2) {
+    display: none !important;
+}
+
+.dplayer-episode-panel-input:hover {
+    box-shadow: 0 0 0 2px #e2c027 inset;
+}
+`)
     }
 
     obj.hotKeyPanel = function () {
@@ -193,12 +212,7 @@
         </span>
     </div>
     <div class="dplayer-hotkey-panel-area" style="margin: 10px 0;max-height: 300px;overflow: hidden auto;">
-        <div class="dplayer-hotkey-panel-content" style="padding: 0 20px;transform: translate(0px, 0px) scale(1) translateZ(0px);">
-            <div class="dplayer-hotkey-panel-content-item" style="font-size: 14px;height: 28px;line-height: 28px;min-width: 360px;text-align: center;">
-                <span class="dplayer-hotkey-panel-content-name" style="display: inline-block;width: 120px;">N</span>
-                <span class="dplayer-hotkey-panel-content-desc" style="color: #969696;display: inline-block;width: 190px;">恢复正常 1x 倍速</span>
-            </div>
-        </div>
+        <div class="dplayer-hotkey-panel-content" style="padding: 0 20px;transform: translate(0px, 0px) scale(1) translateZ(0px);"></div>
     </div>
 </div>`
         $("#dplayer").append(html)
@@ -212,9 +226,6 @@
             $(".dplayer-hotkey-panel-area").append(html)
 
         })
-        $("::-webkit-scrollbar").css("width", "9px")
-        $("::-webkit-scrollbar-thumb").css({ "background": "#ccc", "border-radius": "5px" })
-        $("::-webkit-scrollbar-thumb:hover").css("background", "#f40")
         $(".dplayer-hotkey-panel-close").on("click", () => {
             $(".dplayer-hotkey-panel").hide()
         })
@@ -241,7 +252,7 @@
             !player.video.played.length || dplayerCT.show()
             clearTimeout(autoHideTimer)
             autoHideTimer = setTimeout(() => {
-                !player.video.played.length || player.paused || player.controller.disableAutoHide || dplayerCT.hide()
+                !player.video.played.length || player.paused || dplayerCT.hide()
             }, 3e3)
         }
         $("#dplayer").on("mouseleave", () => {
@@ -257,7 +268,7 @@
         var localSpeed = localStorage.getItem("dplayer-speed")
         localSpeed ? player.speed(localSpeed) : localStorage.setItem("dplayer-speed", 1)
         $(".dplayer-setting-speed-panel").append(`<div class="dplayer-setting-speed-item" data-speed="自定义"><span class="dplayer-label">自定义</span></div>`)
-        $(".dplayer-setting").append(`<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 2;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" maxlength="6" placeholder="0.1~16"> x</span></div></div>`)
+        $(".dplayer-setting").append(`<div class="dplayer-setting-custom-speed" title="双击恢复正常" style="display: none;right: 72px;position: absolute;bottom: 50px;width: 150px;border-radius: 2px;background: rgba(28,28,28,.9);padding: 7px 0;transition: all .3s ease-in-out;overflow: hidden;z-index: 5;"><div class="dplayer-speed-item" style="padding: 5px 10px;box-sizing: border-box;cursor: pointer;position: relative;"><span class="dplayer-speed-label" style="color: #f5f5f5;font-size: 13px;display: inline-block;vertical-align: middle;white-space: nowrap;">播放倍速：<input type="text" style="width: 55px;height: 15px;top: 3px;font-size: 13px;color: #222;border: 1px solid #fff;border-radius: 3px;text-align: center;" maxlength="6" placeholder="0.1~16"> x</span></div></div>`)
         var custombox = $(".dplayer-setting-custom-speed")
         var input = $(".dplayer-setting-custom-speed input")
         input.val(localSpeed || 1)
@@ -313,8 +324,10 @@
                 if (memoryTime && parseInt(memoryTime)) {
                     var formatTime = formatVideoTime(memoryTime)
                     if (automp == 1) {
-                        (player.video.duration - player.video.currentTime < 15) ? player.seek(memoryTime - 15) : player.seek(memoryTime)
-                        player.play()
+                        player.seek(memoryTime)
+                        setTimeout(() => {
+                            player.play()
+                        }, 1.5e3)
                     } else {
                         let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
     <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;"><strong>点击跳转</strong></a>
@@ -333,9 +346,9 @@
                             player.play()
                         })
                         $(".memory-play-wrap .play-jump").on("click", () => {
-                            (player.video.duration - player.video.currentTime < 15) ? player.seek(memoryTime - 15) : player.seek(memoryTime)
                             clearTimeout(memoryTimeout)
                             $(".memory-play-wrap").remove()
+                            player.seek(memoryTime)
                             player.play()
                         })
                     }
@@ -368,10 +381,7 @@
     }
 
     obj.dPlayerSelections = function (player) {
-        let html = `<button class="dplayer-icon dplayer-quality-icon btn-select-source">
-    <span style="opacity: 0.8;font-weight: bold;">切换线路</span>
-</button>
-<button class="dplayer-icon download-icon">
+        let html = `<button class="dplayer-icon download-icon">
     <span style="opacity: 0.8;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg>
     </span>
@@ -390,7 +400,7 @@
     </span>
 </button>`
         $(".dplayer-icons-right").prepend(html)
-        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
         arr.forEach((icon) => {
             $(icon).mouseenter(() => {
                 $(`${icon} span`).css("opacity", "1")
@@ -406,33 +416,27 @@
         var episodeNow = $("a.episode-item-active").attr("data-index")
         var episodeNext = Number(episodeNow) + 1
         var episodePrevious = Number(episodeNow) - 1
+        let dingwei = document.querySelector(`.episode-list:has(.episode-item-active) a[data-index="${Number(episodeNow)}"]`)
+        dingwei.scrollIntoView()
+        document.querySelector("html").scrollIntoView(true)
         $(".prev-icon").on("click", () => {
             if (episodePrevious > 0) {
-                player.notice("\u5373\u5C06\u64AD\u653E\u4E0A\u4E00\u96C6")
                 let aPrev = $(`.episode-list:has(.episode-item-active) a[data-index="${episodePrevious}"]`).attr("href")
-                setTimeout(() => {
-                    window.open(aPrev, "_self")
-                }, 1e3)
+                window.open(aPrev, "_self")
             } else {
                 player.notice("\u6CA1\u6709\u4E0A\u4E00\u96C6\u4E86")
             }
         })
         $(".next-icon").on("click", () => {
             if (episodeNext <= episodeTotal) {
-                player.notice("\u5373\u5C06\u64AD\u653E\u4E0B\u4E00\u96C6")
                 let aNext = $(`.episode-list:has(.episode-item-active) a[data-index="${episodeNext}"]`).attr("href")
-                setTimeout(() => {
-                    window.open(aNext, "_self")
-                }, 1e3)
+                window.open(aNext, "_self")
             } else {
                 player.notice("\u6CA1\u6709\u4E0B\u4E00\u96C6\u4E86")
             }
         })
         $(".btn-select-episode").on("click", () => {
-            toast("搜索选集播放")
-        })
-        $(".btn-select-source").on("click", () => {
-            toast("切换播放线路")
+            $(".dplayer-episode-panel").show()
         })
     }
 
@@ -458,7 +462,44 @@
         player.on("ended", function () {
             var isNext = $(".dplayer-setting-autonext input").get(0).checked
             let isLoop = $(".dplayer-setting-loop input").get(0).checked
-            isLoop == true ? player.seek(0) : isNext == true ? $(".next-icon").click() : player.pause()
+            isLoop == false || player.seek(0)
+            isLoop == true || isNext == false || $(".next-icon").click()
+
+        })
+    }
+
+    obj.dPlayerSelectEpisode = function (player) {
+        var episodeTotal = $(".episode-list:has(.episode-item-active) a").length
+        var episodeNow = $("a.episode-item-active").attr("data-index")
+        let html = `<div class="dplayer-episode-panel" style="display: none;background-color: rgba(33,33,33,.9);border-radius: 5px;color: #f5f5f5;left: 50%;position: absolute;text-align: center;top: 50%;transform: translate(-50%,-50%);width: 400px;user-select: none;z-index: 20;">
+    <div class="dplayer-episode-panel-title" style="border-bottom: 1px solid hsla(0,0%,100%,.1);font-size: 18px;line-height: 45px;text-align: center;"><strong>搜索选集播放</strong>
+    <span class="dplayer-episode-panel-close" style="fill: #f5f5f5;color: #f5f5f5;cursor: pointer;height: 24px;line-height: 24px;position: absolute;right: 12px;top: 12px;width: 22px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
+    </span>
+    </div>
+    <div class="dplayer-episode-panel-area" style="margin: 10px 10px 10px;max-height: 300px;overflow: hidden auto;display: flex;flex-wrap: wrap;">
+        <div class="dplayer-episode-panel-input" style="display: inline-flex;flex-grow: 1;align-items: center;justify-content: center;padding: 1px 11px;background-color: #f5f5f5;border-radius: 5px;cursor: text;transform: translateZ(0);border-top-right-radius: 0;border-bottom-right-radius: 0;">
+            <input type="number" placeholder="当前播放第 ${Number(episodeNow)} 集，共 ${Number(episodeTotal)} 集" max="${Number(episodeTotal)}" min="1" step="1" style="flex-grow: 1;color: #36282b;font-size: 16px;height: 32px;line-height: 32px;padding: 0;outline: none;border: none;background: none;box-sizing: border-box;">
+        </div>
+        <div class="dplayer-episode-panel-button" style="height: 34px;font-weight: bold;background-color: #e2c027;color: #36282b;position: relative;display: inline-flex;align-items: center;justify-content: center;border-radius: 5px;padding: 0 20px;white-space: nowrap;cursor: pointer;border-left: 0;border-top-left-radius: 0;border-bottom-left-radius: 0;">播放</div>
+    </div>
+</div>`
+        $("#dplayer").append(html)
+        $(".dplayer-episode-panel-button").on("click", () => {
+            var episodeNew = $(".dplayer-episode-panel-input input").val()
+            if (episodeNew) {
+                if (episodeNew > 0 && episodeNew <= episodeTotal) {
+                    let eNew = $(`.episode-list:has(.episode-item-active) a[data-index="${episodeNew}"]`).attr("href")
+                    window.open(eNew, "_self")
+                } else {
+                    player.notice("没有这一集，请重新输入")
+                }
+            } else {
+                player.notice("请输入播放集数")
+            }
+        })
+        $(".dplayer-episode-panel-close").on("click", () => {
+            $(".dplayer-episode-panel").hide()
         })
     }
 
@@ -467,7 +508,7 @@
             var e = event || window.event
             var k = e.keyCode || e.which
             var localSpeed = Number(localStorage.getItem("dplayer-speed"))
-            let arr = [70, 77, 87, 188, 19, 219, 221]
+            let arr = [70, 77, 83, 84, 87, 188, 19, 219, 221]
             arr.forEach((n) => {
                 if (k != n) {
                     e.stopPropagation()
@@ -482,6 +523,11 @@
                     break
                 // 快捷键：N（恢复正常 1x 倍速）
                 case 78: player.speed(1)
+                    break
+                // 快捷键：S（搜索选集播放）
+                case 83:
+                    let dep = document.querySelector(".dplayer-episode-panel")
+                    dep.style.display == "none" ? dep.style.display = "block" : dep.style.display = "none"
                     break
                 // 快捷键：W（切换网页全屏）
                 case 87: player.fullScreen.toggle('web')
