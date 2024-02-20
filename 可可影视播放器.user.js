@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.7.1
-// @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持搜索选集、切换线路，支持任意倍速调整（0.1-16）
+// @version      0.7.2
+// @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
@@ -26,15 +26,15 @@
     'use strict'
 
     const obj = {}
-    const $ = unsafeWindow.jQuery || window.jQuery
+    const $ = unsafeWindow.jQuery || window.jQuery || $
     const userAgent = navigator.userAgent || window.navigator.userAgent
-    const isMobile = /Mobile|Android|webOS|iPhone|iPad|Phone/i.test(userAgent)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini|Mobile/i.test(userAgent)
     const shortcutKey = [
         ["F", "切换全屏"],
         ["K", "查看快捷键说明"],
         ["M", "开启/关闭静音"],
         ["N", "恢复正常 1X 倍速"],
-        ["S", "搜索选集"],
+        ["S", "快速选集"],
         ["T", "切换线路"],
         ["W", "切换网页全屏"],
         [",", "播放上集"],
@@ -50,29 +50,37 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.7.1").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.7.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
+    GM_addStyle(`
+body {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-font-smoothing: antialiased !important;
+    font-smoothing: antialiased !important;
+}
 
-    function toast(msg, type, dus, bgc) {
+.mobile-download-popup,
+[class*='install-tip'],
+.dplayer-menu .dplayer-menu-item:nth-last-child(1),
+.dplayer-menu .dplayer-menu-item:nth-last-child(2) {
+    display: none !important;
+}
+
+.dplayer-episode-panel-input:hover {
+    box-shadow: 0 0 0 2px #e2c027 inset;
+}
+
+.dplayer-source-panel-area a:hover {
+    color: #e2c027 !important;
+}
+`)
+
+    function toast(msg, dus) {
         var cText, text = decodeURIComponent(encodeURIComponent(msg))
-        // 中国传统颜色：http://zhongguose.com
-        switch (type) {
-            case "info": bgc = "#2b73af" // 品蓝
-                cText = `[☑️ info] => ${text}`
-                break
-            case "warn": bgc = "#e2c027" // 姜黄
-                cText = `[⚠️ warn] => ${text}`
-                break
-            case "error": bgc = "#ee3f4d" // 茶花红
-                cText = `[❌ error] => ${text}`
-                break
-            default: bgc = "#36282b" // 苍蝇灰
-                break
-        }
-        let html = `<div id='cToast' style='opacity: 0.9;background-color: ${bgc};position: absolute;bottom: 50%;left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;box-sizing: border-box;'>${text}</div>`
+        let html = `<div id='cToast' style='opacity: 0.9;background-color: rgba(54,40,43,.9);position: absolute;bottom: 50%;left: 50%;padding: 10px 20px;width: max-content;z-index: 999999;color: #f5f5f5;text-align: center;border-radius: 5px;transform: translate(-50%, -50%);pointer-events: all;font-size: 16px;box-sizing: border-box;'>${text}</div>`
         $("body").append(html)
         setTimeout(() => {
-            $("#cToast").css({ "transition": "all 0.3s ease", "opacity": "0" })
+            $("#cToast").css({ "transition": "all 0.3s ease scale(0.5)", "opacity": "0" })
             $("#cToast").remove()
         }, dus ? dus : 2e3)
         console.log(cText)
@@ -118,7 +126,6 @@
         const options = {
             container: container,
             screenshot: true,
-            autoplay: true,
             volume: 1,
             playbackSpeed: [0.25, 0.5, 1, 2, 3],
             video: {
@@ -146,15 +153,14 @@
         try {
             var player = new window.DPlayer(options)
             obj.initPlayer(player)
-            toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u6210\u529F", "info")
+            toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u6210\u529F")
         } catch (error) {
-            toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u5931\u8D25", "error")
+            toast("\u0044\u0050\u006C\u0061\u0079\u0065\u0072\u0020\u64AD\u653E\u5668\u521B\u5EFA\u5931\u8D25")
         }
     }
 
     obj.initPlayer = function (player) {
         const { options: { contextmenu } } = player
-        player.pause()
         obj.longPressInit(player)
         obj.hotKeyPanel()
         isMobile || obj.dPlayerTitle(player)
@@ -166,23 +172,20 @@
         obj.dPlayerAutoMemoryPlay(player)
         obj.dPlayerLoop(player)
         if (isMobile) {
-            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
-            arr.forEach((icon) => {
-                $(icon).hide()
-            })
+            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
             player.on('fullscreen', () => {
+                screen.orientation.lock("landscape")
                 arr.forEach((icon) => {
                     $(icon).show()
                 })
-                screen.orientation.lock("landscape")
             })
             player.on('fullscreen_cancel', () => {
+                screen.orientation.unlock()
                 arr.forEach((icon) => {
                     $(icon).hide()
+                    $(".dplayer-episode-panel").hide()
+                    $(".dplayer-source-panel").hide()
                 })
-                $(".dplayer-episode-panel").hide()
-                $(".dplayer-source-panel").hide()
-                screen.orientation.unlock()
             })
         }
         $("#dplayer video").dblclick(() => {
@@ -190,29 +193,8 @@
         })
         JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
         JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
-        GM_addStyle(`
-body {
-    -webkit-font-smoothing: antialiased !important;
-    -moz-font-smoothing: antialiased !important;
-    font-smoothing: antialiased !important;
-}
-
-.mobile-download-popup,
-#video-loading-wrapper,
-[class*='install-tip'],
-.dplayer-menu .dplayer-menu-item:nth-last-child(1),
-.dplayer-menu .dplayer-menu-item:nth-last-child(2) {
-    display: none !important;
-}
-
-.dplayer-episode-panel-input:hover {
-    box-shadow: 0 0 0 2px #e2c027 inset;
-}
-
-.dplayer-source-panel-area a:hover {
-    color: #e2c027 !important;
-}
-`)
+        GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
+        localStorage.getItem("dplayer-autonext") || localStorage.getItem("dplayer-automp") || location.reload() || window.location.reload()
     }
 
     obj.hotKeyPanel = function () {
@@ -222,9 +204,7 @@ body {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
         </span>
     </div>
-    <div class="dplayer-hotkey-panel-area" style="margin: 10px 0;max-height: 300px;overflow: hidden auto;">
-        <div class="dplayer-hotkey-panel-content" style="padding: 0 20px;transform: translate(0px, 0px) scale(1) translateZ(0px);"></div>
-    </div>
+    <div class="dplayer-hotkey-panel-area" style="margin: 10px 0;max-height: 250px;overflow: hidden auto;"></div>
 </div>`
         $("#dplayer").append(html)
         shortcutKey.forEach((val) => {
@@ -330,54 +310,50 @@ body {
             player.template.settingBox.classList.remove("dplayer-setting-box-open")
             player.template.mask.classList.remove("dplayer-mask-show")
         })
-        player.on("durationchange", () => {
-            if (player.video.duration > 0) {
-                if (memoryTime && parseInt(memoryTime)) {
-                    var formatTime = formatVideoTime(memoryTime)
-                    if (automp == 1) {
-                        player.seek(memoryTime)
-                        player.play()
-                    } else {
-                        let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
-    <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;"><strong>点击跳转</strong></a>
+        player.on("loadedmetadata", () => {
+            if (memoryTime && parseInt(memoryTime)) {
+                var formatTime = formatVideoTime(memoryTime)
+                if (automp == 1) {
+                    player.seek(memoryTime)
+                    $(".source-box-side").click()
+                    player.play()
+                } else {
+                    let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
+    <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">点击跳转</a>
      <span class="close-btn" style="display: inline-block;width: 16px;height: 16px;vertical-align: middle;cursor: pointer;fill: #f5f5f5;color: #f5f5f5;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
      </span>
 </div>`
-                        $(player.container).append(html)
-                        var memoryTimeout = setTimeout(() => {
-                            $(".memory-play-wrap").remove()
-                            player.play()
-                        }, 15e3)
-                        $(".memory-play-wrap .close-btn").on("click", () => {
-                            clearTimeout(memoryTimeout)
-                            $(".memory-play-wrap").remove()
-                            player.play()
-                        })
-                        $(".memory-play-wrap .play-jump").on("click", () => {
-                            clearTimeout(memoryTimeout)
-                            $(".memory-play-wrap").remove()
-                            player.seek(memoryTime)
-                            player.play()
-                        })
-                    }
-                } else {
-                    player.play()
+                    $("#dplayer").append(html)
+                    var memoryTimeout = setTimeout(() => {
+                        $(".memory-play-wrap").remove()
+                        player.play()
+                    }, 15e3)
+                    $(".memory-play-wrap .close-btn").on("click", () => {
+                        clearTimeout(memoryTimeout)
+                        $(".memory-play-wrap").remove()
+                        player.play()
+                    })
+                    $(".memory-play-wrap .play-jump").on("click", () => {
+                        clearTimeout(memoryTimeout)
+                        $(".memory-play-wrap").remove()
+                        player.seek(memoryTime)
+                        player.play()
+                    })
                 }
+            } else {
+                $(".source-box-side").click()
+                player.play()
             }
         })
-        obj.maskCurrentTime = function (player) {
-            let currentTime = player.video.currentTime
-            currentTime && localStorage.setItem(`tcplayer-lpt-${obj.url}`, Number(player.video.currentTime))
-        }
-        document.onvisibilitychange = function () {
-            if (document.visibilityState === "hidden") {
-                obj.maskCurrentTime(player)
+        var totalTime = 0
+        player.on('timeupdate', () => {
+            var currentTime = Math.floor(player.video.currentTime)
+            if (currentTime > 0 && currentTime > totalTime && (currentTime % 5 == 0)) {
+                localStorage.setItem(`tcplayer-lpt-${obj.url}`, Number(currentTime))
             }
-        }
-        window.onbeforeunload = function () {
-            obj.maskCurrentTime(player)
-        }
+            totalTime = currentTime
+        });
         function formatVideoTime(seconds) {
             let secondTotal = Math.round(seconds)
                 , hour = Math.floor(secondTotal / 3600)
@@ -412,7 +388,7 @@ body {
     </span>
 </button>`
         $(".dplayer-icons-right").prepend(html)
-        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode"]
+        let arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
         arr.forEach((icon) => {
             $(icon).mouseenter(() => {
                 $(`${icon} span`).css("opacity", "1")
@@ -486,12 +462,12 @@ body {
         var episodeTotal = $(".episode-list:has(.episode-item-active) a").length
         var episodeNow = $("a.episode-item-active").attr("data-index")
         let html = `<div class="dplayer-episode-panel" style="display: none;background-color: rgba(22,22,22,.9);border-radius: 5px;color: #f5f5f5;left: 50%;position: absolute;text-align: center;top: 50%;transform: translate(-50%,-50%);width: 400px;user-select: none;z-index: 30;">
-    <div class="dplayer-episode-panel-title" style="border-bottom: 1px solid hsla(0,0%,100%,.1);font-size: 18px;line-height: 45px;text-align: center;letter-spacing: 3px;"><strong>搜索选集</strong>
+    <div class="dplayer-episode-panel-title" style="border-bottom: 1px solid hsla(0,0%,100%,.1);font-size: 18px;line-height: 45px;text-align: center;letter-spacing: 3px;"><strong>快速选集</strong>
     <span class="dplayer-episode-panel-close" style="fill: #f5f5f5;color: #f5f5f5;cursor: pointer;height: 24px;line-height: 24px;position: absolute;right: 12px;top: 12px;width: 22px;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
     </span>
     </div>
-    <div class="dplayer-episode-panel-area" style="margin: 10px 10px 10px;max-height: 300px;overflow: hidden auto;display: flex;flex-wrap: wrap;">
+    <div class="dplayer-episode-panel-area" style="margin: 10px 10px 10px;max-height: 250px;overflow: hidden auto;display: flex;flex-wrap: wrap;">
         <div class="dplayer-episode-panel-input" style="display: inline-flex;flex-grow: 1;align-items: center;justify-content: center;padding: 1px 11px;background-color: #f5f5f5;border-radius: 5px;cursor: text;transform: translateZ(0);border-top-right-radius: 0;border-bottom-right-radius: 0;">
             <input type="number" placeholder="当前播放第 ${Number(episodeNow)} 集，共 ${Number(episodeTotal)} 集" max="${Number(episodeTotal)}" min="1" step="1" style="flex-grow: 1;color: #36282b;font-size: 16px;height: 32px;line-height: 32px;padding: 0;outline: none;border: none;background: none;box-sizing: border-box;">
         </div>
@@ -528,7 +504,7 @@ body {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
     </span>
     </div>
-    <div class="dplayer-source-panel-area" style="margin: 10px 10px 10px;max-height: 300px;overflow: hidden auto;display: flex;flex-wrap: wrap;"></div>
+    <div class="dplayer-source-panel-area" style="margin: 10px 10px 10px;max-height: 250px;overflow: hidden auto;display: flex;flex-wrap: wrap;"></div>
 </div>`
         $("#dplayer").append(html)
         var arr = []
@@ -570,7 +546,7 @@ body {
             var e = event || window.event
             var k = e.keyCode || e.which
             var localSpeed = Number(localStorage.getItem("dplayer-speed"))
-            let arr = [70, 75, 77, 83, 84, 87, 188, 19, 219, 221]
+            let arr = [70, 75, 77, 78, 83, 84, 87, 188, 190, 219, 221]
             arr.forEach((n) => {
                 if (k != n) {
                     e.stopPropagation()
@@ -591,12 +567,12 @@ body {
                 // 快捷键：N（恢复正常 1X 倍速）
                 case 78: player.speed(1)
                     break
-                // 快捷键：S（搜索选集播放）
+                // 快捷键：S（快速选集）
                 case 83:
                     let dep = document.querySelector(".dplayer-episode-panel")
                     dep.style.display == "none" ? dep.style.display = "block" : dep.style.display = "none"
                     break
-                // 快捷键：T（切换线路播放）
+                // 快捷键：T（切换线路）
                 case 84:
                     let dsp = document.querySelector(".dplayer-source-panel")
                     dsp.style.display == "none" ? dsp.style.display = "block" : dsp.style.display = "none"
