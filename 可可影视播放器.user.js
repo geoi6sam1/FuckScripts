@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.7.2
+// @version      0.8.1
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1
 // @match        http*://*.keke*.com/play/*
@@ -50,7 +50,7 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.7.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.1").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
     GM_addStyle(`
 body {
@@ -125,12 +125,23 @@ body {
         }
         const options = {
             container: container,
+            autoplay: true,
+            theme: "#e2c027",
             screenshot: true,
+            hotkey: true,
+            airplay: true,
             volume: 1,
             playbackSpeed: [0.25, 0.5, 1, 2, 3],
             video: {
                 url: obj.url,
-                type: "hls",
+                type: 'hls',
+                customType: {
+                    hls: function (video) {
+                        const hls = new window.Hls()
+                        hls.loadSource(video.src)
+                        hls.attachMedia(video)
+                    },
+                },
             },
             contextmenu: [
                 {
@@ -148,7 +159,6 @@ body {
                     click: () => { isMobile ? player.notice("\u5F53\u524D\u8BBE\u5907\u4E0D\u652F\u6301\u5FEB\u6377\u952E") : $(".dplayer-hotkey-panel").show() },
                 },
             ],
-            theme: "#f5f5f5",
         }
         try {
             var player = new window.DPlayer(options)
@@ -160,41 +170,61 @@ body {
     }
 
     obj.initPlayer = function (player) {
-        const { options: { contextmenu } } = player
-        obj.longPressInit(player)
-        obj.hotKeyPanel()
-        isMobile || obj.dPlayerTitle(player)
-        obj.dPlayerSelectEpisode(player)
-        obj.dPlayerChangeSource(player)
-        obj.dPlayerSelections(player)
-        obj.dPlayerSetting(player)
-        obj.dPlayerCustomSpeed(player)
-        obj.dPlayerAutoMemoryPlay(player)
-        obj.dPlayerLoop(player)
-        if (isMobile) {
-            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
-            player.on('fullscreen', () => {
-                screen.orientation.lock("landscape")
-                arr.forEach((icon) => {
-                    $(icon).show()
+        obj.playerReady(player, (player) => {
+            const { options: { contextmenu } } = player
+            obj.longPressInit(player)
+            obj.hotKeyPanel()
+            isMobile || obj.dPlayerTitle(player)
+            obj.dPlayerChangeSource()
+            obj.dPlayerSelectEpisode(player)
+            obj.dPlayerSelections(player)
+            obj.dPlayerSetting(player)
+            obj.dPlayerCustomSpeed(player)
+            obj.dPlayerAutoMemoryPlay(player)
+            obj.dPlayerLoop(player)
+            if (isMobile) {
+                var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+                player.on('fullscreen', () => {
+                    screen.orientation.lock("landscape")
+                    arr.forEach((icon) => {
+                        $(icon).show()
+                    })
                 })
-            })
-            player.on('fullscreen_cancel', () => {
-                screen.orientation.unlock()
-                arr.forEach((icon) => {
-                    $(icon).hide()
-                    $(".dplayer-episode-panel").hide()
-                    $(".dplayer-source-panel").hide()
+                player.on('fullscreen_cancel', () => {
+                    screen.orientation.unlock()
+                    arr.forEach((icon) => {
+                        $(icon).hide()
+                        $(".dplayer-episode-panel").hide()
+                        $(".dplayer-source-panel").hide()
+                    })
                 })
+            }
+            $("#dplayer video").dblclick(() => {
+                player.fullScreen.toggle("browser")
             })
-        }
-        $("#dplayer video").dblclick(() => {
-            player.fullScreen.toggle("browser")
+            JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
+            JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
+            GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
         })
-        JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
-        JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
-        GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
-        localStorage.getItem("dplayer-autonext") || localStorage.getItem("dplayer-automp") || location.reload() || window.location.reload()
+    }
+
+    obj.playerReady = function (player, callback) {
+        player.on("loadeddata", () => {
+            if (player.isReady) {
+                callback && callback(player)
+            } else {
+                if (player.video.readyState >= 2) {
+                    player.isReady = true
+                    callback && callback(player)
+                } else {
+                    player.video.ondurationchange = function () {
+                        player.video.ondurationchange = null
+                        player.isReady = true
+                        callback && callback(player)
+                    }
+                }
+            }
+        })
     }
 
     obj.hotKeyPanel = function () {
@@ -310,50 +340,63 @@ body {
             player.template.settingBox.classList.remove("dplayer-setting-box-open")
             player.template.mask.classList.remove("dplayer-mask-show")
         })
-        player.on("loadedmetadata", () => {
-            if (memoryTime && parseInt(memoryTime)) {
-                var formatTime = formatVideoTime(memoryTime)
-                if (automp == 1) {
-                    player.seek(memoryTime)
-                    $(".source-box-side").click()
-                    player.play()
-                } else {
-                    let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
+        if (memoryTime && parseInt(memoryTime)) {
+            var formatTime = formatVideoTime(memoryTime)
+            if (automp == 1) {
+                player.seek(memoryTime)
+                player.play()
+            } else {
+                let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
     <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">点击跳转</a>
      <span class="close-btn" style="display: inline-block;width: 16px;height: 16px;vertical-align: middle;cursor: pointer;fill: #f5f5f5;color: #f5f5f5;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m8 6.939 3.182-3.182a.75.75 0 1 1 1.061 1.061L9.061 8l3.182 3.182a.75.75 0 1 1-1.061 1.061L8 9.061l-3.182 3.182a.75.75 0 1 1-1.061-1.061L6.939 8 3.757 4.818a.75.75 0 1 1 1.061-1.061L8 6.939z"></path></svg>
      </span>
 </div>`
-                    $("#dplayer").append(html)
-                    var memoryTimeout = setTimeout(() => {
-                        $(".memory-play-wrap").remove()
-                        player.play()
-                    }, 15e3)
-                    $(".memory-play-wrap .close-btn").on("click", () => {
-                        clearTimeout(memoryTimeout)
-                        $(".memory-play-wrap").remove()
-                        player.play()
-                    })
-                    $(".memory-play-wrap .play-jump").on("click", () => {
-                        clearTimeout(memoryTimeout)
-                        $(".memory-play-wrap").remove()
-                        player.seek(memoryTime)
-                        player.play()
-                    })
+                $("#dplayer").append(html)
+                var memoryTimeout = setTimeout(() => {
+                    $(".memory-play-wrap").remove()
+                    player.play()
+                }, 15e3)
+                $(".memory-play-wrap .close-btn").on("click", () => {
+                    clearTimeout(memoryTimeout)
+                    $(".memory-play-wrap").remove()
+                    player.play()
+                })
+                $(".memory-play-wrap .play-jump").on("click", () => {
+                    clearTimeout(memoryTimeout)
+                    $(".memory-play-wrap").remove()
+                    player.seek(memoryTime)
+                    player.play()
+                })
+            }
+        } else {
+            player.play()
+        }
+        var dplayerUrl = `tcplayer-lpt-${obj.url}`
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                var totalTime = Math.floor(player.video.duration)
+                var currentTime = Math.floor(player.video.currentTime)
+                if (currentTime > 0) {
+                    if (totalTime - currentTime < 15) {
+                        localStorage.setItem(dplayerUrl, Number(currentTime - 30))
+                    } else {
+                        localStorage.setItem(dplayerUrl, Number(currentTime))
+                    }
                 }
-            } else {
-                $(".source-box-side").click()
-                player.play()
             }
         })
-        var totalTime = 0
-        player.on('timeupdate', () => {
+        window.addEventListener("beforeunload", () => {
+            var totalTime = Math.floor(player.video.duration)
             var currentTime = Math.floor(player.video.currentTime)
-            if (currentTime > 0 && currentTime > totalTime && (currentTime % 5 == 0)) {
-                localStorage.setItem(`tcplayer-lpt-${obj.url}`, Number(currentTime))
+            if (currentTime > 0) {
+                if (totalTime - currentTime < 15) {
+                    localStorage.setItem(dplayerUrl, Number(currentTime - 30))
+                } else {
+                    localStorage.setItem(dplayerUrl, Number(currentTime))
+                }
             }
-            totalTime = currentTime
-        });
+        })
         function formatVideoTime(seconds) {
             let secondTotal = Math.round(seconds)
                 , hour = Math.floor(secondTotal / 3600)
@@ -483,13 +526,13 @@ body {
                         let eNew = $(`.episode-list:has(.episode-item-active) a[data-index="${episodeNew}"]`).attr("href")
                         window.open(eNew, "_self")
                     } else {
-                        player.notice("没有这一集，请重新输入")
+                        player.notice("\u6CA1\u6709\u8FD9\u4E00\u96C6\uFF0C\u8BF7\u91CD\u65B0\u8F93\u5165")
                     }
                 } else {
-                    player.notice("已经在播放这一集了")
+                    player.notice("\u5F53\u524D\u6B63\u5728\u64AD\u653E\u8FD9\u4E00\u96C6")
                 }
             } else {
-                player.notice("请输入播放集数")
+                player.notice("\u8BF7\u8F93\u5165\u64AD\u653E\u96C6\u6570")
             }
         })
         $(".dplayer-episode-panel-close").on("click", () => {
@@ -497,7 +540,7 @@ body {
         })
     }
 
-    obj.dPlayerChangeSource = function (player) {
+    obj.dPlayerChangeSource = function () {
         let html = `<div class="dplayer-source-panel" style="display: none;background-color: rgba(22,22,22,.9);border-radius: 5px;color: #f5f5f5;left: 50%;position: absolute;text-align: center;top: 50%;transform: translate(-50%,-50%);width: 400px;user-select: none;z-index: 20;">
     <div class="dplayer-source-panel-title" style="border-bottom: 1px solid hsla(0,0%,100%,.1);font-size: 18px;line-height: 45px;text-align: center;letter-spacing: 3px;"><strong>切换线路</strong>
     <span class="dplayer-source-panel-close" style="fill: #f5f5f5;color: #f5f5f5;cursor: pointer;height: 24px;line-height: 24px;position: absolute;right: 12px;top: 12px;width: 22px;">
