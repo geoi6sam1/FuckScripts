@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.8.1
+// @version      0.8.2
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
-// @author       geoi6sam1
+// @author       geoi6sam1@qq.com
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
 // @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
@@ -50,9 +50,37 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.1").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
     GM_addStyle(`
+#dplayer [class*="-panel-area"]::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#dplayer [class*="-panel-area"]::-webkit-scrollbar-track {
+  width: 6px;
+  background: rgba(22,22,22,.1);
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  border-radius: 2em;
+}
+
+#dplayer [class*="-panel-area"]::-webkit-scrollbar-thumb {
+  background-color: rgba(57,58,67,.9);
+  background-clip: padding-box;
+  min-height: 32px;
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  border-radius: 2em;
+  transition: background-color .3s;
+  cursor: pointer;
+}
+
+#dplayer [class*="-panel-area"]::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(57,58,67,.9);
+}
+
 body {
     -webkit-font-smoothing: antialiased !important;
     -moz-font-smoothing: antialiased !important;
@@ -184,6 +212,9 @@ body {
             obj.dPlayerLoop(player)
             if (isMobile) {
                 var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+                arr.forEach((icon) => {
+                    $(icon).hide()
+                })
                 player.on('fullscreen', () => {
                     screen.orientation.lock("landscape")
                     arr.forEach((icon) => {
@@ -194,9 +225,9 @@ body {
                     screen.orientation.unlock()
                     arr.forEach((icon) => {
                         $(icon).hide()
-                        $(".dplayer-episode-panel").hide()
-                        $(".dplayer-source-panel").hide()
                     })
+                    $(".dplayer-episode-panel").hide()
+                    $(".dplayer-source-panel").hide()
                 })
             }
             $("#dplayer video").dblclick(() => {
@@ -253,12 +284,15 @@ body {
     }
 
     obj.dPlayerTitle = function (player) {
-        var playSeason = $(".play-box-side-header .detail-title strong")
-        var playEpisode = $(".episode-list .episode-item-active span")
-        var playTitle = playSeason.text() + " (" + playEpisode.text() + ")"
-        let html = `<div class="dplayer-controller-top" style="display: none;opacity: 0.9;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">
+        var playSeason = $(".play-box-side-header .detail-title strong").text()
+        var playEpisode = $(".episode-list .episode-item-active span").text()
+        if (playSeason.length > 15) {
+            playSeason = playSeason.substr(0, 15) + "…"
+        }
+        var playTitle = playSeason + "（" + playEpisode + "）"
+        let html = `<div class="dplayer-controller-top" style="display: none;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">
             <span class="dplayer-title" style="position: absolute;top: 26px;left: 26px;font-size: 32px;"><strong>${playTitle}</strong></span>
-            <span class="dplayer-time" style="position: absolute;top: 32px;right: 32px;font-size: 26px;"><strong>00:00</strong></span>
+            <span class="dplayer-time" style="position: absolute;top: 26px;right: 26px;font-size: 32px;"><strong>00:00</strong></span>
         </div>`
         $(".dplayer-video-wrap").append(html)
         setInterval(() => {
@@ -270,7 +304,7 @@ body {
         }, 1e3)
         var dplayerCT = $(".dplayer-controller-top")
         var autoHideTimer, autoHideCT = () => {
-            !player.video.played.length || dplayerCT.show()
+            dplayerCT.show()
             clearTimeout(autoHideTimer)
             autoHideTimer = setTimeout(() => {
                 !player.video.played.length || player.paused || dplayerCT.hide()
