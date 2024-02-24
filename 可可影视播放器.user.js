@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.8.2
+// @version      0.8.3
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1@qq.com
 // @match        http*://*.keke*.com/play/*
@@ -50,7 +50,7 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.2").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.3").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
     GM_addStyle(`
 #dplayer [class*="-panel-area"]::-webkit-scrollbar {
@@ -198,64 +198,43 @@ body {
     }
 
     obj.initPlayer = function (player) {
-        obj.playerReady(player, (player) => {
-            const { options: { contextmenu } } = player
-            obj.longPressInit(player)
-            obj.hotKeyPanel()
-            isMobile || obj.dPlayerTitle(player)
-            obj.dPlayerChangeSource()
-            obj.dPlayerSelectEpisode(player)
-            obj.dPlayerSelections(player)
-            obj.dPlayerSetting(player)
-            obj.dPlayerCustomSpeed(player)
-            obj.dPlayerAutoMemoryPlay(player)
-            obj.dPlayerLoop(player)
-            if (isMobile) {
-                var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+        const { options: { contextmenu } } = player
+        obj.longPressInit(player)
+        obj.hotKeyPanel()
+        isMobile || obj.dPlayerTitle(player)
+        obj.dPlayerChangeSource()
+        obj.dPlayerSelectEpisode(player)
+        obj.dPlayerSelections(player)
+        obj.dPlayerSetting(player)
+        obj.dPlayerCustomSpeed(player)
+        obj.dPlayerAutoMemoryPlay(player)
+        obj.dPlayerLoop(player)
+        if (isMobile) {
+            var arr = [".download-icon", ".prev-icon", ".next-icon", ".btn-select-episode", ".btn-select-source"]
+            arr.forEach((icon) => {
+                $(icon).hide()
+            })
+            player.on('fullscreen', () => {
+                screen.orientation.lock("landscape")
+                arr.forEach((icon) => {
+                    $(icon).show()
+                })
+            })
+            player.on('fullscreen_cancel', () => {
+                screen.orientation.unlock()
                 arr.forEach((icon) => {
                     $(icon).hide()
                 })
-                player.on('fullscreen', () => {
-                    screen.orientation.lock("landscape")
-                    arr.forEach((icon) => {
-                        $(icon).show()
-                    })
-                })
-                player.on('fullscreen_cancel', () => {
-                    screen.orientation.unlock()
-                    arr.forEach((icon) => {
-                        $(icon).hide()
-                    })
-                    $(".dplayer-episode-panel").hide()
-                    $(".dplayer-source-panel").hide()
-                })
-            }
-            $("#dplayer video").dblclick(() => {
-                player.fullScreen.toggle("browser")
+                $(".dplayer-episode-panel").hide()
+                $(".dplayer-source-panel").hide()
             })
-            JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
-            JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
-            GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
+        }
+        $("#dplayer video").dblclick(() => {
+            player.fullScreen.toggle("browser")
         })
-    }
-
-    obj.playerReady = function (player, callback) {
-        player.on("loadeddata", () => {
-            if (player.isReady) {
-                callback && callback(player)
-            } else {
-                if (player.video.readyState >= 2) {
-                    player.isReady = true
-                    callback && callback(player)
-                } else {
-                    player.video.ondurationchange = function () {
-                        player.video.ondurationchange = null
-                        player.isReady = true
-                        callback && callback(player)
-                    }
-                }
-            }
-        })
+        JSON.stringify(contextmenu).includes("5EDMgA") || player.destroy()
+        JSON.stringify(contextmenu).includes("69sMaz") || player.destroy()
+        GM_addStyle(`#video-loading-wrapper { display: none !important; }`)
     }
 
     obj.hotKeyPanel = function () {
@@ -406,21 +385,8 @@ body {
         } else {
             player.play()
         }
-        var dplayerUrl = `tcplayer-lpt-${obj.url}`
-        document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === "hidden") {
-                var totalTime = Math.floor(player.video.duration)
-                var currentTime = Math.floor(player.video.currentTime)
-                if (currentTime > 0) {
-                    if (totalTime - currentTime < 15) {
-                        localStorage.setItem(dplayerUrl, Number(currentTime - 30))
-                    } else {
-                        localStorage.setItem(dplayerUrl, Number(currentTime))
-                    }
-                }
-            }
-        })
-        window.addEventListener("beforeunload", () => {
+        obj.tcplayerLptUrl = function () {
+            var dplayerUrl = `tcplayer-lpt-${obj.url}`
             var totalTime = Math.floor(player.video.duration)
             var currentTime = Math.floor(player.video.currentTime)
             if (currentTime > 0) {
@@ -430,6 +396,15 @@ body {
                     localStorage.setItem(dplayerUrl, Number(currentTime))
                 }
             }
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                obj.tcplayerLptUrl()
+            }
+        })
+        window.addEventListener("beforeunload", () => {
+            obj.tcplayerLptUrl()
         })
         function formatVideoTime(seconds) {
             let secondTotal = Math.round(seconds)
@@ -623,7 +598,7 @@ body {
             var e = event || window.event
             var k = e.keyCode || e.which
             var localSpeed = Number(localStorage.getItem("dplayer-speed"))
-            let arr = [70, 75, 77, 78, 83, 84, 87, 188, 190, 219, 221]
+            let arr = [32, 37, 38, 39, 40, 70, 75, 77, 78, 83, 84, 87, 188, 190, 219, 221]
             arr.forEach((n) => {
                 if (k != n) {
                     e.stopPropagation()
