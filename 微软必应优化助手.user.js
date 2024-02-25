@@ -31,9 +31,11 @@
             video: 0, // 相关视频，默认隐藏，值为0
             image: 0, // 相关图像，默认隐藏，值为0
             relSearches: 1, // 底部相关搜索，默认显示，值为1
-            histories: 0,// 底部历史搜索，默认隐藏，值为0
-            webZhihu: 0, // 知乎相关网页，默认隐藏，值为0
-            webCSDN: 0, // CSDN相关网页，默认隐藏，值为0
+            histories: 0, // 底部历史搜索，默认隐藏，值为0
+            web: [ // 隐藏相关网页，默认知乎和CSDN
+                "zhihu.com",
+                "csdn.net",
+            ],
         },
     }
 
@@ -101,26 +103,6 @@ li.b_ans:has(.b_mrs)
         `)
     }
 
-    obj.bingWebZhihu = function () {
-        GM_addStyle(`
-li.b_ans:has(a[href*="zhihu.com"]),
-li.b_algo:has(a[href*="zhihu.com"])
-{
-    display: none !important;
-}
-        `)
-    }
-
-    obj.bingWebCSDN = function () {
-        GM_addStyle(`
-li.b_ans:has(a[href*="csdn.net"]),
-li.b_algo:has(a[href*="csdn.net"])
-{
-    display: none !important;
-}
-        `)
-    }
-
     GM_addStyle(`
 .b_ad,
 .ad_sc,
@@ -146,6 +128,16 @@ li.b_algo:has(.b_attribution[data-partnertag]),
 }
 `)
 
+    obj.web.forEach((item) => {
+        GM_addStyle(`
+li.b_ans:has(a[href*="${item}"]),
+li.b_algo:has(a[href*="${item}"])
+{
+    display: none !important;
+}
+        `)
+    })
+
     var arr = [
         [obj.option.faq, obj.bingFAQ],
         [obj.option.news, obj.bingNews],
@@ -154,8 +146,6 @@ li.b_algo:has(.b_attribution[data-partnertag]),
         [obj.option.image, obj.bingImage],
         [obj.option.relSearches, obj.bingRelevantSearches],
         [obj.option.histories, obj.bingHistories],
-        [obj.option.webZhihu, obj.bingWebZhihu],
-        [obj.option.webCSDN, obj.bingWebCSDN],
     ]
     arr.forEach((item) => {
         if (item[0] == 0) {
