@@ -19,14 +19,14 @@
 // @antifeature  referral-link
 // @grant        unsafeWindow
 // @grant        GM_addStyle
-// @license      MIT
+// @license      GPL-3.0
 // ==/UserScript==
 
 (function () {
     'use strict'
 
-    /*** 设置 ***/
     const obj = {
+        /*** 个性化选项 ***/
         option: {
             quick: 0, // 网页顶部导航按钮，默认隐藏，值为0
             barrage: 0, // 视频弹幕相关内容，默认隐藏，值为0
@@ -66,7 +66,6 @@
         }, 5e3)
     }
 
-    /*** 网站灰度 ***/
     obj.wetvGrayscale = function () {
         GM_addStyle(`
 .gray-style-remembrance
@@ -77,7 +76,6 @@
 `)
     }
 
-    /*** 大众广告 ***/
     GM_addStyle(`
 .quick_games,
 .video-card-module [dt-params*="ad_"],
@@ -120,38 +118,34 @@ iframe[data-src*="mall."],
 }
 `)
 
-    // 监听键盘空格
-    window.addEventListener("keypress", (event) => {
+   obj.adFloatFuck = function () {
+        var txv_player_choose = document.querySelectorAll("#player video")[0]
+        if (txv_player_choose) {
+            setTimeout(() => {
+                if (txv_player_choose.paused == true) {
+                    var txv_player_win = document.querySelector(".txp_videos_container")
+                    txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;")
+                }
+            }, 2e3)
+        }
+    }
+
+    window.addEventListener("keydown", (event) => {
         var e = event || window.event
         var k = e.keyCode || e.which
         if (k == 32) {
-            txv_ad_float_fuck()
+            obj.adFloatFuck()
         }
     })
 
-    // 监听鼠标左键
     window.addEventListener("mousedown", (event) => {
         var e = event || window.event
         var b = e.button
         if (b == 0) {
-            txv_ad_float_fuck()
+            obj.adFloatFuck()
         }
     })
 
-    // 恢复视频窗口大小
-    function txv_ad_float_fuck() {
-        var txv_player_choose = document.querySelectorAll("#player video")[0]
-        if (txv_player_choose) {
-            setTimeout(() => {
-                if (txv_player_choose.paused === true) {
-                    var txv_player_win = document.querySelector(".txp_videos_container")
-                    txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;")
-                }
-            }, 1.5e3)
-        }
-    }
-
-    /*** 初始化 ***/
     var arr = [
         [obj.option.quick, obj.wetvQuick],
         [obj.option.barrage, obj.wetvBarrage],
