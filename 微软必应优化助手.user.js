@@ -128,7 +128,7 @@ li.b_algo:has(.b_attribution[data-partnertag]),
 }
 `)
 
-    obj.web.forEach((item) => {
+    obj.option.web.forEach((item) => {
         GM_addStyle(`
 li.b_ans:has(a[href*="${item}"]),
 li.b_algo:has(a[href*="${item}"])
