@@ -22,8 +22,8 @@
 (function () {
     'use strict'
 
-    /*** 设置 ***/
     const obj = {
+        /*** 个性化选项 ***/
         option: {
             faq: 1, // 相关问题，默认显示，值为1
             news: 1, // 相关资讯，默认显示，值为1
