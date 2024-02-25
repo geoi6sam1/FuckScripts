@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      0.8.3
+// @version      0.8.4
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1@qq.com
 // @match        http*://*.keke*.com/play/*
 // @match        http*://*.keke*.app/play/*
+// @icon         https://api.iowen.cn/favicon/www.kekedy.tv.png
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @require      https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js
 // @require      https://cdn.bootcdn.net/ajax/libs/dplayer/1.27.1/DPlayer.min.js
-// @icon         https://api.iowen.cn/favicon/www.kekedy.tv.png
 // @run-at       document-start
 // @antifeature  ads
 // @antifeature  miner
@@ -50,7 +51,7 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.3").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
+    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.4").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
     GM_addStyle(`
 #dplayer [class*="-panel-area"]::-webkit-scrollbar {
@@ -568,10 +569,10 @@ body {
             let label = psl[i].innerText
             let num = psn[i].innerText
             arr.push([label, num])
-            for (let j = 0; j < arr.length; j++) {
-                if (arr.length != epa.length && arr[j][1] < Number(ep)) {
-                    arr.splice(j, 1)
-                }
+        }
+        for (let i = 0; i < arr.length; i++) {
+            if (arr.length != epa.length && arr[i][1] < Number(ep)) {
+                arr.splice(i, 1)
             }
         }
         for (let i = 0; i < epa.length; i++) {
