@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         微软必应优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.2.0
+// @version      1.2.1
 // @description  微软必应（Microsoft Bing）搜索结果优化，支持电脑端和移动端
 // @author       geoi6sam1
-// @match        *://*.bing.com/*
+// @match        http*://*.bing.com/*
 // @icon         https://bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
@@ -34,6 +34,7 @@
             histories: 0, // 底部历史搜索，默认隐藏，值为0
             web: [ // 隐藏相关网页，默认知乎和CSDN
                 "zhihu.com",
+                "csdn.com",
                 "csdn.net",
             ],
         },
