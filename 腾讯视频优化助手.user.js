@@ -4,10 +4,10 @@
 // @version      1.1.0
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP或使用广告拦截扩展
 // @author       geoi6sam1@qq.com
-// @match        *://v.qq.com/*
-// @match        *://m.v.qq.com/*
-// @match        *://film.qq.com/*
-// @match        *://m.film.qq.com/*
+// @match        http*://v.qq.com/*
+// @match        http*://m.v.qq.com/*
+// @match        http*://film.qq.com/*
+// @match        http*://m.film.qq.com/*
 // @icon         https://v.qq.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
