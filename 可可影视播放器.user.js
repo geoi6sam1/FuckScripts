@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         可可影视播放器
 // @namespace    https://github.com/geoi6sam1
-// @version      1.0.0
+// @version      1.0.1
 // @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
 // @author       geoi6sam1@qq.com
 // @match        http*://*.keke*.com/play/*
@@ -51,8 +51,11 @@
         ["双击视频", "切换全屏"],
         ["长按视频", "临时 3X 倍速播放"],
     ]
-    console.log("\n".concat(" %c 可可影视播放器 v", "0.8.4").concat(" %c https://github.com/geoi6sam1/FuckScripts ", "\n"), "color: #ffd700;background: #36282b;padding: 5px 0;", "background: #ffd700;padding: 5px 0;")
     console.table(shortcutKey)
+    var made = ["d-c-a", "d-i", "u-h"]
+    made.forEach((f) => {
+        localStorage.removeItem(f)
+    })
     GM_addStyle(`
 #dplayer [class*="-panel-area"]::-webkit-scrollbar {
   width: 10px;
@@ -140,6 +143,7 @@ body {
         var container, videoNode = document.querySelector("#my-video")
         if (videoNode) {
             obj.dPlayerGetUrl()
+            $("[data-xgplayerid*='-']").remove()
             container = document.querySelector("#dplayer")
             if (!container) {
                 container = document.createElement("div")
@@ -355,11 +359,11 @@ body {
             player.template.mask.classList.remove("dplayer-mask-show")
         })
         if (memoryTime && parseInt(memoryTime)) {
-            var formatTime = formatVideoTime(memoryTime)
             if (automp == 1) {
                 player.seek(memoryTime)
                 player.play()
             } else {
+                var formatTime = formatVideoTime(memoryTime)
                 let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
     <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">点击跳转</a>
      <span class="close-btn" style="display: inline-block;width: 16px;height: 16px;vertical-align: middle;cursor: pointer;fill: #f5f5f5;color: #f5f5f5;">
@@ -387,7 +391,7 @@ body {
             player.play()
         }
         obj.tcplayerLptUrl = function () {
-            var dplayerUrl = `tcplayer-lpt-${obj.url}`
+            var dplayerUrl = `${obj.url}`
             var totalTime = Math.floor(player.video.duration)
             var currentTime = Math.floor(player.video.currentTime)
             if (currentTime > 0) {
