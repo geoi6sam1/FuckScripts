@@ -273,7 +273,7 @@ body {
         if (playSeason.length > 15) {
             playSeason = playSeason.substr(0, 15) + "…"
         }
-        var playTitle = playSeason + "（" + playEpisode + "）"
+        var playTitle = playSeason + "&nbsp;" + playEpisode
         let html = `<div class="dplayer-controller-top" style="display: none;text-align: center;position: absolute;top: 0px;left: 0;right: 0;color: #F5F5F5;transition: all 0.3s ease;pointer-events: none;">
             <span class="dplayer-title" style="position: absolute;top: 26px;left: 26px;font-size: 32px;"><strong>${playTitle}</strong></span>
             <span class="dplayer-time" style="position: absolute;top: 26px;right: 26px;font-size: 32px;"><strong>00:00</strong></span>
@@ -363,7 +363,7 @@ body {
                 player.seek(memoryTime)
                 player.play()
             } else {
-                var formatTime = formatVideoTime(memoryTime)
+                let formatTime = formatVideoTime(memoryTime)
                 let html = `<div class="memory-play-wrap" style="display: block;position: absolute;left: 30px;bottom: 60px;font-size: 16px;padding: 10px;border-radius: 3px;color: #f5f5f5;background-color: rgba(33, 33, 33, 0.9);z-index:50;">&nbsp;上次播放到：${formatTime}&nbsp;
     <a href="javascript:void(0);" class="play-jump" style="text-decoration: none;color: #2b73af;">点击跳转</a>
      <span class="close-btn" style="display: inline-block;width: 16px;height: 16px;vertical-align: middle;cursor: pointer;fill: #f5f5f5;color: #f5f5f5;">
