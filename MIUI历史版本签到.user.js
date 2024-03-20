@@ -63,7 +63,7 @@ return new Promise((resolve, reject) => {
                             reject()
                             break
                         default:
-                            reMsg("🔴登录失败，请检查账号密码")
+                            reMsg("🟡登录失败，请检查账号密码")
                             reject()
                             break
                     }
