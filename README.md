@@ -9,7 +9,7 @@
 > 👉[**`图文教程`**](https://learn.scriptcat.org)👈&nbsp;&nbsp;&nbsp;👉[**`视频教程`**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
 
 | UserScript Name | Latest Version | Script Type | GitHub | Gitee |
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|:---:|
 | **可可影视播放器** | v1.0.0 | 通用 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
 | **微软必应优化助手** | v1.1.2 | 通用 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
 | **腾讯视频优化助手** | v1.0.2 | 通用 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
