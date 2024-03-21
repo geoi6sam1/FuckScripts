@@ -13,6 +13,7 @@
 // @grant           GM_setValue
 // @grant           GM_log
 // @cloudcat
+// @connect         miuiver.com
 // @exportcookie    domain=.miuiver.com
 // @antifeature     ads
 // @antifeature     miner
@@ -24,7 +25,7 @@
 // ==/UserScript==
 
 /* ==UserConfig==
-miuiver:
+Login:
   log:
     title: 账号
     description: 用户名或邮箱地址
@@ -35,14 +36,18 @@ miuiver:
     default:
  ==/UserConfig== */
 
-GM_getValue("miuiver.log") || GM_setValue("miuiver.log", "")
-GM_getValue("miuiver.pwd") || GM_setValue("miuiver.pwd", "")
+GM_getValue("Login.log") || GM_setValue("Login.log", "")
+GM_getValue("Login.pwd") || GM_setValue("Login.pwd", "")
+GM_getValue("reLogTimes") && GM_setValue("reLogTimes", 0)
 
 return new Promise((resolve, reject) => {
+    var reLogTimes = 0
     function login() {
-        var log = encodeURIComponent(GM_getValue("miuiver.log"))
-        var pwd = encodeURIComponent(GM_getValue("miuiver.pwd"))
+        var log = encodeURIComponent(GM_getValue("Login.log"))
+        var pwd = encodeURIComponent(GM_getValue("Login.pwd"))
         if (log && pwd) {
+            reLogTimes += 1
+            GM_setValue("reLogTimes", reLogTimes)
             GM_xmlhttpRequest({
                 method: "POST",
                 url: "https://miuiver.com/wp-login.php",
@@ -55,21 +60,27 @@ return new Promise((resolve, reject) => {
                 responseType: "json",
                 onload: (res) => {
                     switch (res.status) {
-                        case 302:
-                            main()
+                        case 200:
+                            if (GM_getValue("reLogTimes") > 1) {
+                                reMsg("🟡登录失败，请检查账号密码")
+                                reject()
+                            } else {
+                                main()
+                            }
                             break
                         case 503:
-                            reMsg("🟡登录频繁，请换个IP再运行")
+                            reMsg("🟡登录频繁，请稍后再运行")
                             reject()
                             break
                         default:
-                            reMsg("🟡登录失败，请检查账号密码")
+                            reMsg("🔴登录失败，请查看运行日志")
+                            GM_log(res)
                             reject()
                             break
                     }
                 },
                 onerror: (err) => {
-                    reMsg("🔴未知错误，请查看运行日志")
+                    reMsg("🔴登录出错，请查看运行日志")
                     GM_log(err)
                     reject()
                 },
@@ -103,12 +114,16 @@ return new Promise((resolve, reject) => {
                             resolve()
                             break
                     }
-                } else {
+                } else if (res.status == 400) {
                     login()
+                } else {
+                    reMsg("🔴签到失败，请查看运行日志")
+                    GM_log(res)
+                    reject()
                 }
             },
             onerror: (err) => {
-                reMsg("🔴未知错误，请查看运行日志")
+                reMsg("🔴签到出错，请查看运行日志")
                 GM_log(err)
                 reject()
             },
