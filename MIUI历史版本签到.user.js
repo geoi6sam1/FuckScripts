@@ -2,7 +2,7 @@
 // @name            MIUI历史版本签到
 // @namespace       https://github.com/geoi6sam1
 // @version         0.2.0
-// @description     MIUI历史版本每日自动签到，支持自动登录（WordPress通用模板）
+// @description     MIUI历史版本每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://miuiver.com/favicon.ico
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
