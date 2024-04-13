@@ -1,0 +1,161 @@
+// ==UserScript==
+// @name         腾讯视频优化助手
+// @namespace    https://github.com/geoi6sam1
+// @version      1.1.1
+// @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP或使用广告拦截扩展
+// @author       geoi6sam1@qq.com
+// @match        http*://v.qq.com/*
+// @match        http*://m.v.qq.com/*
+// @match        http*://film.qq.com/*
+// @match        http*://m.film.qq.com/*
+// @icon         https://v.qq.com/favicon.ico
+// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
+// @run-at       document-start
+// @antifeature  ads
+// @antifeature  miner
+// @antifeature  payment
+// @antifeature  tracking
+// @antifeature  membership
+// @antifeature  referral-link
+// @grant        unsafeWindow
+// @grant        GM_addStyle
+// @license      GPL-3.0
+// ==/UserScript==
+
+(function () {
+    'use strict'
+
+    const obj = {
+        /*** 个性化选项 ***/
+        option: {
+            quick: 0, // 网页顶部导航按钮，默认隐藏，值为0
+            barrage: 0, // 视频弹幕相关内容，默认隐藏，值为0
+            watermark: 0, // 视频右上角水印，默认移除，值为0
+            grayscale: 0, // 哀悼日网站灰度，默认取消，值为0
+        },
+    }
+
+    obj.wetvQuick = function () {
+        GM_addStyle(`
+.quick_vip,
+.quick_upload,
+.quick_message,
+#pc_client
+{
+    display: none !important;
+}
+`)
+    }
+
+    obj.wetvBarrage = function () {
+        GM_addStyle(`
+.barrage-control,
+.thumbplayer-barrage
+{
+    display: none !important;
+}
+`)
+    }
+
+    obj.wetvWatermark = function () {
+        setTimeout(() => {
+            var wetv_video_watermark = document.querySelector(".txp-watermark")
+            if (wetv_video_watermark) {
+                wetv_video_watermark.remove()
+            }
+        }, 5e3)
+    }
+
+    obj.wetvGrayscale = function () {
+        GM_addStyle(`
+.gray-style-remembrance
+{
+    -webkit-filter: grayscale(0) !important;
+    filter: grayscale(0) !important;
+}
+`)
+    }
+
+    GM_addStyle(`
+.quick_games,
+.video-card-module [dt-params*="ad_"],
+.focus-wrap [dt-eid*="ad_poster"],
+a[href*="9377s."],
+a[href*="qqgame."],
+a[href*="gamer."],
+a[href*="iwan."],
+.video-banner-module:has(a[href*="9377s."]),
+.video-banner-module:has(a[href*="qqgame."]),
+.video-banner-module:has(a[href*="gamer."]),
+.video-banner-module:has(a[href*="iwan."]),
+#iwan-gamependant-page,
+.tip_download,
+.vip_act,
+.fixed_box,
+#ad_container,
+#iwan-game,
+.banner-ad,
+.txp_ad,
+.txp_none,
+.game-switch-ad,
+.player-comment-btn,
+iframe[data-src*="mall."],
+[class*="txp_full_screen_pause"],
+[data-role*="creative-player-pause"],
+#ad_m-site,
+.open-app.old-open,
+[dt-eid="openbanner"],
+.bottom-wrapper,
+.at-app-banner
+{
+    display: none !important;
+}
+
+.video-card-wrap
+{
+   margin-right: var(--content-big-card-margin);
+   margin-bottom: var(--content-big-card-margin);
+}
+`)
+
+   obj.adFloatFuck = function () {
+        var txv_player_choose = document.querySelectorAll("#player video")[0]
+        if (txv_player_choose) {
+            setTimeout(() => {
+                if (txv_player_choose.paused == true) {
+                    var txv_player_win = document.querySelector(".txp_videos_container")
+                    txv_player_win.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 0;")
+                }
+            }, 2e3)
+        }
+    }
+
+    window.addEventListener("keydown", (event) => {
+        var e = event || window.event
+        var k = e.keyCode || e.which
+        if (k == 32) {
+            obj.adFloatFuck()
+        }
+    })
+
+    window.addEventListener("mousedown", (event) => {
+        var e = event || window.event
+        var b = e.button
+        if (b == 0) {
+            obj.adFloatFuck()
+        }
+    })
+
+    var arr = [
+        [obj.option.quick, obj.wetvQuick],
+        [obj.option.barrage, obj.wetvBarrage],
+        [obj.option.watermark, obj.wetvWatermark],
+        [obj.option.grayscale, obj.wetvGrayscale],
+    ]
+    arr.forEach((item) => {
+        if (item[0] == 0) {
+            item[1]()
+        }
+    })
+
+})()

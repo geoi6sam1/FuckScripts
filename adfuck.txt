@@ -1,0 +1,66 @@
+[Adblock Plus 2.0]
+! Title: ADFUCK
+! Version: 2024040918
+! Expires: 2 days
+! 👇👇过滤规则推荐👇👇
+! EasyList：https://easylist-downloads.adblockplus.org/easylist.txt
+! Easylist China：https://easylist-downloads.adblockplus.org/easylistchina.txt
+! EasyPrivacy：https://easylist-downloads.adblockplus.org/easyprivacy.txt
+! Adblock Warning Removal List：https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
+! CJX's Annoyance List：https://raw.githubusercontent.com/cjx82630/cjxlist/master/cjx-annoyance.txt
+! CJX's uBlock List：https://raw.githubusercontent.com/cjx82630/cjxlist/master/cjx-ublock.txt
+! AdGuard Base filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
+! AdGuard Chinese filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
+! AdGuard Filter unblocking search ads and self-promotions：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! AdGuard Popups：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_19_Annoyances_Popups/filter.txt
+! AdGuard Mobile App Banners：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! AdGuard Cookie Notices：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_18_Annoyances_Cookies/filter.txt
+! AdGuard Mobile ads filter：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
+! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
+
+
+! ---------必应搜索---------
+bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta), #b_footer ul
+
+! ---------腾讯视频---------
+v.qq.com,film.qq.com##.quick_games, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .txp_none, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, [dt-eid="openbanner"], .bottom-wrapper, .at-app-banner
+v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_DESTROY', '')
+v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_LOAD_START', '')
+
+! ---------优酷---------
+youku.com##[class*="kui-watermark"],.vip_vip_wrap,.newswiper_sub_item_box:has(a[href*="tg.602."]),.ad-wrap,.fee-wrap-new.full-mode,.youku-advertise,.youku-advertise-layer,.youku-advertise-tip,.kui-vip-entrance-0,.ad-banner-wrapper,.callEnd_box,.callEnd_fixed_box
+m.youku.com##.clipboard.h5-detail-guide,.clipboard.h5-detail-vip-guide
+youku.com#%#//scriptlet('adjust-setTimeout', 'e-', '', '0.02')
+youku.com#%#//scriptlet('adjust-setTimeout', 'r--', '', '0.02')
+||cibntv.net/youku/*.mp4?$media,redirect=empty,domain=youku.com,important
+
+! ---------爱奇艺---------
+iqiyi.com##.iqp-logo-box,.panel-item:has(a[href*="668wan."]),.panel-item:has(a[href*="game."]),.qy20-h-carousel__ad,.ad-ef,.ad-seed,.ad-screen,.ad-tl,.qy-mod-li:has([class*="vipact"]),.iqp-top-item:has(.tipWrap),.iqp-top-item.iqp-client-launcher,.meta-hot ~ .cont,.side-cont .btn-wrap,.header-sideItem.header-vip,.header-sideItem:has(#nav_game),.qy-plist-ad
+m.iqiyi.com##.m-iqyGuide-layer,#home_tongyong,.m-box[name="m-recList"],#player_bottom,.m-iqylink-diversion,[class^="ChannelHomeBanner_"]
+iqiyi.com#%#//scriptlet('set-constant', 'QiyiPlayerProphetData.a.data.showResponse.slots', 'emptyObj')
+iqiyi.com#%#//scriptlet("set-constant", "Object.prototype.blackscreenDuration", "1")
+||cupid.iqiyi.com/mixer?$domain=iqiyi.com
+
+! ---------芒果TV---------
+mgtv.com###sideFloatbtn,.rightnav .openvip,.proright .m-search-source,.vip-button.vip-button-padding,.sidebar-download
+m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mgui-btn-nowelt,.mg-down-btn,.m-vip-list,.m-vip-list + div
+||da.mgtv.com^
+
+! ---------123云盘---------
+123pan.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,.rightInfo .user-reward-btn,.rightInfo .qrcode_btn,[class*="header-waning-tips"],.user-reward-btn,.loginModal-footer.payment-footer
+123pan.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
+123pan.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
+
+! ---------APKMirror---------
+apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
+apkmirror.com#$#html body { padding-top: 0 !important; }
+
+! ---------屏蔽P2P---------
+||tracker.$xhr,websocket,script,ping
+||p2p.$xhr,websocket,script,ping
+
+! ---------去返利链接---------
+||jd.com^$removeparam=/^utm_/
+||tmall.com^$removeparam=/^utm_/
+||taobao.com^$removeparam=/^utm_/
+||pinduoduo.com^$removeparam=/^utm_/
