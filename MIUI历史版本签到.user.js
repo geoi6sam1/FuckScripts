@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            MIUI历史版本签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.2
+// @version         0.3.3
 // @description     MIUI历史版本每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://miuiver.com/favicon.ico
@@ -33,11 +33,9 @@ Login:
     password: true
  ==/UserConfig== */
 
-GM_setValue("reLogTimes", 0)
+var reLogTimes = 0
 
 return new Promise((resolve, reject) => {
-    var reLogTimes = 0
-
     function getRs(callback) {
         GM_xmlhttpRequest({
             method: "GET",
@@ -60,7 +58,6 @@ return new Promise((resolve, reject) => {
         var pwd = encodeURIComponent(GM_getValue("Login.pwd"))
         if (log && pwd) {
             reLogTimes++
-            GM_setValue("reLogTimes", reLogTimes)
             GM_xmlhttpRequest({
                 method: "POST",
                 url: "https://miuiver.com/wp-login.php",
@@ -73,7 +70,7 @@ return new Promise((resolve, reject) => {
                 onload: (xhr) => {
                     var stat = xhr.status
                     if (stat == 200) {
-                        if (GM_getValue("reLogTimes") > 2) {
+                        if (reLogTimes > 3) {
                             reMsg("失败", "登录失败，请检查账号密码！")
                             resolve()
                         } else {
@@ -92,9 +89,6 @@ return new Promise((resolve, reject) => {
                     reject(err)
                 },
             })
-        } else {
-            reMsg("失败", "尚未登录，请登录后再运行！")
-            resolve()
         }
     }
 
