@@ -6,7 +6,7 @@
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @crontab         * 7-23 once * *
+// @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_getValue
@@ -54,8 +54,8 @@ var keywordIndex = 0
 var keywordList = []
 var domain = "www.bing.com"
 var sleepTime = GM_getValue("Time.inr") * 1000 + Math.floor(Math.random() * 1000)
-var windowsUA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
-var androidUA = "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
+var pcUserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+var mobileUserAgent = "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
 
 function getRewardsInfo() {
     return new Promise((resolve, reject) => {
@@ -129,7 +129,7 @@ async function main() {
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > 3) {
-            reMsg("频繁", `搜索过于频繁，请稍后再重新运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
+            reMsg("频繁", `搜索过于频繁，请稍后再运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
     } else {
@@ -145,7 +145,7 @@ async function main() {
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
                     "Referer": `https://${domain}/`,
-                    "User-Agent": androidUA,
+                    "User-Agent": pcUserAgent,
                 },
                 onload: onload,
             })
@@ -157,7 +157,7 @@ async function main() {
                     url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                     headers: {
                         "Referer": `https://${domain}/`,
-                        "User-Agent": windowsUA,
+                        "User-Agent": mobileUserAgent,
                     },
                     onload: onload,
                 })
