@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name            微软必应Rewards签到
+// @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
 // @version         0.1.0
-// @description     每天自动完成Bing搜索任务获取微软Rewards积分
+// @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @crontab         * * once * *
+// @crontab         * 7-23 once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_getValue
@@ -29,15 +29,12 @@
 Time:
   inr:
     title: 搜索间隔
-    description: 最小1秒，最大60秒，默认5秒
+    description: 最小1秒，默认5秒
     type: number
     default: 5
     min: 1
-    max: 60
     unit: 秒
  ==/UserConfig== */
-
-GM_getValue("Time.inr") || GM_setValue("Time.inr", 5)
 
 function getSubstring(inputStr, startStr, endStr) {
     const startIndex = inputStr.indexOf(startStr)
@@ -57,19 +54,18 @@ var keywordIndex = 0
 var keywordList = []
 var domain = "www.bing.com"
 var sleepTime = GM_getValue("Time.inr") * 1000 + Math.floor(Math.random() * 1000)
-var windowsUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.4567.89"
-var androidUA = "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36 EdgA/123.0.4567.89"
+var windowsUA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+var androidUA = "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
 
 function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com",
-            headers: {
-                "User-Agent": windowsUA,
-            },
             onload(xhr) {
                 if (xhr.status == 200) {
-                    resolve(xhr.responseText)
+                    var res = xhr.responseText
+                    var data = JSON.parse(getSubstring(res, "var dashboard = ", ";\r"))
+                    resolve(data)
                 } else {
                     reMsg("失败", "获取积分信息失败！状态码：" + stat)
                     reject(xhr)
@@ -94,6 +90,13 @@ async function getTopKeyword() {
                         for (let i = 0; i < data.length; i++) {
                             keywordList.push(data[i].word)
                         }
+                        if (!Array.prototype.derangedArray) {
+                            Array.prototype.derangedArray = function () {
+                                for (var a, b, c = this.length; c; a = parseInt(Math.random() * c), x = this[--c], this[c] = this[a], this[a] = b)
+                                    return this
+                            }
+                        }
+                        keywordList.derangedArray()
                         resolve(keywordList[keywordIndex])
                     } else {
                         reMsg("失败", "获取关键词失败！状态码：" + stat)
@@ -122,62 +125,45 @@ async function main() {
             domain = url.host
         }
     }
-    const rewardsData = await getRewardsInfo()
-    const dashboard = JSON.parse(getSubstring(rewardsData, "var dashboard = ", ";\r"))
-    var promoMore = dashboard.morePromotions
-    for (let i = 0; i < promoMore.length; i++) {
-        if (promoMore[i].attributes.isGiveEligible == false) {
-            GM_xmlhttpRequest({
-                url: promoMore[i].attributes.destinationUrl,
-                headers: {
-                    "Referer": `https://rewards.bing.com/`,
-                    "User-Agent": windowsUA,
-                },
-            })
-        }
-    }
-    var dlyPointPro = dashboard.userStatus.counters.dailyPoint[0].pointProgress
-    var pcPro = dashboard.userStatus.counters.pcSearch[0].pointProgress
-    var pcMax = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
-    var mobilePro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
-    var mobileMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
-    if (dlyPointPro === lastProcess) {
+    const dashboard = await getRewardsInfo()
+    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > 3) {
-            reMsg("失败", `请增加搜索间隔时间（默认5秒）\n电脑：${pcPro}/${pcMax}　移动设备：${mobilePro}/${mobileMax}`)
+            reMsg("频繁", `搜索过于频繁，请稍后再重新运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
     } else {
-        lastProcess = dlyPointPro
+        lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
-    var tdPro = pcPro + mobilePro
-    var tdMax = pcMax + mobileMax
-    if (tdPro == tdMax) {
-        reMsg("完成", `当前等级：${dashboard.userStatus.levelInfo.activeLevel}（${dashboard.userStatus.lifetimePoints}）\n可用积分：${dashboard.userStatus.availablePoints}　今日积分：${dlyPointPro}`)
+    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === dashboard.userStatus.counters.dailyPoint[0].pointProgressMax) {
+        reMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　可用积分：${dashboard.userStatus.availablePoints}\n本月积分：${dashboard.userStatus.levelInfo.progress}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
-        if (pcPro < pcMax) {
+        if (dashboard.userStatus.counters.pcSearch[0].pointProgress < dashboard.userStatus.counters.pcSearch[0].pointProgressMax) {
             const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&form=QBLH&lq=0&ghsh=0&ghacc=0&ghpl=`,
-                headers: {
-                    "Referer": `https://${domain}/`,
-                    "User-Agent": windowsUA,
-                },
-                onload: onload,
-            })
-        } else {
-            const keyword = await getTopKeyword()
-            GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&form=QBLH&lq=0&ghsh=0&ghacc=0&ghpl=`,
+                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
                     "Referer": `https://${domain}/`,
                     "User-Agent": androidUA,
                 },
                 onload: onload,
             })
+            return false
+        } else {
+            if (dashboard.userStatus.counters.mobileSearch[0].pointProgress < dashboard.userStatus.counters.mobileSearch[0].pointProgressMax) {
+                const keyword = await getTopKeyword()
+                GM_xmlhttpRequest({
+                    url: `https://${domain}/search?q=${keyword}&form=QBLH`,
+                    headers: {
+                        "Referer": `https://${domain}/`,
+                        "User-Agent": windowsUA,
+                    },
+                    onload: onload,
+                })
+                return false
+            }
         }
-        return false
     }
 }
 
@@ -203,7 +189,7 @@ return new Promise((resolve, reject) => {
 function reMsg(title, text) {
     GM_notification({
         text: text,
-        title: "微软必应Rewards签到" + title,
+        title: "微软积分商城签到" + title,
         image: "https://rewards.bing.com/rewards.png",
     })
 }
