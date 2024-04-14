@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.1.0
+// @version         0.1.1
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -136,7 +136,7 @@ async function main() {
         lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === dashboard.userStatus.counters.dailyPoint[0].pointProgressMax) {
-        reMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　可用积分：${dashboard.userStatus.availablePoints}\n本月积分：${dashboard.userStatus.levelInfo.progress}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
+        reMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　本月积分：${dashboard.userStatus.levelInfo.progress}\n可用积分：${dashboard.userStatus.availablePoints}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
         if (dashboard.userStatus.counters.pcSearch[0].pointProgress < dashboard.userStatus.counters.pcSearch[0].pointProgressMax) {
