@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            智能电视网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.2
+// @version         0.3.3
 // @description     智能电视网每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.znds.com/favicon.ico
@@ -37,12 +37,10 @@ Login:
     password: true
  ==/UserConfig== */
 
-GM_setValue("reLogTimes", 0)
+var reLogTimes = 0
+var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 
 return new Promise((resolve, reject) => {
-    var reLogTimes = 0
-    var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.4567.89"
-
     function login_h(callback) {
         GM_xmlhttpRequest({
             url: "https://www.znds.com/member.php?mod=logging&action=login",
@@ -91,7 +89,6 @@ return new Promise((resolve, reject) => {
         }
         if (log && pwd) {
             reLogTimes++
-            GM_setValue("reLogTimes", reLogTimes)
             login_h((hash) => {
                 var loginhash = encodeURIComponent(hash[0])
                 var formhash = encodeURIComponent(hash[1])
@@ -103,7 +100,7 @@ return new Promise((resolve, reject) => {
                     onload(xhr) {
                         var stat = xhr.status
                         if (stat == 200) {
-                            if (GM_getValue("reLogTimes") > 2) {
+                            if (reLogTimes > 3) {
                                 reMsg("失败", "登录失败,请检查账号密码!")
                                 resolve()
                             } else {
@@ -120,9 +117,6 @@ return new Promise((resolve, reject) => {
                     },
                 })
             })
-        } else {
-            reMsg("失败", "尚未登录,请登录后再运行!")
-            resolve()
         }
     }
 
