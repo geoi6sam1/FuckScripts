@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯视频优化助手
 // @namespace    https://github.com/geoi6sam1
-// @version      1.1.1
+// @version      1.1.2
 // @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP或使用广告拦截扩展
 // @author       geoi6sam1@qq.com
 // @match        http*://v.qq.com/*
@@ -35,6 +35,15 @@
         },
     }
 
+    function removeTimeout(e, t) {
+        setTimeout(() => {
+            var d = document.querySelector(e)
+            if (d) {
+                d.remove()
+            }
+        }, t)
+    }
+
     obj.wetvQuick = function () {
         GM_addStyle(`
 .quick_vip,
@@ -50,20 +59,17 @@
     obj.wetvBarrage = function () {
         GM_addStyle(`
 .barrage-control,
-.thumbplayer-barrage
+.thumbplayer-barrage,
+iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
 {
     display: none !important;
 }
 `)
+        removeTimeout(`iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]`, 5e3)
     }
 
     obj.wetvWatermark = function () {
-        setTimeout(() => {
-            var wetv_video_watermark = document.querySelector(".txp-watermark")
-            if (wetv_video_watermark) {
-                wetv_video_watermark.remove()
-            }
-        }, 5e3)
+        removeTimeout(".txp-watermark", 5e3)
     }
 
     obj.wetvGrayscale = function () {
@@ -118,7 +124,7 @@ iframe[data-src*="mall."],
 }
 `)
 
-   obj.adFloatFuck = function () {
+    obj.adFloatFuck = function () {
         var txv_player_choose = document.querySelectorAll("#player video")[0]
         if (txv_player_choose) {
             setTimeout(() => {
