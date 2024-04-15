@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.0
+// @version         0.2.1
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -48,12 +48,19 @@ function getSubstring(inputStr, startStr, endStr) {
     return inputStr.substring(startIndex + startStr.length, endIndex)
 }
 
-function getRandNum(size) {
-    return Math.floor(Math.random() * size)
+function getRandNum(num) {
+    return Math.floor(Math.random() * num)
+}
+
+function getRandArr(arr) {
+    const randSort = () => {
+        return Math.random() > .5 ? -1 : 1
+    }
+    return arr.sort(randSort)
 }
 
 function getRandStr(type) {
-    const random = {
+    const randData = {
         url: [
             "https://top.baidu.com/api/board?tab=realtime",
             "https://top.baidu.com/api/board?tab=livelihood",
@@ -71,9 +78,9 @@ function getRandStr(type) {
         ]
     }
     switch (type) {
-        case 0: return random.url[getRandNum(random.url.length)]
-        case 1: return random.pc[getRandNum(random.pc.length)]
-        case 2: return random.m[getRandNum(random.m.length)]
+        case 0: return randData.url[getRandNum(randData.url.length)]
+        case 1: return randData.pc[getRandNum(randData.pc.length)]
+        case 2: return randData.m[getRandNum(randData.m.length)]
     }
 }
 
@@ -94,12 +101,10 @@ function getRewardsInfo() {
                     var data = JSON.parse(getSubstring(res, "var dashboard = ", ";\r"))
                     resolve(data)
                 } else {
-                    reMsg("失败", "获取积分信息失败！状态码：" + stat)
-                    reject(xhr)
+                    reMsg("失败", "获取积分信息失败！状态码：" + stat).then(() => { reject(xhr) })
                 }
             }, onerror(err) {
-                reMsg("出错", "获取积分信息出错，请查看运行日志！")
-                reject(err)
+                reMsg("出错", "获取积分信息出错，请查看运行日志！").then(() => { reject(err) })
             }
         })
     })
@@ -117,21 +122,13 @@ async function getTopKeyword() {
                         for (let i = 0; i < data.length; i++) {
                             keywordList.push(data[i].word)
                         }
-                        if (!Array.prototype.derangedArray) {
-                            Array.prototype.derangedArray = function () {
-                                for (var a, b, c = this.length; c; a = parseInt(Math.random() * c), x = this[--c], this[c] = this[a], this[a] = b)
-                                    return this
-                            }
-                        }
-                        keywordList.derangedArray()
+                        keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        reMsg("失败", "获取关键词失败！状态码：" + stat)
-                        reject(xhr)
+                        reMsg("失败", "获取关键词失败！状态码：" + stat).then(() => { reject(xhr) })
                     }
                 }, onerror(err) {
-                    reMsg("出错", "获取关键词出错，请查看运行日志！")
-                    reject(err)
+                    reMsg("出错", "获取关键词出错，请查看运行日志！").then(() => { reject(err) })
                 }
             })
         } else {
