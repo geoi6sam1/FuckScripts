@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.1.1
+// @version         0.2.0
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -48,14 +48,41 @@ function getSubstring(inputStr, startStr, endStr) {
     return inputStr.substring(startIndex + startStr.length, endIndex)
 }
 
+function getRandNum(size) {
+    return Math.floor(Math.random() * size)
+}
+
+function getRandStr(type) {
+    const random = {
+        url: [
+            "https://top.baidu.com/api/board?tab=realtime",
+            "https://top.baidu.com/api/board?tab=livelihood",
+            "https://top.baidu.com/api/board?tab=finance"
+        ],
+        pc: [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (X11; Deepin; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+        ],
+        m: [
+            "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36"
+        ]
+    }
+    switch (type) {
+        case 0: return random.url[getRandNum(random.url.length)]
+        case 1: return random.pc[getRandNum(random.pc.length)]
+        case 2: return random.m[getRandNum(random.m.length)]
+    }
+}
+
 var retryNum = 0
 var lastProcess = 0
 var keywordIndex = 0
 var keywordList = []
 var domain = "www.bing.com"
-var sleepTime = GM_getValue("Time.inr") * 1000 + Math.floor(Math.random() * 1000)
-var pcUserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
-var mobileUserAgent = "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
+var sleepTime = GM_getValue("Time.inr") * 1000 + getRandNum(1000)
 
 function getRewardsInfo() {
     return new Promise((resolve, reject) => {
@@ -80,9 +107,9 @@ function getRewardsInfo() {
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
-        if (keywordList.length == 0) {
+        if (keywordList.length < 1) {
             GM_xmlhttpRequest({
-                url: "https://top.baidu.com/api/board?tab=realtime",
+                url: getRandStr(0),
                 onload(xhr) {
                     if (xhr.status == 200) {
                         var res = JSON.parse(xhr.responseText)
@@ -129,7 +156,7 @@ async function main() {
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > 3) {
-            reMsg("频繁", `搜索过于频繁，请稍后再运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
+            reMsg("停止", `未知原因停止，请手动重新运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
     } else {
@@ -144,8 +171,9 @@ async function main() {
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
+                    "DNT": 1,
                     "Referer": `https://${domain}/`,
-                    "User-Agent": pcUserAgent,
+                    "User-Agent": getRandStr(1),
                 },
                 onload: onload,
             })
@@ -156,8 +184,9 @@ async function main() {
                 GM_xmlhttpRequest({
                     url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                     headers: {
+                        "DNT": 1,
                         "Referer": `https://${domain}/`,
-                        "User-Agent": mobileUserAgent,
+                        "User-Agent": getRandStr(2),
                     },
                     onload: onload,
                 })
