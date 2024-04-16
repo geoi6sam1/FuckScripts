@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            智能电视网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.3
+// @version         0.3.4
 // @description     智能电视网每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.znds.com/favicon.ico
@@ -9,6 +9,7 @@
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
+// @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_setValue
 // @grant           GM_log
@@ -38,7 +39,7 @@ Login:
  ==/UserConfig== */
 
 var reLogTimes = 0
-var userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 
 return new Promise((resolve, reject) => {
     function login_h(callback) {
@@ -155,5 +156,8 @@ function reMsg(title, text) {
         text: text,
         title: "智能电视网签到" + title,
         image: "https://www.znds.com/favicon.ico",
+        onclick: () => {
+            GM_openInTab("https://www.znds.com/member.php?mod=logging&action=login", { active: true, insert: true, setParent: true })
+        }
     })
 }
