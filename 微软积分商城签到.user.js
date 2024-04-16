@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.2
+// @version         0.3.0
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -37,17 +37,12 @@ Time:
     unit: 秒
  ==/UserConfig== */
 
-function getSubstring(inputStr, startStr, endStr) {
-    const startIndex = inputStr.indexOf(startStr)
-    if (startIndex == -1) {
-        return null
-    }
-    const endIndex = inputStr.indexOf(endStr, startIndex + startStr.length)
-    if (endIndex == -1) {
-        return null
-    }
-    return inputStr.substring(startIndex + startStr.length, endIndex)
-}
+var retryNum = 0
+var lastProcess = 0
+var keywordIndex = 0
+var keywordList = []
+var domain = "www.bing.com"
+var sleepTime = GM_getValue("Time.inr") * 1000 + getRandNum(1000)
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -85,22 +80,19 @@ function getRandStr(type) {
     }
 }
 
-var retryNum = 0
-var lastProcess = 0
-var keywordIndex = 0
-var keywordList = []
-var domain = "www.bing.com"
-var sleepTime = GM_getValue("Time.inr") * 1000 + getRandNum(1000)
-
 function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
-            url: "https://rewards.bing.com",
+            url: "https://rewards.bing.com/api/getuserinfo",
             onload(xhr) {
                 if (xhr.status == 200) {
-                    var res = xhr.responseText
-                    var data = JSON.parse(getSubstring(res, "var dashboard = ", ";\r"))
-                    data ? resolve(data) : pushMsg("失败", "获取积分信息失败，请尝试手动运行！").then(() => { reject(null) })
+                    var res = JSON.parse(xhr.responseText)
+                    if (res) {
+                        var data = res.dashboard.userStatus
+                        resolve(data)
+                    } else {
+                        pushMsg("失败", "获取积分信息失败，请登录微软账号！").then(() => { resolve() })
+                    }
                 } else {
                     pushMsg("失败", "获取积分信息失败！状态码：" + stat).then(() => { reject(xhr) })
                 }
@@ -150,21 +142,21 @@ async function main() {
             domain = url.host
         }
     }
-    const dashboard = await getRewardsInfo()
-    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
+    const userInfo = await getRewardsInfo()
+    if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > 3) {
-            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
+            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${userInfo.counters.mobileSearch[0].pointProgress}/${userInfo.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
     } else {
-        lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
+        lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
-    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === dashboard.userStatus.counters.dailyPoint[0].pointProgressMax) {
-        pushMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　本月积分：${dashboard.userStatus.levelInfo.progress}\n可用积分：${dashboard.userStatus.availablePoints}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
+    if (userInfo.counters.dailyPoint[0].pointProgress === userInfo.counters.dailyPoint[0].pointProgressMax) {
+        pushMsg("完成", `历史积分：${userInfo.lifetimePoints}　本月积分：${userInfo.levelInfo.progress}\n可用积分：${userInfo.availablePoints}　今日积分：${userInfo.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
-        if (dashboard.userStatus.counters.pcSearch[0].pointProgress < dashboard.userStatus.counters.pcSearch[0].pointProgressMax) {
+        if (userInfo.counters.pcSearch[0].pointProgress < userInfo.counters.pcSearch[0].pointProgressMax) {
             const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
@@ -176,7 +168,7 @@ async function main() {
             })
             return false
         } else {
-            if (dashboard.userStatus.counters.mobileSearch[0].pointProgress < dashboard.userStatus.counters.mobileSearch[0].pointProgressMax) {
+            if (userInfo.counters.mobileSearch[0].pointProgress < userInfo.counters.mobileSearch[0].pointProgressMax) {
                 const keyword = await getTopKeyword()
                 GM_xmlhttpRequest({
                     url: `https://${domain}/search?q=${keyword}&form=QBLH`,
