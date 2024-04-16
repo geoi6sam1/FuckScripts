@@ -102,18 +102,18 @@ return new Promise((resolve, reject) => {
                         var stat = xhr.status
                         if (stat == 200) {
                             if (reLogTimes > 2) {
-                                reMsg("失败", "登录失败,请检查账号密码!")
+                                pushMsg("失败", "登录失败,请检查账号密码!")
                                 resolve()
                             } else {
                                 main()
                             }
                         } else {
-                            reMsg("失败", "登录请求失败!状态码:" + stat)
+                            pushMsg("失败", "登录请求失败!状态码:" + stat)
                             reject(xhr)
                         }
                     },
                     onerror(err) {
-                        reMsg("出错", "登录出错,请查看运行日志!")
+                        pushMsg("出错", "登录出错,请查看运行日志!")
                         reject(err)
                     },
                 })
@@ -135,14 +135,14 @@ return new Promise((resolve, reject) => {
                     if (stat == 200) {
                         var msg = res.match(/<p>(.*?)<\/p>/)
                         msg = msg[1]
-                        reMsg("成功", msg)
+                        pushMsg("成功", msg)
                         resolve()
                     } else {
-                        reMsg("失败", "打卡请求失败!状态码:" + stat)
+                        pushMsg("失败", "打卡请求失败!状态码:" + stat)
                         reject(xhr)
                     }
                 }, onerror(err) {
-                    reMsg("出错", "打卡出错,请查看运行日志!")
+                    pushMsg("出错", "打卡出错,请查看运行日志!")
                     reject(err)
                 },
             })
@@ -151,7 +151,7 @@ return new Promise((resolve, reject) => {
     main()
 })
 
-function reMsg(title, text) {
+function pushMsg(title, text) {
     GM_notification({
         text: text,
         title: "智能电视网签到" + title,
