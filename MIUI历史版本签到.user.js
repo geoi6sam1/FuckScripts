@@ -70,7 +70,7 @@ return new Promise((resolve, reject) => {
                 onload: (xhr) => {
                     var stat = xhr.status
                     if (stat == 200) {
-                        if (reLogTimes > 3) {
+                        if (reLogTimes > 2) {
                             reMsg("失败", "登录失败，请检查账号密码！")
                             resolve()
                         } else {
