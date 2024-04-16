@@ -71,21 +71,21 @@ return new Promise((resolve, reject) => {
                     var stat = xhr.status
                     if (stat == 200) {
                         if (reLogTimes > 2) {
-                            reMsg("失败", "登录失败，请检查账号密码！")
+                            pushMsg("失败", "登录失败，请检查账号密码！")
                             resolve()
                         } else {
                             main()
                         }
                     } else if (stat == 503) {
-                        reMsg("失败", "登录请求频繁，请稍后再登录！")
+                        pushMsg("失败", "登录请求频繁，请稍后再登录！")
                         resolve()
                     } else {
-                        reMsg("失败", "登录请求失败！状态码：" + stat)
+                        pushMsg("失败", "登录请求失败！状态码：" + stat)
                         reject(xhr)
                     }
                 },
                 onerror: (err) => {
-                    reMsg("出错", "登录出错，请查看运行日志！")
+                    pushMsg("出错", "登录出错，请查看运行日志！")
                     reject(err)
                 },
             })
@@ -109,13 +109,13 @@ return new Promise((resolve, reject) => {
                     switch (status) {
                         case 200:
                             getRs((rewards) => {
-                                reMsg("成功", "签到成功，当前积分：" + rewards)
+                                pushMsg("成功", "签到成功，当前积分：" + rewards)
                                 resolve()
                             })
                             break
                         case 201:
                             getRs((rewards) => {
-                                reMsg("重复", "签到重复，当前积分：" + rewards)
+                                pushMsg("重复", "签到重复，当前积分：" + rewards)
                                 resolve()
                             })
                             break
@@ -123,12 +123,12 @@ return new Promise((resolve, reject) => {
                 } else if (stat == 400) {
                     login()
                 } else {
-                    reMsg("失败", "签到请求失败！状态码:" + stat)
+                    pushMsg("失败", "签到请求失败！状态码:" + stat)
                     reject(xhr)
                 }
             },
             onerror: (err) => {
-                reMsg("出错", "签到出错，请查看运行日志！")
+                pushMsg("出错", "签到出错，请查看运行日志！")
                 reject(err)
             },
         })
@@ -136,7 +136,7 @@ return new Promise((resolve, reject) => {
     main()
 })
 
-function reMsg(title, text) {
+function pushMsg(title, text) {
     GM_notification({
         text: text,
         title: "MIUI历史版本签到" + title,
