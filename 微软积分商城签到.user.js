@@ -81,7 +81,7 @@ function getRandStr(type) {
     }
 }
 
-function getRewardsInfo() {
+async function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com/api/getuserinfo",
