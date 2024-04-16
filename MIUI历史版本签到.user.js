@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            MIUI历史版本签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.4
+// @version         0.3.5
 // @description     MIUI历史版本每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://miuiver.com/favicon.ico
@@ -9,6 +9,7 @@
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
+// @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_setValue
 // @grant           GM_log
@@ -140,5 +141,8 @@ function reMsg(title, text) {
         text: text,
         title: "MIUI历史版本签到" + title,
         image: "https://miuiver.com/favicon.ico",
+        onclick: () => {
+            GM_openInTab("https://miuiver.com/user-profile", { active: true, insert: true, setParent: true })
+        }
     })
 }
