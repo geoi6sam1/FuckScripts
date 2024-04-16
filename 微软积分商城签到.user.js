@@ -146,7 +146,7 @@ async function main() {
     const userInfo = await getRewardsInfo()
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
-        if (retryNum > 3) {
+        if (retryNum > 5) {
             pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${userInfo.counters.mobileSearch[0].pointProgress}/${userInfo.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
