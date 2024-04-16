@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.1
+// @version         0.2.2
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -29,10 +29,11 @@
 Time:
   inr:
     title: 搜索间隔
-    description: 最小1秒，默认5秒
+    description: 默认5秒
     type: number
     default: 5
     min: 1
+    max: 60
     unit: 秒
  ==/UserConfig== */
 
@@ -99,12 +100,12 @@ function getRewardsInfo() {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
                     var data = JSON.parse(getSubstring(res, "var dashboard = ", ";\r"))
-                    resolve(data)
+                    data ? resolve(data) : pushMsg("失败", "获取积分信息失败，请尝试手动运行！").then(() => { reject(null) })
                 } else {
-                    reMsg("失败", "获取积分信息失败！状态码：" + stat).then(() => { reject(xhr) })
+                    pushMsg("失败", "获取积分信息失败！状态码：" + stat).then(() => { reject(xhr) })
                 }
             }, onerror(err) {
-                reMsg("出错", "获取积分信息出错，请查看运行日志！").then(() => { reject(err) })
+                pushMsg("出错", "获取积分信息出错，请查看运行日志！").then(() => { reject(err) })
             }
         })
     })
@@ -125,10 +126,10 @@ async function getTopKeyword() {
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        reMsg("失败", "获取关键词失败！状态码：" + stat).then(() => { reject(xhr) })
+                        pushMsg("失败", "获取关键词失败！状态码：" + stat).then(() => { reject(xhr) })
                     }
                 }, onerror(err) {
-                    reMsg("出错", "获取关键词出错，请查看运行日志！").then(() => { reject(err) })
+                    pushMsg("出错", "获取关键词出错，请查看运行日志！").then(() => { reject(err) })
                 }
             })
         } else {
@@ -153,14 +154,14 @@ async function main() {
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > 3) {
-            reMsg("停止", `未知原因停止，请手动重新运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
+            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${dashboard.userStatus.counters.pcSearch[0].pointProgress}/${dashboard.userStatus.counters.pcSearch[0].pointProgressMax}　移动设备：${dashboard.userStatus.counters.mobileSearch[0].pointProgress}/${dashboard.userStatus.counters.mobileSearch[0].pointProgressMax}`)
             return true
         }
     } else {
         lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === dashboard.userStatus.counters.dailyPoint[0].pointProgressMax) {
-        reMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　本月积分：${dashboard.userStatus.levelInfo.progress}\n可用积分：${dashboard.userStatus.availablePoints}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
+        pushMsg("完成", `历史积分：${dashboard.userStatus.lifetimePoints}　本月积分：${dashboard.userStatus.levelInfo.progress}\n可用积分：${dashboard.userStatus.availablePoints}　今日积分：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
         if (dashboard.userStatus.counters.pcSearch[0].pointProgress < dashboard.userStatus.counters.pcSearch[0].pointProgressMax) {
@@ -168,7 +169,6 @@ async function main() {
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "DNT": 1,
                     "Referer": `https://${domain}/`,
                     "User-Agent": getRandStr(1),
                 },
@@ -181,7 +181,6 @@ async function main() {
                 GM_xmlhttpRequest({
                     url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                     headers: {
-                        "DNT": 1,
                         "Referer": `https://${domain}/`,
                         "User-Agent": getRandStr(2),
                     },
@@ -205,17 +204,20 @@ return new Promise((resolve, reject) => {
                 }, sleepTime)
             }
         } catch (err) {
-            reMsg('出错', '搜索出错，请查看运行日志！')
+            pushMsg('出错', '搜索出错，请查看运行日志！')
             reject(err)
         }
     }
     start()
 })
 
-function reMsg(title, text) {
+function pushMsg(title, text) {
     GM_notification({
         text: text,
         title: "微软积分商城签到" + title,
         image: "https://rewards.bing.com/rewards.png",
+        onclick: () => {
+            GM_openInTab("https://rewards.bing.com/pointsbreakdown", { active: true, insert: true, setParent: true })
+        }
     })
 }
