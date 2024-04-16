@@ -9,6 +9,7 @@
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
+// @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_setValue
 // @grant           GM_log
