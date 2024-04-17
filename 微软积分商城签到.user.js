@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.0
+// @version         0.3.1
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -11,7 +11,6 @@
 // @grant           GM_notification
 // @grant           GM_openInTab
 // @grant           GM_getValue
-// @grant           GM_setValue
 // @grant           GM_log
 // @cloudcat
 // @connect         bing.com
@@ -27,23 +26,22 @@
 // ==/UserScript==
 
 /* ==UserConfig==
-Time:
+Options:
   inr:
     title: 搜索间隔
     description: 默认5秒
     type: number
     default: 5
     min: 1
-    max: 60
     unit: 秒
+  times:
+    title: 重试次数
+    description: 默认5次
+    type: number
+    default: 5
+    min: 1
+    unit: 次
  ==/UserConfig== */
-
-var retryNum = 0
-var lastProcess = 0
-var keywordIndex = 0
-var keywordList = []
-var domain = "www.bing.com"
-var sleepTime = GM_getValue("Time.inr") * 1000 + getRandNum(1000)
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -104,6 +102,9 @@ async function getRewardsInfo() {
     })
 }
 
+let keywordList = []
+let keywordIndex = 0
+
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordList.length < 1) {
@@ -136,6 +137,12 @@ async function getTopKeyword() {
     return query + new Date().getTime() % 1000
 }
 
+let retryNum = 0
+let lastProcess = 0
+let mobilePtPro = 0
+let mobilePtProMax = 0
+let domain = "www.bing.com"
+
 async function main() {
     const onload = (resp) => {
         const url = new URL(resp.finalUrl)
@@ -144,13 +151,18 @@ async function main() {
         }
     }
     const userInfo = await getRewardsInfo()
+    if (userInfo.counters.mobileSearch) {
+        mobilePtPro = userInfo.counters.mobileSearch[0].pointProgress
+        mobilePtProMax = userInfo.counters.mobileSearch[0].pointProgressMax
+    }
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
-        if (retryNum > 5) {
-            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${userInfo.counters.mobileSearch[0].pointProgress}/${userInfo.counters.mobileSearch[0].pointProgressMax}`)
+        if (retryNum > GM_getValue("Options.time")) {
+            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
+        retryNum = 0
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (userInfo.counters.dailyPoint[0].pointProgress === userInfo.counters.dailyPoint[0].pointProgressMax) {
@@ -169,7 +181,7 @@ async function main() {
             })
             return false
         } else {
-            if (userInfo.counters.mobileSearch[0].pointProgress < userInfo.counters.mobileSearch[0].pointProgressMax) {
+            if (mobilePtPro < mobilePtProMax) {
                 const keyword = await getTopKeyword()
                 GM_xmlhttpRequest({
                     url: `https://${domain}/search?q=${keyword}&form=QBLH`,
@@ -194,7 +206,7 @@ return new Promise((resolve, reject) => {
             } else {
                 setTimeout(() => {
                     start()
-                }, sleepTime)
+                }, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
             }
         } catch (err) {
             pushMsg('出错', '搜索出错，请查看运行日志！')
