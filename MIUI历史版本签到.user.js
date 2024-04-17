@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            MIUI历史版本签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.5
+// @version         0.3.6
 // @description     MIUI历史版本每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://miuiver.com/favicon.ico
@@ -11,7 +11,6 @@
 // @grant           GM_notification
 // @grant           GM_openInTab
 // @grant           GM_getValue
-// @grant           GM_setValue
 // @grant           GM_log
 // @cloudcat
 // @connect         miuiver.com
@@ -34,7 +33,7 @@ Login:
     password: true
  ==/UserConfig== */
 
-var reLogTimes = 0
+let reLogTimes = 0
 
 return new Promise((resolve, reject) => {
     function getRs(callback) {
