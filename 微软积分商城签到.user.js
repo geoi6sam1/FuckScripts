@@ -29,16 +29,16 @@
 Options:
   inr:
     title: 搜索间隔
-    description: 默认5秒
+    description: 默认6秒
     type: number
-    default: 5
+    default: 6
     min: 1
     unit: 秒
   times:
     title: 重试次数
-    description: 默认5次
+    description: 默认6次
     type: number
-    default: 5
+    default: 6
     min: 1
     unit: 次
  ==/UserConfig== */
@@ -86,17 +86,14 @@ async function getRewardsInfo() {
             onload(xhr) {
                 if (xhr.status == 200) {
                     var res = JSON.parse(xhr.responseText)
-                    if (res) {
-                        var data = res.dashboard.userStatus
-                        resolve(data)
-                    } else {
-                        pushMsg("失败", "获取积分信息失败，请登录微软账号！").then(() => { resolve() })
-                    }
+                    resolve(res.dashboard.userStatus)
                 } else {
-                    pushMsg("失败", "获取积分信息失败！状态码：" + stat).then(() => { reject(xhr) })
+                    pushMsg("失败", "获取积分信息失败！状态码：" + stat)
+                    reject(xhr)
                 }
             }, onerror(err) {
-                pushMsg("出错", "获取积分信息出错，请查看运行日志！").then(() => { reject(err) })
+                pushMsg("出错", "获取积分信息出错，请查看运行日志！")
+                reject(err)
             }
         })
     })
@@ -120,10 +117,12 @@ async function getTopKeyword() {
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        pushMsg("失败", "获取关键词失败！状态码：" + stat).then(() => { reject(xhr) })
+                        pushMsg("失败", "获取关键词失败！状态码：" + stat)
+                        reject(xhr)
                     }
                 }, onerror(err) {
-                    pushMsg("出错", "获取关键词出错，请查看运行日志！").then(() => { reject(err) })
+                    pushMsg("出错", "获取关键词出错，请查看运行日志！")
+                    reject(err)
                 }
             })
         } else {
@@ -209,7 +208,6 @@ return new Promise((resolve, reject) => {
                 }, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
             }
         } catch (err) {
-            pushMsg('出错', '搜索出错，请查看运行日志！')
             reject(err)
         }
     }
