@@ -157,7 +157,7 @@ async function main() {
     }
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
-        if (retryNum > GM_getValue("Options.time")) {
+        if (retryNum > GM_getValue("Options.times")) {
             pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
