@@ -2,7 +2,7 @@
 // @name         腾讯视频优化助手
 // @namespace    https://github.com/geoi6sam1
 // @version      1.1.2
-// @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频VIP或使用广告拦截扩展
+// @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频会员或使用广告拦截扩展
 // @author       geoi6sam1@qq.com
 // @match        http*://v.qq.com/*
 // @match        http*://m.v.qq.com/*
