@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.0
+// @version         1.0.1
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -105,6 +105,7 @@ let keywordIndex = 0
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
+            keywordIndex++
             GM_xmlhttpRequest({
                 url: getRandStr(0),
                 onload(xhr) {
@@ -125,10 +126,9 @@ async function getTopKeyword() {
                     reject(err)
                 }
             })
-            keywordIndex++
         } else {
             keywordIndex++
-            if (keywordIndex > keywordList.length) {
+            if (keywordIndex > keywordList.length - 1) {
                 keywordIndex = 0
             }
             resolve(keywordList[keywordIndex])
@@ -146,8 +146,8 @@ let mobilePtProMax = 0
 let domain = "www.bing.com"
 
 async function main() {
-    const onload = (resp) => {
-        const url = new URL(resp.finalUrl)
+    const onload = (res) => {
+        const url = new URL(res.finalUrl)
         if (url.host != domain) {
             domain = url.host
         }
