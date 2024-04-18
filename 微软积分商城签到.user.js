@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.1
+// @version         0.3.2
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -138,7 +138,9 @@ async function getTopKeyword() {
 
 let retryNum = 0
 let lastProcess = 0
+let pcPtPro = 0
 let mobilePtPro = 0
+let pcPtProMax = 0
 let mobilePtProMax = 0
 let domain = "www.bing.com"
 
@@ -150,6 +152,8 @@ async function main() {
         }
     }
     const userInfo = await getRewardsInfo()
+    pcPtPro = userInfo.counters.pcSearch[0].pointProgress
+    pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
     if (userInfo.counters.mobileSearch) {
         mobilePtPro = userInfo.counters.mobileSearch[0].pointProgress
         mobilePtProMax = userInfo.counters.mobileSearch[0].pointProgressMax
@@ -157,18 +161,18 @@ async function main() {
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryNum++
         if (retryNum > GM_getValue("Options.times")) {
-            pushMsg("停止", `未知错误停止，请尝试手动运行！\n电脑：${userInfo.counters.pcSearch[0].pointProgress}/${userInfo.counters.pcSearch[0].pointProgressMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            pushMsg("出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
         retryNum = 0
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
-    if (userInfo.counters.dailyPoint[0].pointProgress === userInfo.counters.dailyPoint[0].pointProgressMax) {
-        pushMsg("完成", `历史积分：${userInfo.lifetimePoints}　本月积分：${userInfo.levelInfo.progress}\n可用积分：${userInfo.availablePoints}　今日积分：${userInfo.counters.dailyPoint[0].pointProgress}`)
+    if (pcPtPro + mobilePtPro == pcPtProMax + mobilePtProMax) {
+        pushMsg("完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n可用：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
-        if (userInfo.counters.pcSearch[0].pointProgress < userInfo.counters.pcSearch[0].pointProgressMax) {
+        if (pcPtPro < pcPtProMax) {
             const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
