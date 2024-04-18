@@ -104,7 +104,7 @@ let keywordIndex = 0
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
-        if (keywordList.length < 1) {
+        if (keywordIndex < 1 || keywordList.length < 1) {
             GM_xmlhttpRequest({
                 url: getRandStr(0),
                 onload(xhr) {
@@ -125,6 +125,7 @@ async function getTopKeyword() {
                     reject(err)
                 }
             })
+            keywordIndex++
         } else {
             keywordIndex++
             if (keywordIndex > keywordList.length) {
