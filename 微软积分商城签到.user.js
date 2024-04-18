@@ -169,7 +169,7 @@ async function main() {
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro + mobilePtPro == pcPtProMax + mobilePtProMax) {
-        pushMsg("完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n可用：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
+        pushMsg("完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
