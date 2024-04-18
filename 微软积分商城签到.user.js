@@ -128,9 +128,12 @@ async function getTopKeyword() {
         } else {
             keywordIndex++
             if (keywordIndex > keywordList.length) {
+                keywordList = []
                 keywordIndex = 0
+                query()
+            } else {
+                resolve(keywordList[keywordIndex])
             }
-            resolve(keywordList[keywordIndex])
         }
     })
     return query + new Date().getTime() % 1000
