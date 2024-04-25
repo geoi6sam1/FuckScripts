@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.2
+// @version         1.0.3
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -95,7 +95,7 @@ async function getRewardsInfo() {
                         resolve()
                     }
                 } else {
-                    pushMsg("失败", "获取积分信息失败！状态码：" + stat)
+                    pushMsg("失败", "获取积分信息失败！状态码：" + xhr.status)
                     reject(xhr)
                 }
             }, onerror(err) {
@@ -125,7 +125,7 @@ async function getTopKeyword() {
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        pushMsg("失败", "获取关键词失败！状态码：" + stat)
+                        pushMsg("失败", "获取关键词失败！状态码：" + xhr.status)
                         reject(xhr)
                     }
                 }, onerror(err) {
