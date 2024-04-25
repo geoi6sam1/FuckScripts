@@ -91,7 +91,7 @@ async function getRewardsInfo() {
                         res = JSON.parse(res)
                         resolve(res.dashboard.userStatus)
                     } else {
-                        pushMsg("失败", "请检查微软账号登录状态和网络状况！")
+                        pushMsg("失败", "请检查账号登录状态和网络状况！")
                         resolve()
                     }
                 } else {
