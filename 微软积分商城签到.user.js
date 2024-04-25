@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.1
+// @version         1.0.2
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -85,8 +85,15 @@ async function getRewardsInfo() {
             url: "https://rewards.bing.com/api/getuserinfo",
             onload(xhr) {
                 if (xhr.status == 200) {
-                    var res = JSON.parse(xhr.responseText)
-                    resolve(res.dashboard.userStatus)
+                    var res = xhr.responseText
+                    var data = res.match(/(\"userStatus\"?)/)
+                    if (data && data[0]) {
+                        res = JSON.parse(res)
+                        resolve(res.dashboard.userStatus)
+                    } else {
+                        pushMsg("失败", "请检查微软账号登录状态和网络状况！")
+                        resolve()
+                    }
                 } else {
                     pushMsg("失败", "获取积分信息失败！状态码：" + stat)
                     reject(xhr)
