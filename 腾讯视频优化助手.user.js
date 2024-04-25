@@ -34,6 +34,8 @@
             grayscale: 0, // 哀悼日网站灰度，默认取消，值为0
         },
     }
+    const userAgent = navigator.userAgent || window.navigator.userAgent
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini|Mobile/i.test(userAgent)
 
     function removeTimeout(e, t) {
         setTimeout(() => {
@@ -65,7 +67,14 @@ iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
     display: none !important;
 }
 `)
-        removeTimeout(`iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]`, 5e3)
+        if (!isMobile) {
+            GM_addStyle(`
+iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
+{
+    display: none !important;
+}
+`)
+        }
     }
 
     obj.wetvWatermark = function () {
