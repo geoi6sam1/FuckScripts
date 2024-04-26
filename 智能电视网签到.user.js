@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            智能电视网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.4
+// @version         0.3.6
 // @description     智能电视网每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.znds.com/favicon.ico
@@ -38,6 +38,9 @@ Login:
  ==/UserConfig== */
 
 let reLogTimes = 0
+let loginWay = GM_getValue("Login.way")
+let userLog = encodeURIComponent(GM_getValue("Login.log"))
+let userPwd = encodeURIComponent(GM_getValue("Login.pwd"))
 let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 
 return new Promise((resolve, reject) => {
@@ -79,45 +82,40 @@ return new Promise((resolve, reject) => {
     }
 
     function login() {
-        var way = GM_getValue("Login.way")
-        var log = encodeURIComponent(GM_getValue("Login.log"))
-        var pwd = encodeURIComponent(GM_getValue("Login.pwd"))
-        if (way == "邮箱") {
-            way = "email"
+        reLogTimes++
+        if (loginWay == "邮箱") {
+            loginWay = "email"
         } else {
-            way = "username"
+            loginWay = "username"
         }
-        if (log && pwd) {
-            reLogTimes++
-            login_h((hash) => {
-                var loginhash = encodeURIComponent(hash[0])
-                var formhash = encodeURIComponent(hash[1])
-                GM_xmlhttpRequest({
-                    url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${loginhash}&inajax=1&formhash=${formhash}&referer=https%3A%2F%2Fwww.znds.com%2F.%2F&loginfield=${way}&username=${log}&password=${pwd}&questionid=0&answer=&cookietime=2592000`,
-                    headers: {
-                        "User-Agent": userAgent,
-                    },
-                    onload(xhr) {
-                        var stat = xhr.status
-                        if (stat == 200) {
-                            if (reLogTimes > 2) {
-                                pushMsg("失败", "登录失败,请检查账号密码!")
-                                resolve()
-                            } else {
-                                main()
-                            }
+        login_h((hash) => {
+            var loginhash = encodeURIComponent(hash[0])
+            var formhash = encodeURIComponent(hash[1])
+            GM_xmlhttpRequest({
+                url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${loginhash}&inajax=1&formhash=${formhash}&referer=https%3A%2F%2Fwww.znds.com%2F.%2F&loginfield=${loginWay}&username=${userLog}&password=${userPwd}&questionid=0&answer=&cookietime=2592000`,
+                headers: {
+                    "User-Agent": userAgent,
+                },
+                onload(xhr) {
+                    var stat = xhr.status
+                    if (stat == 200) {
+                        if (reLogTimes > 2) {
+                            pushMsg("失败", "登录失败,请检查账号密码!")
+                            resolve()
                         } else {
-                            pushMsg("失败", "登录请求失败!状态码:" + stat)
-                            reject(xhr)
+                            main()
                         }
-                    },
-                    onerror(err) {
-                        pushMsg("出错", "登录出错,请查看运行日志!")
-                        reject(err)
-                    },
-                })
+                    } else {
+                        pushMsg("失败", "登录请求失败!状态码:" + stat)
+                        reject(xhr)
+                    }
+                },
+                onerror(err) {
+                    pushMsg("出错", "登录出错,请查看运行日志!")
+                    reject(err)
+                },
             })
-        }
+        })
     }
 
     function main() {
