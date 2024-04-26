@@ -64,7 +64,7 @@ return new Promise((resolve, reject) => {
                 "Referer": "https://miuiver.com/wp-login.php",
             },
             data: `log=${userLog}&pwd=${userPwd}&rememberme=forever&wp-submit=%E7%99%BB%E5%BD%95&redirect_to=https%3A%2F%2Fmiuiver.com%2Fwp-admin%2F&testcookie=1`,
-            dataType: "json",
+            responseType: "json",
             onload: (xhr) => {
                 var stat = xhr.status
                 if (stat == 200) {
@@ -98,7 +98,7 @@ return new Promise((resolve, reject) => {
                 "Referer": "https://miuiver.com/user-profile/",
             },
             data: "action=epd_checkin",
-            dataType: "json",
+            responseType: "json",
             onload: (xhr) => {
                 var stat = xhr.status
                 if (stat == 200) {
