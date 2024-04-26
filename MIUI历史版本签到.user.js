@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            MIUI历史版本签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.6
+// @version         0.3.8
 // @description     MIUI历史版本每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://miuiver.com/favicon.ico
@@ -34,6 +34,8 @@ Login:
  ==/UserConfig== */
 
 let reLogTimes = 0
+let userLog = encodeURIComponent(GM_getValue("Login.log"))
+let userPwd = encodeURIComponent(GM_getValue("Login.pwd"))
 
 return new Promise((resolve, reject) => {
     function getRs(callback) {
@@ -53,42 +55,38 @@ return new Promise((resolve, reject) => {
     }
 
     function login() {
-        var log = encodeURIComponent(GM_getValue("Login.log"))
-        var pwd = encodeURIComponent(GM_getValue("Login.pwd"))
-        if (log && pwd) {
-            reLogTimes++
-            GM_xmlhttpRequest({
-                method: "POST",
-                url: "https://miuiver.com/wp-login.php",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Referer": "https://miuiver.com/wp-login.php",
-                },
-                data: `log=${log}&pwd=${pwd}&rememberme=forever&wp-submit=%E7%99%BB%E5%BD%95&redirect_to=https%3A%2F%2Fmiuiver.com%2Fwp-admin%2F&testcookie=1`,
-                responseType: "json",
-                onload: (xhr) => {
-                    var stat = xhr.status
-                    if (stat == 200) {
-                        if (reLogTimes > 2) {
-                            pushMsg("失败", "登录失败，请检查账号密码！")
-                            resolve()
-                        } else {
-                            main()
-                        }
-                    } else if (stat == 503) {
-                        pushMsg("失败", "登录请求频繁，请稍后再登录！")
+        reLogTimes++
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: "https://miuiver.com/wp-login.php",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Referer": "https://miuiver.com/wp-login.php",
+            },
+            data: `log=${userLog}&pwd=${userPwd}&rememberme=forever&wp-submit=%E7%99%BB%E5%BD%95&redirect_to=https%3A%2F%2Fmiuiver.com%2Fwp-admin%2F&testcookie=1`,
+            dataType: "json",
+            onload: (xhr) => {
+                var stat = xhr.status
+                if (stat == 200) {
+                    if (reLogTimes > 2) {
+                        pushMsg("失败", "登录失败，请检查账号密码！")
                         resolve()
                     } else {
-                        pushMsg("失败", "登录请求失败！状态码：" + stat)
-                        reject(xhr)
+                        main()
                     }
-                },
-                onerror: (err) => {
-                    pushMsg("出错", "登录出错，请查看运行日志！")
-                    reject(err)
-                },
-            })
-        }
+                } else if (stat == 503) {
+                    pushMsg("失败", "登录请求频繁，请稍后再登录！")
+                    resolve()
+                } else {
+                    pushMsg("失败", "登录请求失败！状态码：" + stat)
+                    reject(xhr)
+                }
+            },
+            onerror: (err) => {
+                pushMsg("出错", "登录出错，请查看运行日志！")
+                reject(err)
+            },
+        })
     }
 
     function main() {
@@ -100,7 +98,7 @@ return new Promise((resolve, reject) => {
                 "Referer": "https://miuiver.com/user-profile/",
             },
             data: "action=epd_checkin",
-            responseType: "json",
+            dataType: "json",
             onload: (xhr) => {
                 var stat = xhr.status
                 if (stat == 200) {
