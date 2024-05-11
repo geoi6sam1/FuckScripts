@@ -60,13 +60,13 @@ async function _hash() {
 }
 
 let qiandao = 0
-let retryNum = 0
+let retryTimes = 0
 let packetid = 55
 
 async function main() {
-    retryNum++
+    retryTimes++
     const formhash = await _hash()
-    if (retryNum > 6) {
+    if (retryTimes > 6) {
         pushMsg("出错", "签到出错，请查看运行日志！")
         return true
     }
