@@ -13,8 +13,8 @@
 // @grant           GM_getValue
 // @grant           GM_log
 // @cloudcat            
-// @connect         znds.com
-// @exportcookie    domain=.znds.com
+// @connect         www.znds.com
+// @exportcookie    domain=www.znds.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
@@ -52,12 +52,17 @@ return new Promise((resolve, reject) => {
             },
             onload(xhr) {
                 var res = xhr.responseText
-                var loginhash = res.match(/loginhash=(.*?)"/)
-                var formhash = res.match(/formhash=(.*?)'/)
-                loginhash = loginhash[1]
-                formhash = formhash[1]
-                var hasharr = [loginhash, formhash]
-                callback(hasharr)
+                if (xhr.status == 200) {
+                    var loginhash = res.match(/loginhash=(.*?)"/)
+                    var formhash = res.match(/formhash=(.*?)'/)
+                    loginhash = loginhash[1]
+                    formhash = formhash[1]
+                    var hasharr = [loginhash, formhash]
+                    callback(hasharr)
+                } else {
+                    pushMsg("失败", "登录请求失败!状态码:" + xhr.status)
+                    resolve()
+                }
             },
         })
     }
@@ -70,12 +75,17 @@ return new Promise((resolve, reject) => {
             },
             onload(xhr) {
                 var res = xhr.responseText
-                var formhash = res.match(/formhash=(.*?)"/)
-                if (!formhash) {
-                    login()
-                } else {
-                    formhash = formhash[1]
-                    callback(formhash)
+                if (xhr.status == 200) {
+                    var formhash = res.match(/formhash=(.*?)"/)
+                    if (!formhash) {
+                        login()
+                    } else {
+                        formhash = formhash[1]
+                        callback(formhash)
+                    }
+                } else {.
+                    pushMsg("失败", "打卡请求失败!状态码:" + xhr.status)
+                    resolve()
                 }
             },
         })
@@ -97,8 +107,7 @@ return new Promise((resolve, reject) => {
                     "User-Agent": userAgent,
                 },
                 onload(xhr) {
-                    var stat = xhr.status
-                    if (stat == 200) {
+                    if (xhr.status == 200) {
                         if (reLogTimes > 2) {
                             pushMsg("失败", "登录失败,请检查账号密码!")
                             resolve()
@@ -106,14 +115,10 @@ return new Promise((resolve, reject) => {
                             main()
                         }
                     } else {
-                        pushMsg("失败", "登录请求失败!状态码:" + stat)
-                        reject(xhr)
+                        pushMsg("失败", "登录请求失败!状态码:" + xhr.status)
+                        resolve()
                     }
-                },
-                onerror(err) {
-                    pushMsg("出错", "登录出错,请查看运行日志!")
-                    reject(err)
-                },
+                }
             })
         })
     }
@@ -127,21 +132,16 @@ return new Promise((resolve, reject) => {
                     "User-Agent": userAgent,
                 },
                 onload(xhr) {
-                    var stat = xhr.status
                     var res = xhr.responseText
-                    if (stat == 200) {
+                    if (xhr.status == 200) {
                         var msg = res.match(/<p>(.*?)<\/p>/)
-                        msg = msg[1]
-                        pushMsg("成功", msg)
+                        pushMsg("成功", msg[1])
                         resolve()
                     } else {
-                        pushMsg("失败", "打卡请求失败!状态码:" + stat)
-                        reject(xhr)
+                        pushMsg("失败", "打卡请求失败!状态码:" + xhr.status)
+                        resolve()
                     }
-                }, onerror(err) {
-                    pushMsg("出错", "打卡出错,请查看运行日志!")
-                    reject(err)
-                },
+                }
             })
         })
     }
