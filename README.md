@@ -10,6 +10,7 @@
 
 | UserScript Name | Latest Version | Script Type | GitHub | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
+| **粤梦缘论坛签到** | v0.1.0 | 后台脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤梦缘论坛签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤梦缘论坛签到.user.js) |
 | **可可影视播放器** | v1.0.1 | 普通脚本（已失效） | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
 | **智能电视网签到** | v0.3.6 | 后台脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
 | **微软必应优化助手** | v1.2.2 | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
