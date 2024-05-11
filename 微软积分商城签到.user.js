@@ -186,7 +186,7 @@ async function main() {
                     "Referer": `https://${domain}/`,
                     "User-Agent": getRandStr(1),
                 },
-                onload: onload,
+                onload: onload
             })
             return false
         } else {
@@ -198,7 +198,7 @@ async function main() {
                         "Referer": `https://${domain}/`,
                         "User-Agent": getRandStr(2),
                     },
-                    onload: onload,
+                    onload: onload
                 })
                 return false
             }
