@@ -142,7 +142,7 @@ function getTopKeyword() {
     return query + new Date().getTime() % 1000
 }
 
-let retryNum = 0
+let retryTimes = 0
 let lastProcess = 0
 let pcPtPro = 0
 let mobilePtPro = 0
@@ -165,13 +165,13 @@ async function main() {
         mobilePtProMax = userInfo.counters.mobileSearch[0].pointProgressMax
     }
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
-        retryNum++
-        if (retryNum > GM_getValue("Options.times")) {
+        retryTimes++
+        if (retryTimes > GM_getValue("Options.times")) {
             pushMsg("出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
-        retryNum = 0
+        retryTimes = 0
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro + mobilePtPro >= pcPtProMax + mobilePtProMax) {
