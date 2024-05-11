@@ -50,7 +50,7 @@ return new Promise((resolve, reject) => {
                 } else {
                     callback("获取失败")
                 }
-            },
+            }
         })
     }
 
@@ -65,7 +65,7 @@ return new Promise((resolve, reject) => {
             },
             data: `log=${userLog}&pwd=${userPwd}&rememberme=forever&wp-submit=%E7%99%BB%E5%BD%95&redirect_to=https%3A%2F%2Fmiuiver.com%2Fwp-admin%2F&testcookie=1`,
             responseType: "json",
-            onload: (xhr) => {
+            onload(xhr) {
                 var stat = xhr.status
                 if (stat == 200) {
                     if (reLogTimes > 2) {
@@ -81,11 +81,7 @@ return new Promise((resolve, reject) => {
                     pushMsg("失败", "登录请求失败！状态码：" + stat)
                     reject(xhr)
                 }
-            },
-            onerror: (err) => {
-                pushMsg("出错", "登录出错，请查看运行日志！")
-                reject(err)
-            },
+            }
         })
     }
 
@@ -99,7 +95,7 @@ return new Promise((resolve, reject) => {
             },
             data: "action=epd_checkin",
             responseType: "json",
-            onload: (xhr) => {
+            onload(xhr) {
                 var stat = xhr.status
                 if (stat == 200) {
                     var status = xhr.response.status
@@ -123,13 +119,10 @@ return new Promise((resolve, reject) => {
                     pushMsg("失败", "签到请求失败！状态码:" + stat)
                     reject(xhr)
                 }
-            },
-            onerror: (err) => {
-                pushMsg("出错", "签到出错，请查看运行日志！")
-                reject(err)
-            },
+            }
         })
     }
+  
     main()
 })
 
