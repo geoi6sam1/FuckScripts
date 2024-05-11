@@ -13,9 +13,13 @@
 // @grant           GM_getValue
 // @grant           GM_log
 // @cloudcat
+// @connect         live.com
 // @connect         bing.com
+// @connect         rewards.bing.com
 // @connect         top.baidu.com
+// @exportCookie    domain=.live.com
 // @exportCookie    domain=.bing.com
+// @exportCookie    domain=rewards.bing.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
