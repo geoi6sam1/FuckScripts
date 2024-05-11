@@ -79,7 +79,7 @@ function getRandStr(type) {
     }
 }
 
-async function getRewardsInfo() {
+function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com/api/getuserinfo?type=1",
@@ -92,15 +92,12 @@ async function getRewardsInfo() {
                         resolve(res.dashboard.userStatus)
                     } else {
                         pushMsg("失败", "请检查微软账号登录状态！")
-                        resolve()
+                        return true
                     }
                 } else {
                     pushMsg("失败", "获取积分信息失败！状态码：" + xhr.status)
-                    reject(xhr)
+                    return true
                 }
-            }, onerror(err) {
-                pushMsg("出错", "获取积分信息出错，请查看运行日志！")
-                reject(err)
             }
         })
     })
@@ -109,7 +106,7 @@ async function getRewardsInfo() {
 let keywordList = []
 let keywordIndex = 0
 
-async function getTopKeyword() {
+function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
             keywordIndex++
@@ -126,11 +123,8 @@ async function getTopKeyword() {
                         resolve(keywordList[keywordIndex])
                     } else {
                         pushMsg("失败", "获取关键词失败！状态码：" + xhr.status)
-                        reject(xhr)
+                        return true
                     }
-                }, onerror(err) {
-                    pushMsg("出错", "获取关键词出错，请查看运行日志！")
-                    reject(err)
                 }
             })
         } else {
