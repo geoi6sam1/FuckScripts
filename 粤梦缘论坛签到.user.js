@@ -54,7 +54,7 @@ async function _hash() {
                     pushMsg("失败", "签到失败！状态码：" + stat)
                     return true
                 }
-            },
+            }
         })
     })
 }
