@@ -148,15 +148,8 @@ let pcPtPro = 0
 let mobilePtPro = 0
 let pcPtProMax = 0
 let mobilePtProMax = 0
-let domain = "www.bing.com"
 
 async function main() {
-    const onload = (res) => {
-        const url = new URL(res.finalUrl)
-        if (url.host != domain) {
-            domain = url.host
-        }
-    }
     const userInfo = await getRewardsInfo()
     pcPtPro = userInfo.counters.pcSearch[0].pointProgress
     pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
@@ -178,27 +171,24 @@ async function main() {
         pushMsg("完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
+        const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
-            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
+                url: `https://www.bing.com/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "Referer": `https://${domain}/`,
+                    "Referer": `https://www.bing.com/`,
                     "User-Agent": getRandStr(1),
-                },
-                onload: onload
+                }
             })
             return false
         } else {
             if (mobilePtPro < mobilePtProMax) {
-                const keyword = await getTopKeyword()
                 GM_xmlhttpRequest({
-                    url: `https://${domain}/search?q=${keyword}&form=QBLH`,
+                    url: `https://www.bing.com/search?q=${keyword}&form=QBLH`,
                     headers: {
-                        "Referer": `https://${domain}/`,
+                        "Referer": `https://www.bing.com/`,
                         "User-Agent": getRandStr(2),
-                    },
-                    onload: onload
+                    }
                 })
                 return false
             }
@@ -210,13 +200,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            if (result) {
-                resolve()
-            } else {
-                setTimeout(() => {
-                    start()
-                }, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
-            }
+            result ? resolve() : setTimeout(start(), GM_getValue("Options.inr") * 1000 + getRandNum(1000))
         } catch (err) {
             reject(err)
         }
