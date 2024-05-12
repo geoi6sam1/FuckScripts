@@ -170,20 +170,20 @@ async function main() {
         const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
             GM_xmlhttpRequest({
-                url: `https://www.bing.com/search?q=${keyword}&form=QBLH`,
+                url: `https://www.bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                 headers: {
                     "Referer": `https://www.bing.com/`,
-                    "User-Agent": getRandStr(1),
+                    "User-Agent": getRandStr(1)
                 }
             })
             return false
         } else {
             if (mobilePtPro < mobilePtProMax) {
                 GM_xmlhttpRequest({
-                    url: `https://www.bing.com/search?q=${keyword}&form=QBLH`,
+                    url: `https://www.bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                     headers: {
                         "Referer": `https://www.bing.com/`,
-                        "User-Agent": getRandStr(2),
+                        "User-Agent": getRandStr(2)
                     }
                 })
                 return false
@@ -196,7 +196,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(() => start(), GM_getValue("Options.inr") * 1000 + getRandNum(1000))
+            result ? resolve() : setTimeout(() => { start() }, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
         } catch (err) {
             reject(err)
         }
