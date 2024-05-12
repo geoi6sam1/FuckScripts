@@ -49,7 +49,7 @@ function _hash() {
                         return true
                     }
                 } else {
-                    pushMsg("失败", "签到失败！状态码：" + stat)
+                    pushMsg("失败", "签到失败！状态码：" + xhr.status)
                     return true
                 }
             }
