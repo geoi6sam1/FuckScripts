@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            粤梦缘论坛签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.1.0
+// @version         0.2.0
 // @description     粤梦缘论坛每日自动签到，领取红包
 // @author          geoi6sam1@qq.com
 // @icon            https://www.dranime.net/favicon.ico
@@ -33,7 +33,7 @@ function getRandStr() {
     return randData[getRandNum(randData.length)]
 }
 
-async function _hash() {
+function _hash() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://www.dranime.net",
@@ -70,27 +70,35 @@ async function main() {
         pushMsg("出错", "签到出错，请查看运行日志！")
         return true
     }
-    if (qiandao > 1) {
+    if (qiandao < -1) {
+        pushMsg("失败", "签到失败，您的账号没有签到权限！")
+        return true
+    } else if (qiandao > 1) {
         pushMsg("完成", "签到完成，签到就完成了！")
         return true
     } else {
         qiandao = 0
+        const onload = (xhr) => {
+            var res = xhr.responseText
+            if (res.match(/用户组/)) {
+                qiandao--
+            } else if (res.match(/签到/)) {
+                qiandao++
+            }
+        }
         GM_xmlhttpRequest({
             url: `https://www.dranime.net/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1&formhash=${encodeURIComponent(formhash)}&qdxq=${getRandStr()}&qdmode=3&todaysay=&fastreply=0`,
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
             },
-            onload() { qiandao++ },
+            onload: onload
         })
         GM_xmlhttpRequest({
             url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3&formhash=${encodeURIComponent(formhash)}&qdxq=${getRandStr()}`,
-            headers: {
-                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36",
-            },
-            onload() { qiandao++ },
+            onload: onload
         })
         GM_xmlhttpRequest({
-            url: `https://www.dranime.net/plugin.php?id=luckypacket&module=ajax&action=get&getsubmit=yes&packetid=${packetid}`,
+            url: `https://www.dranime.net/plugin.php?id=luckypacket&module=ajax&action=get&getsubmit=yes&packetid=${packetid}`
         })
         return false
     }
@@ -100,7 +108,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : start()
+            result ? resolve() : setTimeout(start(), 100 + getRandNum(100))
         } catch (err) {
             reject(err)
         }
