@@ -12,10 +12,9 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @connect         live.com
-// @connect         bing.com
 // @connect         rewards.bing.com
 // @connect         top.baidu.com
+// @connect         www.bing.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
