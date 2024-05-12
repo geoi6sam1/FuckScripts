@@ -12,9 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @cloudcat
 // @connect         miuiver.com
-// @exportcookie    domain=.miuiver.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
