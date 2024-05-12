@@ -85,14 +85,14 @@ async function main() {
             }
         }
         GM_xmlhttpRequest({
-            url: `https://www.dranime.net/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1&formhash=${encodeURIComponent(formhash)}&qdxq=${getRandStr()}&qdmode=3&todaysay=&fastreply=0`,
+            url: `https://www.dranime.net/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1&formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${encodeURIComponent("来自客户端的签到")}&fastreply=0`,
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
             },
             onload: onload
         })
         GM_xmlhttpRequest({
-            url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3&formhash=${encodeURIComponent(formhash)}&qdxq=${getRandStr()}`,
+            url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3&formhash=${formhash}&qdxq=${getRandStr()}`,
             onload: onload
         })
         GM_xmlhttpRequest({
@@ -106,7 +106,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(() => start(), 100 + getRandNum(100))
+            result ? resolve() : setTimeout(() => { start() }, 100 + getRandNum(100))
         } catch (err) {
             reject(err)
         }
