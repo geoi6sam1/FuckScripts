@@ -12,9 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @cloudcat            
 // @connect         www.dranime.net
-// @exportcookie    domain=www.dranime.net
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
