@@ -11,10 +11,8 @@
 // @grant           GM_notification
 // @grant           GM_openInTab
 // @grant           GM_getValue
-// @grant           GM_log
-// @cloudcat            
+// @grant           GM_log  
 // @connect         www.znds.com
-// @exportcookie    domain=www.znds.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
