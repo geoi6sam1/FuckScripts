@@ -83,7 +83,7 @@ return new Promise((resolve, reject) => {
                         formhash = formhash[1]
                         callback(formhash)
                     }
-                } else {.
+                } else {
                     pushMsg("失败", "打卡请求失败!状态码:" + xhr.status)
                     resolve()
                 }
