@@ -196,7 +196,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(start(), GM_getValue("Options.inr") * 1000 + getRandNum(1000))
+            result ? resolve() : setTimeout(() => start(), GM_getValue("Options.inr") * 1000 + getRandNum(1000))
         } catch (err) {
             reject(err)
         }
