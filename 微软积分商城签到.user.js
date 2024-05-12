@@ -143,8 +143,15 @@ let pcPtPro = 0
 let mobilePtPro = 0
 let pcPtProMax = 0
 let mobilePtProMax = 0
+let domain = "www.bing.com"
 
 async function main() {
+    const onload = (res) => {
+        const url = new URL(res.finalUrl)
+        if (url.host != domain) {
+            domain = url.host
+        }
+    }
     const userInfo = await getRewardsInfo()
     pcPtPro = userInfo.counters.pcSearch[0].pointProgress
     pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
@@ -169,21 +176,23 @@ async function main() {
         const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
             GM_xmlhttpRequest({
-                url: `https://www.bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                 headers: {
-                    "Referer": `https://www.bing.com/`,
+                    "Referer": `https://${domain}/`,
                     "User-Agent": getRandStr(1)
-                }
+                },
+                onload: onload
             })
             return false
         } else {
             if (mobilePtPro < mobilePtProMax) {
                 GM_xmlhttpRequest({
-                    url: `https://www.bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                     headers: {
-                        "Referer": `https://www.bing.com/`,
+                        "Referer": `https://${domain}/`,
                         "User-Agent": getRandStr(2)
-                    }
+                    },
+                    onload: onload
                 })
                 return false
             }
