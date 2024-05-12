@@ -61,8 +61,7 @@
     obj.wetvBarrage = function () {
         GM_addStyle(`
 .barrage-control,
-.thumbplayer-barrage,
-iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
+.thumbplayer-barrage
 {
     display: none !important;
 }
