@@ -110,7 +110,7 @@ function getRewardsInfo() {
 let keywordList = []
 let keywordIndex = 0
 
-function getTopKeyword() {
+async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
             keywordIndex++
