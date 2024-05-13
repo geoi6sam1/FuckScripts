@@ -12,11 +12,8 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @connect         top.baidu.com
-// @connect         rewards.bing.com
-// @connect         www.bing.com
-// @connect         cn.bing.com
 // @connect         bing.com
+// @connect         top.baidu.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
@@ -206,7 +203,11 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(() => { start() }, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
+            if (result) {
+                resolve()
+            } else {
+                return setTimeout(start, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
+            }
         } catch (err) {
             reject(err)
         }
