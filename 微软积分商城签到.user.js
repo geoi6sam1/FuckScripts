@@ -140,8 +140,8 @@ let retryTimes = 0
 let lastProcess = 0
 let pcPtPro = 0
 let mobilePtPro = 0
-let pcPtProMax = 0
-let mobilePtProMax = 0
+let pcPtProMax = 1
+let mobilePtProMax = 1
 let domain = "www.bing.com"
 
 async function main() {
@@ -152,8 +152,10 @@ async function main() {
         }
     }
     const userInfo = await getRewardsInfo()
-    pcPtPro = userInfo.counters.pcSearch[0].pointProgress
-    pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
+    if (userInfo.counters.pcSearch) {
+        pcPtPro = userInfo.counters.pcSearch[0].pointProgress
+        pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
+    }
     if (userInfo.counters.mobileSearch) {
         mobilePtPro = userInfo.counters.mobileSearch[0].pointProgress
         mobilePtProMax = userInfo.counters.mobileSearch[0].pointProgressMax
