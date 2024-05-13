@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name            粤梦缘论坛签到
+// @name            飘雪动漫社签到
 // @namespace       https://github.com/geoi6sam1
 // @version         0.2.0
-// @description     粤梦缘论坛每日自动签到，领取红包
+// @description     飘雪动漫社每日自动签到，领取红包
 // @author          geoi6sam1@qq.com
 // @icon            https://www.dranime.net/favicon.ico
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
