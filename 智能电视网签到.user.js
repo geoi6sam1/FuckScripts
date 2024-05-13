@@ -12,7 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log  
-// @connect         www.znds.com
+// @connect         znds.com
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
@@ -97,10 +97,8 @@ return new Promise((resolve, reject) => {
             loginWay = "username"
         }
         login_h((hash) => {
-            var loginhash = encodeURIComponent(hash[0])
-            var formhash = encodeURIComponent(hash[1])
             GM_xmlhttpRequest({
-                url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${loginhash}&inajax=1&formhash=${formhash}&referer=https%3A%2F%2Fwww.znds.com%2F.%2F&loginfield=${loginWay}&username=${userLog}&password=${userPwd}&questionid=0&answer=&cookietime=2592000`,
+                url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${encodeURIComponent(hash[0])}&inajax=1&formhash=${encodeURIComponent(hash[1])}&referer=https%3A%2F%2Fwww.znds.com%2F.%2F&loginfield=${loginWay}&username=${userLog}&password=${userPwd}&questionid=0&answer=&cookietime=2592000`,
                 headers: {
                     "User-Agent": userAgent,
                 },
@@ -123,9 +121,8 @@ return new Promise((resolve, reject) => {
 
     function main() {
         daka_h((hash) => {
-            var formhash = encodeURIComponent(hash)
             GM_xmlhttpRequest({
-                url: `https://www.znds.com/plugin.php?id=ljdaka:daka&action=msg&formhash=${formhash}&infloat=yes&handlekey=ljdaka&inajax=1&ajaxtarget=fwin_content_ljdaka`,
+                url: `https://www.znds.com/plugin.php?id=ljdaka:daka&action=msg&formhash=${encodeURIComponent(hash)}&infloat=yes&handlekey=ljdaka&inajax=1&ajaxtarget=fwin_content_ljdaka`,
                 headers: {
                     "User-Agent": userAgent,
                 },
