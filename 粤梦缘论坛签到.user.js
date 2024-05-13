@@ -12,7 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @connect         www.dranime.net
+// @connect         dranime.net
 // @antifeature     ads
 // @antifeature     miner
 // @antifeature     payment
@@ -106,7 +106,11 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(() => { start() }, 100 + getRandNum(100))
+            if (result) {
+                resolve()
+            } else {
+                return setTimeout(start, 100 + getRandNum(100))
+            }
         } catch (err) {
             reject(err)
         }
