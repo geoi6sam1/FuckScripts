@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            飘雪动漫社签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.0
+// @version         0.2.1
 // @description     飘雪动漫社每日自动签到，领取红包
 // @author          geoi6sam1@qq.com
 // @icon            https://www.dranime.net/favicon.ico
@@ -68,7 +68,7 @@ async function main() {
         return true
     }
     if (qiandao < -1) {
-        pushMsg("失败", "签到失败，您的账号没有签到权限！")
+        pushMsg("失败", "您的账号没有签到权限哦！")
         return true
     } else if (qiandao > 1) {
         pushMsg("完成", "签到完成，签到就完成了！")
