@@ -106,11 +106,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            if (result) {
-                resolve()
-            } else {
-                return setTimeout(start, 100 + getRandNum(100))
-            }
+            result ? resolve() : setTimeout(start, 100 + getRandNum(100))
         } catch (err) {
             reject(err)
         }
