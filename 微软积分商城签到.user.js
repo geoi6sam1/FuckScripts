@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.4
+// @version         1.0.5
 // @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -22,24 +22,6 @@
 // @antifeature     referral-link
 // @license         GPL-3.0
 // ==/UserScript==
-
-/* ==UserConfig==
-Options:
-  inr:
-    title: 搜索间隔
-    description: 默认6秒
-    type: number
-    default: 6
-    min: 1
-    unit: 秒
-  times:
-    title: 重试次数
-    description: 默认6次
-    type: number
-    default: 6
-    min: 1
-    unit: 次
- ==/UserConfig== */
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -162,7 +144,7 @@ async function main() {
     }
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
-        if (retryTimes > GM_getValue("Options.times")) {
+        if (retryTimes > 6) {
             pushMsg("出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
@@ -205,11 +187,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            if (result) {
-                resolve()
-            } else {
-                return setTimeout(start, GM_getValue("Options.inr") * 1000 + getRandNum(1000))
-            }
+            result ? resolve() : setTimeout(start, 6 * 1000 + getRandNum(1000))
         } catch (err) {
             reject(err)
         }
