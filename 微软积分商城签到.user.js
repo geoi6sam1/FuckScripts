@@ -10,7 +10,6 @@
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_openInTab
-// @grant           GM_getValue
 // @grant           GM_log
 // @connect         bing.com
 // @connect         top.baidu.com
