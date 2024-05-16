@@ -12,7 +12,8 @@
 |:---:|:---:|:---:|:---:|:---:|
 | **飘雪动漫社签到** | v0.2.1 | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
 | **可可影视播放器** | v1.0.1 | 普通脚本（已失效） | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
-| **智能电视网签到** | v0.3.6 | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
+| **智能电视网签到** | v0.4.0 | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
+| **粤知缘动漫社签到** | v0.1.0 | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤知缘动漫社.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社.user.js) |
 | **微软必应优化助手** | v1.2.2 | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
 | **腾讯视频优化助手** | v1.1.3 | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
 | **MIUI历史版本签到** | v0.3.8 | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI历史版本签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) |
