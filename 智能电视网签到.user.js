@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            智能电视网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.3.6
+// @version         0.4.0
 // @description     智能电视网每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.znds.com/favicon.ico
@@ -42,7 +42,7 @@ let userPwd = encodeURIComponent(GM_getValue("Login.pwd"))
 let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 
 return new Promise((resolve, reject) => {
-    function login_h(callback) {
+    function _logh(callback) {
         GM_xmlhttpRequest({
             url: "https://www.znds.com/member.php?mod=logging&action=login",
             headers: {
@@ -50,24 +50,19 @@ return new Promise((resolve, reject) => {
             },
             onload(xhr) {
                 var res = xhr.responseText
-                if (xhr.status == 200) {
-                    var loginhash = res.match(/loginhash=(.*?)"/)
-                    var formhash = res.match(/formhash=(.*?)'/)
-                    loginhash = loginhash[1]
-                    formhash = formhash[1]
-                    var hasharr = [loginhash, formhash]
-                    callback(hasharr)
-                } else {
-                    pushMsg("失败", "登录请求失败!状态码:" + xhr.status)
-                    resolve()
-                }
-            },
+                var loginhash = res.match(/loginhash=(.*?)"/)
+                var formhash = res.match(/formhash=(.*?)'/)
+                loginhash = loginhash[1]
+                formhash = formhash[1]
+                var hasharr = [loginhash, formhash]
+                callback(hasharr)
+            }
         })
     }
 
-    function daka_h(callback) {
+    function _fh(callback) {
         GM_xmlhttpRequest({
-            url: "https://www.znds.com/forum.php",
+            url: "https://www.znds.com",
             headers: {
                 "User-Agent": userAgent,
             },
@@ -90,57 +85,65 @@ return new Promise((resolve, reject) => {
     }
 
     function login() {
-        reLogTimes++
-        if (loginWay == "邮箱") {
-            loginWay = "email"
-        } else {
-            loginWay = "username"
-        }
-        login_h((hash) => {
-            GM_xmlhttpRequest({
-                url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${hash[0]}&inajax=1&formhash=${hash[1]}&referer=https%3A%2F%2Fwww.znds.com%2F.%2F&loginfield=${loginWay}&username=${userLog}&password=${userPwd}&questionid=0&answer=&cookietime=2592000`,
-                headers: {
-                    "User-Agent": userAgent,
-                },
-                onload(xhr) {
-                    if (xhr.status == 200) {
-                        if (reLogTimes > 2) {
-                            pushMsg("失败", "登录失败,请检查账号密码!")
-                            resolve()
+        if (loginWay && userLog && userPwd) {
+            if (loginWay == "邮箱") {
+                loginWay = "email"
+            } else {
+                loginWay = "username"
+            }
+            _logh((hash) => {
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url: `https://www.znds.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=${hash[0]}&inajax=1`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Referer": "https://www.znds.com/",
+                        "User-Agent": userAgent
+                    },
+                    data: `&formhash=${hash[1]}&referer=https%3A%2F%2Fwww.znds.com%2F&loginfield=${loginWay}&username=${userLog}&password=${userPwd}&questionid=0&answer=&cookietime=2592000`,
+                    onload(xhr) {
+                        if (xhr.status == 200) {
+                            if (reLogTimes > 2) {
+                                pushMsg("失败", "账号密码错误或登录请求频繁!")
+                                resolve()
+                            } else {
+                                reLogTimes++
+                                main()
+                            }
                         } else {
-                            main()
+                            pushMsg("失败", "登录请求失败!状态码:" + xhr.status)
+                            resolve()
                         }
-                    } else {
-                        pushMsg("失败", "登录请求失败!状态码:" + xhr.status)
-                        resolve()
                     }
+                })
+            })
+        } else {
+            pushMsg("失败", "请先登录才能继续操作！")
+            resolve()
+        }
+    }
+
+    function main() {
+        _fh((formhash) => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `https://www.znds.com/plugin.php?id=ljdaka:daka&action=msg`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Referer": "https://www.znds.com/",
+                    "User-Agent": userAgent
+                },
+                data: `&formhash=${formhash}&infloat=yes&handlekey=ljdaka&inajax=1&ajaxtarget=fwin_content_ljdaka`,
+                onload(xhr) {
+                    var res = xhr.responseText
+                    var msg = res.match(/<p>(.*?)<\/p>/)
+                    pushMsg("成功", msg[1])
+                    resolve()
                 }
             })
         })
     }
 
-    function main() {
-        daka_h((hash) => {
-            GM_xmlhttpRequest({
-                url: `https://www.znds.com/plugin.php?id=ljdaka:daka&action=msg&formhash=${hash}&infloat=yes&handlekey=ljdaka&inajax=1&ajaxtarget=fwin_content_ljdaka`,
-                headers: {
-                    "User-Agent": userAgent,
-                },
-                onload(xhr) {
-                    var res = xhr.responseText
-                    if (xhr.status == 200) {
-                        var msg = res.match(/<p>(.*?)<\/p>/)
-                        pushMsg("成功", msg[1])
-                        resolve()
-                    } else {
-                        pushMsg("失败", "打卡请求失败!状态码:" + xhr.status)
-                        resolve()
-                    }
-                }
-            })
-        })
-    }
-  
     main()
 })
 
