@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            飘雪动漫社签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.1
+// @version         0.2.2
 // @description     飘雪动漫社每日自动签到，领取红包
 // @author          geoi6sam1@qq.com
 // @icon            https://www.dranime.net/favicon.ico
@@ -116,7 +116,7 @@ return new Promise((resolve, reject) => {
 function pushMsg(title, text) {
     GM_notification({
         text: text,
-        title: "粤梦缘论坛签到" + title,
+        title: "飘雪动漫社签到" + title,
         image: "https://www.dranime.net/favicon.ico",
         onclick: () => {
             GM_openInTab("https://www.dranime.net/member.php?mod=logging&action=login", { active: true, insert: true, setParent: true })
