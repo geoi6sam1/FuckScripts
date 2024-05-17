@@ -8,8 +8,8 @@
 > 
 > 👉[**`图文教程`**](https://learn.scriptcat.org)👈&nbsp;&nbsp;&nbsp;👉[**`视频教程`**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
 
-| UserScript Name | Script Type | GitHub | Gitee |
-|:---:|:---:|:---:|:---:|:---:|
+| UserScript | Type | GitHub | Gitee |
+|:---:|:---:|:---:|:---:|
 | **飘雪动漫社签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
 | **可可影视播放器** | 普通脚本（已失效） | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
 | **智能电视网签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
