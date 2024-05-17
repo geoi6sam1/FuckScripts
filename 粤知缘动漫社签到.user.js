@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            粤知缘动漫社签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.1.0
+// @version         0.1.1
 // @description     粤知缘动漫社每日自动签到，领取任务奖励，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.yzydm.com/favicon.ico
@@ -66,6 +66,9 @@ return new Promise((resolve, reject) => {
     function _logh(callback) {
         GM_xmlhttpRequest({
             url: "https://www.yzydm.com/member.php?mod=logging&action=login",
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            },
             onload(xhr) {
                 var res = xhr.responseText
                 var loginhash = res.match(/loginhash=(.*?)"/)
