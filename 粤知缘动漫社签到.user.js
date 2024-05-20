@@ -14,8 +14,8 @@
 // @grant           GM_log
 // @connect         yzydm.com
 // @license         GPL-3.0
-// @updateURL       
-// @downloadURL     
+// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E7%B2%A4%E7%9F%A5%E7%BC%98%E5%8A%A8%E6%BC%AB%E7%A4%BE%E7%AD%BE%E5%88%B0.user.js
+// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E7%B2%A4%E7%9F%A5%E7%BC%98%E5%8A%A8%E6%BC%AB%E7%A4%BE%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 /* ==UserConfig==
