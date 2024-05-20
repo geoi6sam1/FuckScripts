@@ -14,8 +14,6 @@
 // @grant           GM_log
 // @connect         miuiver.com
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC%E7%AD%BE%E5%88%B0.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 /* ==UserConfig==
