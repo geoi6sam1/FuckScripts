@@ -56,7 +56,7 @@ return new Promise((resolve, reject) => {
                 "Referer": "https://bbs.tampermonkey.net.cn/",
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
             },
-            data: `formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${Date.now()}&fastreply=0`,
+            data: `formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${encodeURIComponent("好多人啊")}&fastreply=0`,
             onload(xhr) {
                 var res = xhr.responseText.replace(/\s/g, "")
                 GM_log(res)
