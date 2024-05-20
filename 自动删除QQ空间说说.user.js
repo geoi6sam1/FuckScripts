@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         自动删除QQ空间说说
-// @namespace    https://github.com/geoi6sam1
-// @version      0.1.0
-// @description  选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续
-// @author       geoi6sam1
-// @match        *://user.qzone.qq.com/*
-// @icon         https://qzone.qq.com/favicon.ico
-// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @run-at       document-end
-// @license      MIT
-// @updateURL       
-// @downloadURL     
+// @name            自动删除QQ空间说说
+// @namespace       https://github.com/geoi6sam1
+// @version         0.1.0
+// @description     选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续
+// @author          geoi6sam1
+// @match           *://user.qzone.qq.com/*
+// @icon            https://qzone.qq.com/favicon.ico
+// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @run-at          document-end
+// @license         GPL-3.0
+// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js
+// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js
 // ==/UserScript==
 
 setTimeout(() => {
