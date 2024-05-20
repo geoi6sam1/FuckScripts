@@ -12,12 +12,6 @@
 // @require      https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js
 // @require      https://cdn.bootcdn.net/ajax/libs/dplayer/1.27.1/DPlayer.min.js
 // @run-at       document-start
-// @antifeature  ads
-// @antifeature  miner
-// @antifeature  payment
-// @antifeature  tracking
-// @antifeature  membership
-// @antifeature  referral-link
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @license      GPL-3.0
