@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            飘雪动漫社签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.2.2
+// @version         0.2.3
 // @description     飘雪动漫社每日自动签到，领取红包
 // @author          geoi6sam1@qq.com
 // @icon            https://www.dranime.net/favicon.ico
@@ -35,7 +35,7 @@ function _hash() {
         GM_xmlhttpRequest({
             url: "https://www.dranime.net",
             headers: {
-                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
             },
             onload(xhr) {
                 var res = xhr.responseText
@@ -86,12 +86,15 @@ async function main() {
         GM_xmlhttpRequest({
             url: `https://www.dranime.net/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1&formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${encodeURIComponent("来自客户端的签到")}&fastreply=0`,
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
             },
             onload: onload
         })
         GM_xmlhttpRequest({
             url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3&formhash=${formhash}&qdxq=${getRandStr()}`,
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
+            },
             onload: onload
         })
         GM_xmlhttpRequest({
