@@ -9,8 +9,6 @@
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at          document-end
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4QQ%E7%A9%BA%E9%97%B4%E8%AF%B4%E8%AF%B4.user.js
 // ==/UserScript==
 
 setTimeout(() => {
