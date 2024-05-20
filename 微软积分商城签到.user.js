@@ -14,8 +14,6 @@
 // @connect         bing.com
 // @connect         top.baidu.com
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E5%95%86%E5%9F%8E%E7%AD%BE%E5%88%B0.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%BE%AE%E8%BD%AF%E7%A7%AF%E5%88%86%E5%95%86%E5%9F%8E%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 function getRandNum(num) {
