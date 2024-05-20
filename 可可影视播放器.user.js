@@ -21,6 +21,8 @@
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @license      GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 (function () {
