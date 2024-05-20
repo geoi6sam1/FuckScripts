@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软必应优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.2.2
+// @version         1.2.3
 // @description     微软必应（Microsoft Bing）搜索结果优化，支持电脑端和移动端
 // @author          geoi6sam1
 // @match           http*://*.bing.com/*
