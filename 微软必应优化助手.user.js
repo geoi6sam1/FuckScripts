@@ -8,15 +8,11 @@
 // @icon         https://bing.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at       document-start
-// @antifeature  ads
-// @antifeature  miner
-// @antifeature  payment
-// @antifeature  tracking
-// @antifeature  membership
-// @antifeature  referral-link
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @license      GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 (function () {
