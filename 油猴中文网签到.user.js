@@ -12,13 +12,9 @@
 // @grant           GM_openInTab
 // @grant           GM_log
 // @connect         bbs.tampermonkey.net.cn
-// @antifeature     ads
-// @antifeature     miner
-// @antifeature     payment
-// @antifeature     tracking
-// @antifeature     membership
-// @antifeature     referral-link
 // @license         GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 function getRandNum(num) {
