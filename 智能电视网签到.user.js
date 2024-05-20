@@ -13,13 +13,9 @@
 // @grant           GM_getValue
 // @grant           GM_log  
 // @connect         znds.com
-// @antifeature     ads
-// @antifeature     miner
-// @antifeature     payment
-// @antifeature     tracking
-// @antifeature     membership
-// @antifeature     referral-link
 // @license         GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 /* ==UserConfig==
