@@ -13,8 +13,6 @@
 // @grant           GM_log
 // @connect         dranime.net
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E9%A3%98%E9%9B%AA%E5%8A%A8%E6%BC%AB%E7%A4%BE%E7%AD%BE%E5%88%B0.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E9%A3%98%E9%9B%AA%E5%8A%A8%E6%BC%AB%E7%A4%BE%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 function getRandNum(num) {
