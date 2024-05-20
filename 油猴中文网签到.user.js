@@ -13,8 +13,8 @@
 // @grant           GM_log
 // @connect         bbs.tampermonkey.net.cn
 // @license         GPL-3.0
-// @updateURL       
-// @downloadURL     
+// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E6%B2%B9%E7%8C%B4%E4%B8%AD%E6%96%87%E7%BD%91%E7%AD%BE%E5%88%B0.user.js
+// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E6%B2%B9%E7%8C%B4%E4%B8%AD%E6%96%87%E7%BD%91%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 function getRandNum(num) {
