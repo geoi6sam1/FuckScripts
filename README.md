@@ -4,12 +4,11 @@
 
 ### \#\# 脚本猫/油猴脚本
 
-> **🔥🔥脚本猫/油猴脚本开发指南🔥🔥**
++ **🔥🔥脚本猫/油猴脚本开发指南🔥🔥**
+  + 👉[**图文教程** - 油猴中文网（ggnb!）](https://learn.scriptcat.org)👈
+  + 👉[**视频教程** - 天才少年李恒道（号被盗）](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
 
-+ 👉[**图文教程 - 油猴中文网（ggnb!）**](https://learn.scriptcat.org)👈
-+ 👉[**视频教程 - 天才少年李恒道（号被盗）**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
-
-#### 👇👇普通脚本（通用）👇👇
+> **👇👇普通脚本（通用）👇👇**
 
 | Name | GitHub | Gitee |
 |:---:|:---:|:---:|
@@ -19,7 +18,7 @@
 | **自动删除QQ空间说说** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自动删除QQ空间说说.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自动删除QQ空间说说.user.js) |
 | **自用校园网自动登录** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自用校园网自动登录.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自用校园网自动登录.user.js) |
 
-#### 👇👇定时脚本（[脚本猫](https://docs.scriptcat.org)）👇👇
+> **👇👇定时脚本（[脚本猫](https://docs.scriptcat.org)）👇👇**
 
 | Name | Type | GitHub | Gitee |
 |:---:|:---:|:---:|:---:|
@@ -36,6 +35,6 @@
 
 > **🔥🔥网页广告过滤规则🔥🔥**
 
-| Title | Version | Expires | Github | Gitee |
+| Title | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| ADFUCK | 2024040918 | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+| ADFUCK |2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
