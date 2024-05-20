@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            油猴中文网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.1.0
+// @version         0.1.1
 // @description     油猴中文网每日自动签到
 // @author          geoi6sam1@qq.com
 // @icon            https://bbs.tampermonkey.net.cn/favicon.ico
@@ -22,7 +22,7 @@ function getRandNum(num) {
 }
 
 function getRandStr() {
-    const randData = ['kx', 'ng', 'ym', 'wl', 'nu', 'ch', 'fd', 'yl', 'dk']
+    const randData = ['kx', 'ng', 'ym', 'wl', 'nu', 'ch', 'fd', 'yl', 'shuai']
     return randData[getRandNum(randData.length)]
 }
 
