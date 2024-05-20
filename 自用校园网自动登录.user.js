@@ -10,8 +10,6 @@
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at          document-end
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E7%94%A8%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%87%AA%E7%94%A8%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js
 // ==/UserScript==
 
 const uid = "" // 学号
