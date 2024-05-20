@@ -1,22 +1,22 @@
 // ==UserScript==
-// @name         可可影视播放器
-// @namespace    https://github.com/geoi6sam1
-// @version      1.0.1
-// @description  使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
-// @author       geoi6sam1@qq.com
-// @match        http*://*.keke*.com/play/*
-// @match        http*://*.keke*.app/play/*
-// @icon         https://api.iowen.cn/favicon/www.kekedy.tv.png
-// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @require      https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js
-// @require      https://cdn.bootcdn.net/ajax/libs/dplayer/1.27.1/DPlayer.min.js
-// @run-at       document-start
-// @grant        unsafeWindow
-// @grant        GM_addStyle
-// @license      GPL-3.0
-// @updateURL       
-// @downloadURL     
+// @name            可可影视播放器
+// @namespace       https://github.com/geoi6sam1
+// @version         1.0.1
+// @description     使用DPlayer插件播放影片，支持转码mp4下载，支持记忆、连续播放，支持更多快捷键操作，支持显示标题和时间，支持快速选集、切换线路，支持任意倍速调整（0.1-16）
+// @author          geoi6sam1@qq.com
+// @match           http*://*.keke*.com/play/*
+// @match           http*://*.keke*.app/play/*
+// @icon            https://api.iowen.cn/favicon/www.kekedy.tv.png
+// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @require         https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
+// @require         https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.12/hls.min.js
+// @require         https://cdn.bootcdn.net/ajax/libs/dplayer/1.27.1/DPlayer.min.js
+// @run-at          document-start
+// @grant           unsafeWindow
+// @grant           GM_addStyle
+// @license         GPL-3.0
+// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%8F%AF%E5%8F%AF%E5%BD%B1%E8%A7%86%E6%92%AD%E6%94%BE%E5%99%A8.user.js
+// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%8F%AF%E5%8F%AF%E5%BD%B1%E8%A7%86%E6%92%AD%E6%94%BE%E5%99%A8.user.js
 // ==/UserScript==
 
 (function () {
