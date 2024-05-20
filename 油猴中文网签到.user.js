@@ -30,13 +30,11 @@ function getRandStr() {
     return randData[getRandNum(randData.length)]
 }
 
-let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
-
 return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
         url: "https://bbs.tampermonkey.net.cn",
         headers: {
-            "User-Agent": userAgent
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         },
         onload(xhr) {
             var res = xhr.responseText
@@ -62,9 +60,9 @@ return new Promise((resolve, reject) => {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Referer": "https://bbs.tampermonkey.net.cn/",
-                "User-Agent": userAgent
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
             },
-            data: `&formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${Date.now()}&fastreply=0`,
+            data: `formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${Date.now()}&fastreply=0`,
             onload(xhr) {
                 var res = xhr.responseText.replace(/\s/g, "")
                 GM_log(res)
