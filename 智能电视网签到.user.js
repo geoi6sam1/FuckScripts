@@ -14,8 +14,6 @@
 // @grant           GM_log  
 // @connect         znds.com
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E6%99%BA%E8%83%BD%E7%94%B5%E8%A7%86%E7%BD%91%E7%AD%BE%E5%88%B0.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E6%99%BA%E8%83%BD%E7%94%B5%E8%A7%86%E7%BD%91%E7%AD%BE%E5%88%B0.user.js
 // ==/UserScript==
 
 /* ==UserConfig==
