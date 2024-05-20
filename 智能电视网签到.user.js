@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            智能电视网签到
 // @namespace       https://github.com/geoi6sam1
-// @version         0.4.0
+// @version         0.4.1
 // @description     智能电视网每日自动签到，支持自动登录
 // @author          geoi6sam1@qq.com
 // @icon            https://www.znds.com/favicon.ico
@@ -40,14 +40,12 @@ return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://www.znds.com/member.php?mod=logging&action=login",
             headers: {
-                "User-Agent": userAgent,
+                "User-Agent": userAgent
             },
             onload(xhr) {
                 var res = xhr.responseText
-                var loginhash = res.match(/loginhash=(.*?)"/)
-                var formhash = res.match(/formhash=(.*?)'/)
-                loginhash = loginhash[1]
-                formhash = formhash[1]
+                var loginhash = res.match(/loginhash=(.*?)"/)[1]
+                var formhash = res.match(/formhash=(.*?)'/)[1]
                 var hasharr = [loginhash, formhash]
                 callback(hasharr)
             }
@@ -58,7 +56,7 @@ return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://www.znds.com",
             headers: {
-                "User-Agent": userAgent,
+                "User-Agent": userAgent
             },
             onload(xhr) {
                 var res = xhr.responseText
