@@ -36,5 +36,5 @@
 > **🔥🔥网页广告过滤规则🔥🔥**
 
 | Title | Expires | Github | Gitee |
-|:---:|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|
 | ADFUCK |2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
