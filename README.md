@@ -5,8 +5,9 @@
 ### \#\# 脚本猫/油猴脚本
 
 + **🔥🔥脚本猫/油猴脚本开发指南🔥🔥**
-  + 👉[**图文教程** - 油猴中文网（ggnb!）](https://learn.scriptcat.org)👈
-  + 👉[**视频教程** - 天才少年李恒道（号被盗）](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
+  + 👉[**脚本开发图文教程**](https://learn.scriptcat.org)👈
+  + 👉[**脚本开发视频教程**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
+  + 👉[**脚本猫官方开发文档**](https://docs.scriptcat.org/docs/dev)👈
 
 > **👇👇普通脚本（通用）👇👇**
 
