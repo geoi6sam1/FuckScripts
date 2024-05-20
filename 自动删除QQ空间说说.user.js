@@ -7,14 +7,10 @@
 // @match        *://user.qzone.qq.com/*
 // @icon         https://qzone.qq.com/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @antifeature  ads
-// @antifeature  miner
-// @antifeature  payment
-// @antifeature  tracking
-// @antifeature  membership
-// @antifeature  referral-link
 // @run-at       document-end
 // @license      MIT
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 setTimeout(() => {
