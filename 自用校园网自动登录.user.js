@@ -6,16 +6,12 @@
 // @author       geoi6sam1
 // @match        *://10.10.0.76/*
 // @match        *://10.10.0.253/*
-// @icon         https://www.google.com/favicon.ico
+// @icon         https://www.tsinghua.edu.cn/favicon.ico
 // @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @antifeature  ads
-// @antifeature  miner
-// @antifeature  payment
-// @antifeature  tracking
-// @antifeature  membership
-// @antifeature  referral-link
 // @run-at       document-end
 // @license      MIT
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 const uid = "" // 学号
