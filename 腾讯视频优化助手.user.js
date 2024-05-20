@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name         腾讯视频优化助手
-// @namespace    https://github.com/geoi6sam1
-// @version      1.1.4
-// @description  仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频会员或使用广告拦截扩展
-// @author       geoi6sam1@qq.com
-// @match        http*://v.qq.com/*
-// @match        http*://m.v.qq.com/*
-// @match        http*://film.qq.com/*
-// @match        http*://m.film.qq.com/*
-// @icon         https://v.qq.com/favicon.ico
-// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
-// @run-at       document-start
-// @grant        unsafeWindow
-// @grant        GM_addStyle
-// @license      GPL-3.0
-// @updateURL       
-// @downloadURL     
+// @name            腾讯视频优化助手
+// @namespace       https://github.com/geoi6sam1
+// @version         1.1.4
+// @description     仅用于优化观影体验，非跳过视频开头广告脚本，有需要请开通腾讯视频会员或使用广告拦截扩展
+// @author          geoi6sam1@qq.com
+// @match           http*://v.qq.com/*
+// @match           http*://m.v.qq.com/*
+// @match           http*://film.qq.com/*
+// @match           http*://m.film.qq.com/*
+// @icon            https://v.qq.com/favicon.ico
+// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @run-at          document-start
+// @grant           unsafeWindow
+// @grant           GM_addStyle
+// @license         GPL-3.0
+// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js
+// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js
 // ==/UserScript==
 
 (function () {
