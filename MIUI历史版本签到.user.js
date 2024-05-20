@@ -20,6 +20,8 @@
 // @antifeature     membership
 // @antifeature     referral-link
 // @license         GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 /* ==UserConfig==
