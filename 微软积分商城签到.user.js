@@ -13,13 +13,9 @@
 // @grant           GM_log
 // @connect         bing.com
 // @connect         top.baidu.com
-// @antifeature     ads
-// @antifeature     miner
-// @antifeature     payment
-// @antifeature     tracking
-// @antifeature     membership
-// @antifeature     referral-link
 // @license         GPL-3.0
+// @updateURL       
+// @downloadURL     
 // ==/UserScript==
 
 function getRandNum(num) {
