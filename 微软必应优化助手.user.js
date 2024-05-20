@@ -11,8 +11,6 @@
 // @grant           unsafeWindow
 // @grant           GM_addStyle
 // @license         GPL-3.0
-// @updateURL       https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js
-// @downloadURL     https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/%E5%BE%AE%E8%BD%AF%E5%BF%85%E5%BA%94%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js
 // ==/UserScript==
 
 (function () {
