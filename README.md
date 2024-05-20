@@ -8,19 +8,26 @@
 > 
 > 👉[**`图文教程`**](https://learn.scriptcat.org)👈&nbsp;&nbsp;&nbsp;👉[**`视频教程`**](https://www.bilibili.com/video/BV1gT4y1N7zy)👈
 
+#### 👇普通脚本（通用）👇
+
+| UserScript | GitHub | Gitee |
+|:---:|:---:|:---:|
+| ~~**可可影视播放器**~~ | [~~安装~~](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [~~安装~~](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
+| **微软必应优化助手** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
+| **腾讯视频优化助手** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
+| **自动删除QQ空间说说** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自动删除QQ空间说说.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自动删除QQ空间说说.user.js) |
+| **自用校园网自动登录** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自用校园网自动登录.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自用校园网自动登录.user.js) |
+
+#### 👇定时脚本（[脚本猫](https://docs.scriptcat.org)）👇
+
 | UserScript | Type | GitHub | Gitee |
 |:---:|:---:|:---:|:---:|
-| **油猴中文网签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/油猴中文网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/油猴中文网签到.user.js) |
-| **飘雪动漫社签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
-| **可可影视播放器** | 普通脚本（已失效） | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
-| **智能电视网签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
-| **粤知缘动漫社签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤知缘动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社签到.user.js) |
-| **微软必应优化助手** | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
-| **腾讯视频优化助手** | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
-| **MIUI历史版本签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI历史版本签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) |
-| **微软积分商城签到** | 后台定时脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软积分商城签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软积分商城签到.user.js) |
-| **自动删除QQ空间说说** | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自动删除QQ空间说说.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自动删除QQ空间说说.user.js) |
-| **自用校园网自动登录** | 普通脚本 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自用校园网自动登录.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自用校园网自动登录.user.js) |
+| **油猴中文网签到** | Discuz(DSU每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/油猴中文网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/油猴中文网签到.user.js) |
+| **智能电视网签到** | Discuz(亮剑打卡签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
+| **飘雪动漫社签到** | Discuz(西瓜微社区签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
+| **粤知缘动漫社签到** | Discuz(DC每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤知缘动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社签到.user.js) |
+| **MIUI历史版本签到** | WordPress | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI历史版本签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) |
+| **微软积分商城签到** | 无 | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软积分商城签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软积分商城签到.user.js) |
 
 ---
 
