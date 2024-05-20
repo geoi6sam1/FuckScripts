@@ -39,3 +39,7 @@
 | Title | Expires | Github | Gitee |
 |:---:|:---:|:---:|:---:|
 | ADFUCK |2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
+
+![微信赞赏](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/wechat.png)
+![支付宝赞赏](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/alipay.png)
+![支付宝红包](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/aliere.png)
