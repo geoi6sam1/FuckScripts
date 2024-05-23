@@ -40,6 +40,6 @@
 |:---:|:---:|:---:|:---:|
 | ADFUCK | 2 days | [下载](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/adfuck.txt) | [下载](https://gitee.com/geoi6sam1/FuckScripts/raw/main/adfuck.txt) |
 
-<img alt="微信赞赏" src="https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/wechat.png" width="500px">
-<img alt="支付宝打赏" src="https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/alipay.png" width="500px">
-<img alt="支付宝红包" src="https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/images/aliere.png" width="500px">
+<img alt="微信赞赏" src="https://sg-thumbnail-drive.mypikpak.com/v0/thumbnails/17BEDE89ACCDD19C895F3FBC2638283453B70378/720/2048" width="500px">
+<img alt="支付宝打赏" src="https://sg-thumbnail-drive.mypikpak.com/v0/thumbnails/D2C70E781795FB3C0D440D840180555DADD9ECAD/720/2048" width="500px">
+<img alt="支付宝红包" src="https://sg-thumbnail-drive.mypikpak.com/v0/thumbnails/6C09FC1C959C3AC44C3BCE326B1CC20D9F8EA8A0/720/2048" width="500px">
