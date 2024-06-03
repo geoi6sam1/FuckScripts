@@ -11,12 +11,16 @@
 // @grant           GM_notification
 // @grant           GM_openInTab
 // @grant           GM_log
-// @connect         dranime.net
+// @connect         www.dranime.net
 // @license         GPL-3.0
 // ==/UserScript==
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
+}
+
+function getSRandNum(min, max) {
+    return Math.floor(Math.random() * (max + 1 - min) + min)
 }
 
 function getRandStr() {
@@ -79,17 +83,6 @@ async function main() {
         }
         GM_xmlhttpRequest({
             method: 'POST',
-            url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3`,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Referer": "https://www.dranime.net/",
-                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
-            },
-            data: `formhash=${formhash}&qdxq=${getRandStr()}`,
-            onload: onload
-        })
-        GM_xmlhttpRequest({
-            method: 'POST',
             url: `https://www.dranime.net/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1`,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -97,6 +90,17 @@ async function main() {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
             },
             data: `formhash=${formhash}&qdxq=${getRandStr()}&qdmode=1&todaysay=${encodeURIComponent("来自客户端的签到")}&fastreply=0`,
+            onload: onload
+        })
+        GM_xmlhttpRequest({
+            method: 'POST',
+            url: `https://www.dranime.net/plugin.php?id=xigua_sign:response&operation=qiandao&infloat=1&inajax=1&mobile=no&qdmode=3`,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Referer": "https://www.dranime.net/",
+                "User-Agent": "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
+            },
+            data: `formhash=${formhash}&qdxq=${getRandStr()}`,
             onload: onload
         })
         GM_xmlhttpRequest({
@@ -110,7 +114,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(start, 100 + getRandNum(100))
+            result ? resolve() : setTimeout(start, getSRandNum(100,200))
         } catch (err) {
             reject(err)
         }
