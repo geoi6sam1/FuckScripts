@@ -12,7 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log  
-// @connect         znds.com
+// @connect         www.znds.com
 // @license         GPL-3.0
 // ==/UserScript==
 
