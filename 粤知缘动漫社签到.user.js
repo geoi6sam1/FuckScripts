@@ -12,7 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_getValue
 // @grant           GM_log
-// @connect         yzydm.com
+// @connect         www.yzydm.com
 // @license         GPL-3.0
 // ==/UserScript==
 
