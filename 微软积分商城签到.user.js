@@ -77,7 +77,7 @@ function getRewardsToken() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com",
-            onload: (xhr) => {
+            onload(xhr) {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
                     var html = res.replace(/\s/g, "")
@@ -206,7 +206,6 @@ async function taskSearch() {
 }
 
 let testTimes = 0
-let promotionsArr = []
 
 async function taskPromotions() {
     if (testTimes > 2) {
@@ -219,7 +218,7 @@ async function taskPromotions() {
         return true
     } else {
         testTimes++
-        promotionsArr = []
+        const promotionsArr = []
         const dashboard = await getRewardsInfo()
         const morePromotions = dashboard.morePromotions
         const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
