@@ -6,6 +6,7 @@
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @require         https://cdn.bootcdn.net/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
@@ -17,12 +18,10 @@
 // ==/UserScript==
 
 const dateTime = new Date()
-    , yearNow = dateTime.getFullYear()
-    , monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
-    , dayNow = ("0" + dateTime.getDate()).slice(-2)
-    , dateNow = `${monthNow}/${dayNow}/${yearNow}`
-    , userAgent = navigator.userAgent || window.navigator.userAgent
-    , isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini|Mobile/i.test(userAgent)
+const yearNow = dateTime.getFullYear()
+const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
+const dayNow = ("0" + dateTime.getDate()).slice(-2)
+const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -41,7 +40,7 @@ function getRandArr(arr) {
 
 function bingGo(d, k, u, r) {
     GM_xmlhttpRequest({
-        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH`,
+        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH&cvid=${md5(Date.now())}`,
         headers: {
             "Referer": `https://${d}/`,
             "User-Agent": u
@@ -82,8 +81,8 @@ function getRewardsToken() {
             onload: (xhr) => {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
-                        , html = res.replace(/\s/g, "")
-                        , data = html.match(/RequestVerificationToken/)
+                    var html = res.replace(/\s/g, "")
+                    var data = html.match(/RequestVerificationToken/)
                     if (data && data[0]) {
                         var token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
                         resolve(token[1])
@@ -103,7 +102,7 @@ function getRewardsInfo() {
             onload(xhr) {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
-                        , data = res.match(/(\"dashboard\"?)/)
+                    var data = res.match(/(\"dashboard\"?)/)
                     if (data && data[0]) {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
@@ -121,7 +120,7 @@ function getRewardsInfo() {
 }
 
 let keywordList = []
-    , keywordIndex = 0
+let keywordIndex = 0
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
@@ -132,7 +131,7 @@ async function getTopKeyword() {
                 onload(xhr) {
                     if (xhr.status == 200) {
                         var res = JSON.parse(xhr.responseText)
-                            , data = res.data.cards[0].content
+                        var data = res.data.cards[0].content
                         for (let i = 0; i < data.length; i++) {
                             keywordList.push(data[i].word)
                         }
@@ -156,12 +155,12 @@ async function getTopKeyword() {
 }
 
 let retryTimes = 0
-    , lastProcess = 0
-    , pcPtPro = 0
-    , mobilePtPro = 0
-    , pcPtProMax = 1
-    , mobilePtProMax = 1
-    , domain = "www.bing.com"
+let lastProcess = 0
+let pcPtPro = 0
+let mobilePtPro = 0
+let pcPtProMax = 1
+let mobilePtProMax = 1
+let domain = "www.bing.com"
 
 async function taskSearch() {
     const onload = (res) => {
@@ -170,8 +169,8 @@ async function taskSearch() {
             domain = url.host
         }
     }
-        , dashboard = await getRewardsInfo()
-        , userInfo = dashboard.userStatus
+    const dashboard = await getRewardsInfo()
+    const userInfo = dashboard.userStatus
     if (userInfo.counters.pcSearch) {
         pcPtPro = userInfo.counters.pcSearch[0].pointProgress
         pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
@@ -195,31 +194,20 @@ async function taskSearch() {
         return true
     } else {
         const keyword = await getTopKeyword()
-        if (isMobile) {
+        if (pcPtPro < pcPtProMax) {
+            bingGo(domain, keyword, getRandStr(1), onload)
+            return false
+        } else {
             if (mobilePtPro < mobilePtProMax) {
                 bingGo(domain, keyword, getRandStr(2), onload)
                 return false
-            } else {
-                if (pcPtPro < pcPtProMax) {
-                    bingGo(domain, keyword, getRandStr(1), onload)
-                    return false
-                }
-            }
-        } else {
-            if (pcPtPro < pcPtProMax) {
-                bingGo(domain, keyword, getRandStr(1), onload)
-                return false
-            } else {
-                if (mobilePtPro < mobilePtProMax) {
-                    bingGo(domain, keyword, getRandStr(2), onload)
-                    return false
-                }
             }
         }
     }
 }
 
 let testTimes = 0
+let promotionsArr = []
 
 async function taskPromotions() {
     if (testTimes > 2) {
@@ -232,10 +220,10 @@ async function taskPromotions() {
         return true
     } else {
         testTimes++
+        promotionsArr = []
         const dashboard = await getRewardsInfo()
-            , morePromotions = dashboard.morePromotions
-            , dailySetPromotions = dashboard.dailySetPromotions[dateNow]
-            , promotionsArr = []
+        const morePromotions = dashboard.morePromotions
+        const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
         for (let d = 0; d < dailySetPromotions.length; d++) {
             if (dailySetPromotions[d].complete == false) {
                 promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
@@ -247,7 +235,7 @@ async function taskPromotions() {
             }
         }
         if (promotionsArr.length == 0) {
-            pushMsg("活动任务完成", "开始必应搜索任务，请耐心等待...")
+            pushMsg("活动任务完成", "正在完成必应搜索任务，请耐心等待...")
             return true
         } else {
             promotionsArr.forEach((item) => {
