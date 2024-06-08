@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.5
-// @description     每天自动完成微软必应搜索任务获取微软积分商城奖励
+// @version         1.0.6
+// @description     每天自动完成微软积分商城活动任务和必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
@@ -16,8 +16,18 @@
 // @license         GPL-3.0
 // ==/UserScript==
 
+const dateTime = new Date()
+const yearNow = dateTime.getFullYear()
+const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
+const dayNow = ("0" + dateTime.getDate()).slice(-2)
+const dateNow = `${monthNow}/${dayNow}/${yearNow}`
+
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
+}
+
+function getSRandNum(min, max) {
+    return Math.floor(Math.random() * (max + 1 - min) + min)
 }
 
 function getRandArr(arr) {
@@ -52,6 +62,27 @@ function getRandStr(type) {
     }
 }
 
+function getRewardsToken() {
+    return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+            url: "https://rewards.bing.com",
+            onload: (xhr) => {
+                if (xhr.status == 200) {
+                    var res = xhr.responseText
+                    var html = res.replace(/\s/g, "")
+                    var data = html.match(/RequestVerificationToken/)
+                    if (data && data[0]) {
+                        var token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
+                        resolve(token[1])
+                    } else {
+                        resolve(0)
+                    }
+                }
+            }
+        })
+    })
+}
+
 function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
@@ -59,16 +90,16 @@ function getRewardsInfo() {
             onload(xhr) {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
-                    var data = res.match(/(\"userStatus\"?)/)
+                    var data = res.match(/(\"dashboard\"?)/)
                     if (data && data[0]) {
                         res = JSON.parse(res)
-                        resolve(res.dashboard.userStatus)
+                        resolve(res.dashboard)
                     } else {
-                        pushMsg("失败", "请检查微软账号登录状态！")
+                        pushMsg("脚本运行失败", "请检查微软账号登录状态！")
                         return true
                     }
                 } else {
-                    pushMsg("失败", "获取积分信息失败！状态码：" + xhr.status)
+                    pushMsg("脚本运行失败", "获取积分信息失败！状态码：" + xhr.status)
                     return true
                 }
             }
@@ -95,7 +126,7 @@ async function getTopKeyword() {
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        pushMsg("失败", "获取关键词失败！状态码：" + xhr.status)
+                        pushMsg("脚本运行失败", "获取关键词失败！状态码：" + xhr.status)
                         return true
                     }
                 }
@@ -119,14 +150,15 @@ let pcPtProMax = 1
 let mobilePtProMax = 1
 let domain = "www.bing.com"
 
-async function main() {
+async function taskSearch() {
     const onload = (res) => {
         const url = new URL(res.finalUrl)
         if (url.host != domain) {
             domain = url.host
         }
     }
-    const userInfo = await getRewardsInfo()
+    const dashboard = await getRewardsInfo()
+    const userInfo = dashboard.userStatus
     if (userInfo.counters.pcSearch) {
         pcPtPro = userInfo.counters.pcSearch[0].pointProgress
         pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
@@ -138,7 +170,7 @@ async function main() {
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
         if (retryTimes > 6) {
-            pushMsg("出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            pushMsg("搜索任务出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
@@ -146,7 +178,7 @@ async function main() {
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        pushMsg("完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
+        pushMsg("搜索任务完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
         return true
     } else {
         const keyword = await getTopKeyword()
@@ -176,22 +208,78 @@ async function main() {
     }
 }
 
+let testTimes = 0
+
+async function taskPromotions() {
+    if (testTimes > 2) {
+        pushMsg("活动任务失败", "未知错误，请尝试手动点击活动卡片！")
+        return true
+    }
+    const token = await getRewardsToken()
+    if (token == 0) {
+        pushMsg("活动任务失败", "RequestVerificationToken 获取失败！")
+        return true
+    } else {
+        testTimes++
+        const dashboard = await getRewardsInfo()
+        const morePromotions = dashboard.morePromotions
+        const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+        const promotionsArr = []
+        for (let d = 0; d < dailySetPromotions.length; d++) {
+            if (dailySetPromotions[d].complete == false) {
+                promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
+            }
+        }
+        for (let m = 0; m < morePromotions.length; m++) {
+            if (morePromotions[m].complete == false) {
+                promotionsArr.push({ "offerId": morePromotions[m].offerId, "hash": morePromotions[m].hash })
+            }
+        }
+        if (promotionsArr.length == 0) {
+            pushMsg("活动任务完成", "开始必应搜索任务，请耐心等待...")
+            return true
+        } else {
+            promotionsArr.forEach((item) => {
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url: `https://rewards.bing.com/api/reportactivity`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Referer": `https://rewards.bing.com/`,
+                        "User-Agent": getRandStr(1)
+                    },
+                    data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`,
+                })
+            })
+            return false
+        }
+    }
+}
+
 return new Promise((resolve, reject) => {
     const start = async () => {
         try {
-            const result = await main()
-            result ? resolve() : setTimeout(start, 6 * 1000 + getRandNum(1000))
+            const result = await taskSearch()
+            result ? resolve() : setTimeout(start, getSRandNum(5000, 6000))
         } catch (err) {
             reject(err)
         }
     }
-    start()
+    const begin = async () => {
+        try {
+            const ending = await taskPromotions()
+            ending ? start() : setTimeout(begin, 3e3)
+        } catch (err) {
+            reject(err)
+        }
+    }
+    begin()
 })
 
 function pushMsg(title, text) {
     GM_notification({
         text: text,
-        title: "微软积分商城签到" + title,
+        title: "微软积分商城" + title,
         image: "https://rewards.bing.com/rewards.png",
         onclick: () => {
             GM_openInTab("https://rewards.bing.com/pointsbreakdown", { active: true, insert: true, setParent: true })
