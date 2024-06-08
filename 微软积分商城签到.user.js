@@ -6,7 +6,6 @@
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @require         https://cdn.bootcdn.net/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
@@ -40,7 +39,7 @@ function getRandArr(arr) {
 
 function bingGo(d, k, u, r) {
     GM_xmlhttpRequest({
-        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH&cvid=${md5(Date.now())}`,
+        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH}`,
         headers: {
             "Referer": `https://${d}/`,
             "User-Agent": u
