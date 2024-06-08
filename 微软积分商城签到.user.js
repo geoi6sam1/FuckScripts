@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.6
+// @version         1.0.7
 // @description     每天自动完成微软积分商城活动任务和必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -17,10 +17,12 @@
 // ==/UserScript==
 
 const dateTime = new Date()
-const yearNow = dateTime.getFullYear()
-const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
-const dayNow = ("0" + dateTime.getDate()).slice(-2)
-const dateNow = `${monthNow}/${dayNow}/${yearNow}`
+    , yearNow = dateTime.getFullYear()
+    , monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
+    , dayNow = ("0" + dateTime.getDate()).slice(-2)
+    , dateNow = `${monthNow}/${dayNow}/${yearNow}`
+    , userAgent = navigator.userAgent || window.navigator.userAgent
+    , isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini|Mobile/i.test(userAgent)
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -35,6 +37,17 @@ function getRandArr(arr) {
         return Math.random() > .5 ? -1 : 1
     }
     return arr.sort(randSort)
+}
+
+function bingGo(d, k, u, r) {
+    GM_xmlhttpRequest({
+        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH`,
+        headers: {
+            "Referer": `https://${d}/`,
+            "User-Agent": u
+        },
+        onload: r
+    })
 }
 
 function getRandStr(type) {
@@ -69,8 +82,8 @@ function getRewardsToken() {
             onload: (xhr) => {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
-                    var html = res.replace(/\s/g, "")
-                    var data = html.match(/RequestVerificationToken/)
+                        , html = res.replace(/\s/g, "")
+                        , data = html.match(/RequestVerificationToken/)
                     if (data && data[0]) {
                         var token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
                         resolve(token[1])
@@ -90,7 +103,7 @@ function getRewardsInfo() {
             onload(xhr) {
                 if (xhr.status == 200) {
                     var res = xhr.responseText
-                    var data = res.match(/(\"dashboard\"?)/)
+                        , data = res.match(/(\"dashboard\"?)/)
                     if (data && data[0]) {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
@@ -108,7 +121,7 @@ function getRewardsInfo() {
 }
 
 let keywordList = []
-let keywordIndex = 0
+    , keywordIndex = 0
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
@@ -119,7 +132,7 @@ async function getTopKeyword() {
                 onload(xhr) {
                     if (xhr.status == 200) {
                         var res = JSON.parse(xhr.responseText)
-                        var data = res.data.cards[0].content
+                            , data = res.data.cards[0].content
                         for (let i = 0; i < data.length; i++) {
                             keywordList.push(data[i].word)
                         }
@@ -143,12 +156,12 @@ async function getTopKeyword() {
 }
 
 let retryTimes = 0
-let lastProcess = 0
-let pcPtPro = 0
-let mobilePtPro = 0
-let pcPtProMax = 1
-let mobilePtProMax = 1
-let domain = "www.bing.com"
+    , lastProcess = 0
+    , pcPtPro = 0
+    , mobilePtPro = 0
+    , pcPtProMax = 1
+    , mobilePtProMax = 1
+    , domain = "www.bing.com"
 
 async function taskSearch() {
     const onload = (res) => {
@@ -157,8 +170,8 @@ async function taskSearch() {
             domain = url.host
         }
     }
-    const dashboard = await getRewardsInfo()
-    const userInfo = dashboard.userStatus
+        , dashboard = await getRewardsInfo()
+        , userInfo = dashboard.userStatus
     if (userInfo.counters.pcSearch) {
         pcPtPro = userInfo.counters.pcSearch[0].pointProgress
         pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
@@ -182,27 +195,25 @@ async function taskSearch() {
         return true
     } else {
         const keyword = await getTopKeyword()
-        if (pcPtPro < pcPtProMax) {
-            GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                headers: {
-                    "Referer": `https://${domain}/`,
-                    "User-Agent": getRandStr(1)
-                },
-                onload: onload
-            })
-            return false
-        } else {
+        if (isMobile) {
             if (mobilePtPro < mobilePtProMax) {
-                GM_xmlhttpRequest({
-                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                    headers: {
-                        "Referer": `https://${domain}/`,
-                        "User-Agent": getRandStr(2)
-                    },
-                    onload: onload
-                })
+                bingGo(domain, keyword, getRandStr(2), onload)
                 return false
+            } else {
+                if (pcPtPro < pcPtProMax) {
+                    bingGo(domain, keyword, getRandStr(1), onload)
+                    return false
+                }
+            }
+        } else {
+            if (pcPtPro < pcPtProMax) {
+                bingGo(domain, keyword, getRandStr(1), onload)
+                return false
+            } else {
+                if (mobilePtPro < mobilePtProMax) {
+                    bingGo(domain, keyword, getRandStr(2), onload)
+                    return false
+                }
             }
         }
     }
@@ -222,9 +233,9 @@ async function taskPromotions() {
     } else {
         testTimes++
         const dashboard = await getRewardsInfo()
-        const morePromotions = dashboard.morePromotions
-        const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
-        const promotionsArr = []
+            , morePromotions = dashboard.morePromotions
+            , dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+            , promotionsArr = []
         for (let d = 0; d < dailySetPromotions.length; d++) {
             if (dailySetPromotions[d].complete == false) {
                 promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
