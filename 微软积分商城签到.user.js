@@ -209,7 +209,7 @@ let testTimes = 0
 
 async function taskPromotions() {
     if (testTimes > 2) {
-        pushMsg("活动任务失败", "未知错误，请尝试手动点击活动卡片！")
+        pushMsg("活动任务失败", "失败！开始必应搜索任务，请继续耐心等待...")
         return true
     }
     const token = await getRewardsToken()
@@ -233,7 +233,7 @@ async function taskPromotions() {
             }
         }
         if (promotionsArr.length == 0) {
-            pushMsg("活动任务完成", "正在完成必应搜索任务，请耐心等待...")
+            pushMsg("活动任务完成", "完成！开始必应搜索任务，请继续耐心等待...")
             return true
         } else {
             promotionsArr.forEach((item) => {
@@ -257,7 +257,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(start, getSRandNum(5000, 6000))
+            result ? resolve() : setTimeout(start, getSRandNum(5432, 6789))
         } catch (err) {
             reject(err)
         }
