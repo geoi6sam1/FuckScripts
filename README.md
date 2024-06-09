@@ -46,4 +46,4 @@
 
 | 微信（WePay） | 支付宝（AliPay） |
 |:---:|:---:|
-| ![WePay](https://pic.imgdb.cn/item/665ee2165e6d1bfa05465c4e.png) | ![AliPay](https://pic.imgdb.cn/item/665ee2165e6d1bfa05465b54.png) |
+| ![WePay](https://geoi6sam1.github.io/assets/images/wepay.png) | ![AliPay](https://geoi6sam1.github.io/assets/images/alipay.png) |
