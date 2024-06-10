@@ -19,10 +19,6 @@ function getRandNum(num) {
     return Math.floor(Math.random() * num)
 }
 
-function getSRandNum(min, max) {
-    return Math.floor(Math.random() * (max + 1 - min) + min)
-}
-
 function getRandStr() {
     const randData = ['kx', 'ng', 'ym', 'wl', 'nu', 'ch', 'fd', 'yl']
     return randData[getRandNum(randData.length)]
@@ -61,7 +57,7 @@ let packetid = 55
 async function main() {
     retryTimes++
     const formhash = await _hash()
-    if (retryTimes > 6) {
+    if (retryTimes > 9) {
         pushMsg("出错", "签到出错，请查看运行日志！")
         return true
     }
@@ -114,7 +110,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await main()
-            result ? resolve() : setTimeout(start, getSRandNum(100,200))
+            result ? resolve() : setTimeout(start, 100)
         } catch (err) {
             reject(err)
         }
