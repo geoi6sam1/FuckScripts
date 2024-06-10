@@ -101,6 +101,7 @@ li.b_ans:has(.b_mrs)
 .ad_sc,
 .adsblock,
 #ads_banner,
+#sacs_win,
 li.b_algo:has(.b_attribution[data-partnertag]),
 .b_hPanel:has([class*="bingApp_"]),
 .sidebar:has(.ads_dwn),
