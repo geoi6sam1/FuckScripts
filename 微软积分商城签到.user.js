@@ -150,7 +150,7 @@ async function getTopKeyword() {
             resolve(keywordList[keywordIndex])
         }
     })
-    return query + new Date().getTime() % 1000
+    return query + Date.now() % 1000
 }
 
 let retryTimes = 0
@@ -257,7 +257,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(start, getSRandNum(5123, 6987))
+            result ? resolve() : setTimeout(start, getSRandNum(4321, 6789))
         } catch (err) {
             reject(err)
         }
