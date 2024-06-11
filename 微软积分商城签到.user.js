@@ -39,13 +39,24 @@ function getRandArr(arr) {
 
 function bingGo(d, k, u, r) {
     GM_xmlhttpRequest({
-        url: `https://${d}/search?q=${encodeURIComponent(k)}&form=QBLH}`,
+        url: `https://${d}/search?q=${encodeURIComponent(k)}`,
         headers: {
             "Referer": `https://${d}/`,
             "User-Agent": u
         },
         onload: r
     })
+}
+
+let lastNumber = null;
+
+function getRandUniNum(min, max) {
+    let num
+    do {
+        num = Math.floor(Math.random() * (max - min + 1) + min)
+    } while (num === lastNumber);
+    lastNumber = num
+    return num
 }
 
 function getRandStr(type) {
@@ -56,18 +67,20 @@ function getRandStr(type) {
             "https://top.baidu.com/api/board?tab=finance"
         ],
         pc: [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0",
-            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/604.1 Edg/120.0.0.0",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.207 Safari/537.36 Edg/124.0.2478.131",
+            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.6261.129 Safari/604.1 Edg/122.0.2365.106",
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.225 Safari/537.36 Edg/120.0.2210.181",
+            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36 Edg/109.0.1518.140"
         ],
         mobile: [
-            "Mozilla/5.0 (Linux; Android 14; MI 6 Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Mobile Safari/537.36 EdgA/111.0.0.0",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1 EdgiOS/110.0.0.0",
-            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36 EdgA/109.0.0.0"
+            "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
+            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/122.0.2365.99 Version/18.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.154 Mobile Safari/537.36 EdgA/110.0.1587.61"
         ]
     }
     switch (type) {
-        case 0: return randData.url[getRandNum(randData.url.length)]
+        case 0: return randData.url[getRandUniNum(0, randData.url.length - 1)]
         case 1: return randData.pc[getRandNum(randData.pc.length)]
         case 2: return randData.mobile[getRandNum(randData.mobile.length)]
     }
