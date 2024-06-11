@@ -37,17 +37,6 @@ function getRandArr(arr) {
     return arr.sort(randSort)
 }
 
-function bingGo(d, k, u, r) {
-    GM_xmlhttpRequest({
-        url: `https://${d}/search?q=${encodeURIComponent(k)}`,
-        headers: {
-            "Referer": `https://${d}/`,
-            "User-Agent": u
-        },
-        onload: r
-    })
-}
-
 let lastNumber = null;
 
 function getRandUniNum(min, max) {
@@ -67,16 +56,16 @@ function getRandStr(type) {
             "https://top.baidu.com/api/board?tab=finance"
         ],
         pc: [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.207 Safari/537.36 Edg/124.0.2478.131",
-            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.6261.129 Safari/604.1 Edg/122.0.2365.106",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.225 Safari/537.36 Edg/120.0.2210.181",
-            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36 Edg/109.0.1518.140"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
+            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/604.1 Edg/122.0.2365.106",
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.181",
+            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.140"
         ],
         mobile: [
             "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
-            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.0.0 Version/16.0 Mobile/15E148 Safari/604.1",
             "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/122.0.2365.99 Version/18.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.154 Mobile Safari/537.36 EdgA/110.0.1587.61"
+            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
         ]
     }
     switch (type) {
@@ -194,7 +183,7 @@ async function taskSearch() {
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
         if (retryTimes > 6) {
-            pushMsg("搜索任务出错", `未知错误停止，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            pushMsg("搜索任务出错", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
@@ -207,11 +196,23 @@ async function taskSearch() {
     } else {
         const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
-            bingGo(domain, keyword, getRandStr(1), onload)
+            GM_xmlhttpRequest({
+                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=ANAB01&PC=U531`,
+                headers: {
+                    "User-Agent": getRandStr(1)
+                },
+                onload: onload
+            })
             return false
         } else {
             if (mobilePtPro < mobilePtProMax) {
-                bingGo(domain, keyword, getRandStr(2), onload)
+                GM_xmlhttpRequest({
+                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&PC=EMMX01&FROM=LWS001`,
+                    headers: {
+                        "User-Agent": getRandStr(2)
+                    },
+                    onload: onload
+                })
                 return false
             }
         }
@@ -227,7 +228,7 @@ async function taskPromotions() {
     }
     const token = await getRewardsToken()
     if (token == 0) {
-        pushMsg("活动任务失败", "RequestVerificationToken 获取失败！")
+        pushMsg("活动任务出错", "RequestVerificationToken 获取失败！")
         return true
     } else {
         testTimes++
@@ -270,7 +271,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(start, getSRandNum(4321, 6789))
+            result ? resolve() : setTimeout(start, getSRandNum(4321, 9876))
         } catch (err) {
             reject(err)
         }
