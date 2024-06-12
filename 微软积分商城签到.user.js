@@ -60,6 +60,8 @@ function getRandStr(type) {
             "https://hot.baiwumm.com/api/netease",
             "https://hot.baiwumm.com/api/toutiao",
             "https://hot.baiwumm.com/api/qq",
+            "https://hot.baiwumm.com/api/baidutieba",
+            "https://hot.baiwumm.com/api/juejin",
             "https://hot.baiwumm.com/api/history-today"
         ],
         pc: [
