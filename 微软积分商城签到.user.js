@@ -51,9 +51,16 @@ function getRandUniNum(min, max) {
 function getRandStr(type) {
     const randData = {
         url: [
-            "https://top.baidu.com/api/board?tab=realtime",
-            "https://top.baidu.com/api/board?tab=livelihood",
-            "https://top.baidu.com/api/board?tab=finance"
+            "https://hot.baiwumm.com/api/baidu",
+            "https://hot.baiwumm.com/api/weibo",
+            "https://hot.baiwumm.com/api/douyin",
+            "https://hot.baiwumm.com/api/kuaishou",
+            "https://hot.baiwumm.com/api/zhihu",
+            "https://hot.baiwumm.com/api/thepaper",
+            "https://hot.baiwumm.com/api/netease",
+            "https://hot.baiwumm.com/api/toutiao",
+            "https://hot.baiwumm.com/api/qq",
+            "https://hot.baiwumm.com/api/history-today"
         ],
         pc: [
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
@@ -63,8 +70,8 @@ function getRandStr(type) {
         ],
         mobile: [
             "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
-            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.0.0 Version/16.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/122.0.2365.99 Version/18.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/123.0.2420.108 Version/18.0 Mobile/15E148 Safari/604.1",
             "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
         ]
     }
@@ -132,9 +139,8 @@ async function getTopKeyword() {
                 onload(xhr) {
                     if (xhr.status == 200) {
                         var res = JSON.parse(xhr.responseText)
-                        var data = res.data.cards[0].content
-                        for (let i = 0; i < data.length; i++) {
-                            keywordList.push(data[i].word)
+                        for (let i = 0; i < res.data.length; i++) {
+                            keywordList.push(res.data[i].title)
                         }
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
