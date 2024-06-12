@@ -6,7 +6,7 @@
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @crontab         * * once * *
+// @crontab         * 10-23 once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_openInTab
@@ -197,9 +197,10 @@ async function taskSearch() {
         const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=ANAB01&PC=U531`,
+                url: `https://${domain}/search?q=${keyword}&FORM=QBLH`,
                 headers: {
-                    "User-Agent": getRandStr(1)
+                    "User-Agent": getRandStr(1),
+                    "Referer": `https://${domain}/`
                 },
                 onload: onload
             })
@@ -207,9 +208,10 @@ async function taskSearch() {
         } else {
             if (mobilePtPro < mobilePtProMax) {
                 GM_xmlhttpRequest({
-                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&PC=EMMX01&FROM=LWS001`,
+                    url: `https://${domain}/search?q=${keyword}&FORM=QBLH`,
                     headers: {
-                        "User-Agent": getRandStr(2)
+                        "User-Agent": getRandStr(2),
+                        "Referer": `https://${domain}/`
                     },
                     onload: onload
                 })
@@ -271,7 +273,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(start, getSRandNum(4321, 9876))
+            result ? resolve() : setTimeout(start, getSRandNum(6789, 9876))
         } catch (err) {
             reject(err)
         }
@@ -279,7 +281,7 @@ return new Promise((resolve, reject) => {
     const begin = async () => {
         try {
             const ending = await taskPromotions()
-            ending ? start() : setTimeout(begin, 3e3)
+            ending ? start() : setTimeout(begin, 4321)
         } catch (err) {
             reject(err)
         }
