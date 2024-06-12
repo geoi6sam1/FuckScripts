@@ -12,7 +12,7 @@
 // @grant           GM_openInTab
 // @grant           GM_log
 // @connect         bing.com
-// @connect         top.baidu.com
+// @connect         hot.baiwumm.com
 // @license         GPL-3.0
 // ==/UserScript==
 
