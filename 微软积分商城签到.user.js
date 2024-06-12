@@ -197,7 +197,7 @@ async function taskSearch() {
         const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&FORM=QBLH`,
+                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=QBLH`,
                 headers: {
                     "User-Agent": getRandStr(1),
                     "Referer": `https://${domain}/`
@@ -208,7 +208,7 @@ async function taskSearch() {
         } else {
             if (mobilePtPro < mobilePtProMax) {
                 GM_xmlhttpRequest({
-                    url: `https://${domain}/search?q=${keyword}&FORM=QBLH`,
+                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=QBLH`,
                     headers: {
                         "User-Agent": getRandStr(2),
                         "Referer": `https://${domain}/`
@@ -230,7 +230,6 @@ async function taskPromotions() {
     }
     const token = await getRewardsToken()
     if (token == 0) {
-        pushMsg("活动任务出错", "RequestVerificationToken 获取失败！")
         return true
     } else {
         testTimes++
