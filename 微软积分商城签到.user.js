@@ -1,15 +1,17 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.7
+// @version         1.0.8
 // @description     每天自动完成微软积分商城活动任务和必应搜索任务获取微软积分商城奖励
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @crontab         * 10-23 once * *
+// @crontab         * once * * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_openInTab
+// @grant           GM_getValue
+// @grant           GM_setValue
 // @grant           GM_log
 // @connect         bing.com
 // @connect         hot.baiwumm.com
@@ -21,6 +23,18 @@ const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
+
+const whileArr = ["sucHD", "sucSS", "failSS"]
+GM_getValue("date") || GM_setValue("date", dateNow)
+whileArr.forEach((item) => {
+    GM_getValue(item) || GM_setValue(item, 0)
+})
+if (GM_getValue("date") != dateNow) {
+    GM_setValue("date", dateNow)
+    whileArr.forEach((item) => {
+        GM_setValue(item, 0)
+    })
+}
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -191,7 +205,11 @@ async function taskSearch() {
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
         if (retryTimes > 6) {
-            pushMsg("搜索任务出错", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            if (GM_getValue("failSS") > 6) {
+                GM_setValue("failSS", 0)
+                pushMsg("搜索任务限制", `请尝试手动运行或等待下轮运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            }
+            GM_setValue("failSS", GM_getValue("failSS") + 1)
             return true
         }
     } else {
@@ -199,7 +217,10 @@ async function taskSearch() {
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        pushMsg("搜索任务完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
+        if (GM_getValue("sucSS") == 1) {
+            pushMsg("搜索任务完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
+        }
+        GM_setValue("sucSS", GM_getValue("sucSS") + 1)
         return true
     } else {
         const keyword = await getTopKeyword()
@@ -229,18 +250,11 @@ async function taskSearch() {
     }
 }
 
-let testTimes = 0
-
 async function taskPromotions() {
-    if (testTimes > 2) {
-        pushMsg("活动任务失败", "失败！开始必应搜索任务，请耐心等待...")
-        return true
-    }
     const token = await getRewardsToken()
     if (token == 0) {
         return true
     } else {
-        testTimes++
         const promotionsArr = []
         const dashboard = await getRewardsInfo()
         const morePromotions = dashboard.morePromotions
@@ -256,7 +270,10 @@ async function taskPromotions() {
             }
         }
         if (promotionsArr.length == 0) {
-            pushMsg("活动任务完成", "完成！开始必应搜索任务，请耐心等待...")
+            if (GM_getValue("sucHD") == 1) {
+                pushMsg("活动任务完成", "每日活动与更多活动任务已完成！")
+            }
+            GM_setValue("sucHD", GM_getValue("sucHD") + 1)
             return true
         } else {
             promotionsArr.forEach((item) => {
