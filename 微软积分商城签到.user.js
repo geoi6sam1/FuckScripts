@@ -205,8 +205,7 @@ async function taskSearch() {
     if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
         if (retryTimes > 6) {
-            if (GM_getValue("failSS") > 6) {
-                GM_setValue("failSS", 0)
+            if (GM_getValue("failSS") % 3 == 0) {
                 pushMsg("搜索任务限制", `请尝试手动运行或等待下轮运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             }
             GM_setValue("failSS", GM_getValue("failSS") + 1)
@@ -217,7 +216,7 @@ async function taskSearch() {
         lastProcess = userInfo.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        if (GM_getValue("sucSS") == 1) {
+        if (GM_getValue("sucSS") == 0) {
             pushMsg("搜索任务完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
         }
         GM_setValue("sucSS", GM_getValue("sucSS") + 1)
@@ -270,7 +269,7 @@ async function taskPromotions() {
             }
         }
         if (promotionsArr.length == 0) {
-            if (GM_getValue("sucHD") == 1) {
+            if (GM_getValue("sucHD") == 0) {
                 pushMsg("活动任务完成", "每日活动与更多活动任务已完成！")
             }
             GM_setValue("sucHD", GM_getValue("sucHD") + 1)
