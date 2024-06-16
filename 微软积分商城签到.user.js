@@ -22,8 +22,9 @@
 
 /* ==UserConfig==
 Config:
-  token:
-    title: token
+  cookie:
+    title: Cookie
+    type: textarea
  ==/UserConfig== */
 
 const dateTime = new Date()
@@ -32,8 +33,6 @@ const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const dateNowPure = `${monthNow}${dayNow}${yearNow}`
-const getDIDC = GM_getValue("Config.token")
-const getToken = GM_getValue("AccessToken")
 let rwUrl = "https://rewards.bing.com/pointsbreakdown"
 let rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 
@@ -113,6 +112,9 @@ function getRefreshCode() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: rcUrl,
+            headers: {
+                "Cookie": GM_getValue("Config.cookie")
+            },
             onload(xhr) {
                 var res = xhr.finalUrl
                 var code = res.match(/code=(.*?)&/)
@@ -126,56 +128,57 @@ function getRefreshCode() {
     })
 }
 
+let appTimes = 0
+
 async function getAccessToken() {
-    const code = await getRefreshCode()
-    return new Promise((resolve, reject) => {
-        if (code == 0) {
-            getDIDC ? code = getDIDC : resolve(0)
+    if (GM_getValue("Config.cookie") == null) {
+        GM_setValue("Config.cookie", "")
+    } else {
+        var formatDIDC = GM_getValue("Config.cookie").match(/DIDC=(.*?);/)
+        if (formatDIDC) {
+            GM_setValue("Config.cookie", formatDIDC[0])
         }
-        GM_xmlhttpRequest({
-            url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
-            onload(xhr) {
-                var res = JSON.parse(xhr.responseText)
-                if (res.access_token) {
-                    GM_setValue("AccessToken", res.access_token)
-                    resolve(res.access_token)
-                } else {
-                    GM_log(`【${res.error}】${res.error_description}`)
-                    resolve(0)
-                }
+    }
+    const code = await getRefreshCode()
+    GM_xmlhttpRequest({
+        url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
+        onload(xhr) {
+            var res = JSON.parse(xhr.responseText)
+            if (res.access_token) {
+                GM_setValue("Config.token", res.access_token)
+            } else {
+                appTimes++
+                GM_setValue("Config.token", "")
+                GM_log(`【${res.error}】${res.error_description}`)
             }
-        })
+        }
     })
+    if (appTimes > 0) {
+        pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rcUrl)
+        return true
+    } else {
+        return false
+    }
 }
 
-let readtimes = 0
+let readTimes = 0
 let readPoints = 3
 
-async function taskRead() {
-    if (readtimes > 20) {
-        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...")
+function taskRead() {
+    if (readTimes > 2) {
+        pushMsg("阅读任务失败", "阅读信息获取失败！开始活动任务...")
         return true
     }
     if (readPoints == 0) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
+        return true
     }
-    if (getToken) {
-        token = getToken
-    } else {
-        const token = await getAccessToken()
-        if (token == 0) {
-            pushMsg("APP任务失败", "请重新填写令牌！开始活动任务...", rcUrl)
-            return true
-        }
-    }
-    readtimes++
     GM_xmlhttpRequest({
         method: "POST",
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
-            "User-Agent": getRandStr(2),
             "Content-Type": "application/json",
-            "authorization": `Bearer ${token}`
+            "authorization": `Bearer ${GM_getValue("Config.token")}`
         },
         data: JSON.stringify({
             "amount": 1,
@@ -189,13 +192,14 @@ async function taskRead() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
+                readTimes = 0
                 var res = JSON.parse(xhr.responseText)
                 var points = res.response.activity.p
                 if (points == 0) {
                     readPoints = 0
                 }
             } else {
-                await getAccessToken()
+                readTimes++
             }
         }
     })
@@ -418,7 +422,15 @@ return new Promise((resolve, reject) => {
             reject(err)
         }
     }
-    readStart()
+    const start = async () => {
+        try {
+            const result = await getAccessToken()
+            result ? promoStart() : readStart()
+        } catch (err) {
+            reject(err)
+        }
+    }
+    start()
 })
 
 function pushMsg(title, text, url) {
