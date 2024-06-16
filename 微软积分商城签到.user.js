@@ -22,8 +22,8 @@
 
 /* ==UserConfig==
 Config:
-  cookie:
-    title: Cookie
+  token:
+    title: token
  ==/UserConfig== */
 
 const dateTime = new Date()
@@ -32,6 +32,9 @@ const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const dateNowPure = `${monthNow}${dayNow}${yearNow}`
+const getDIDC = GM_getValue("Config.token")
+let rwUrl = "https://rewards.bing.com/pointsbreakdown"
+let rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -105,15 +108,10 @@ function getRandStr(type) {
     }
 }
 
-let cookieDIDC = GM_getValue("Config.cookie")
-
 function getRefreshCode() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
-            url: "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf",
-            headers: {
-                "Cookie": cookieDIDC
-            },
+            url: rcUrl,
             onload(xhr) {
                 var res = xhr.finalUrl
                 var code = res.match(/code=(.*?)&/)
@@ -131,11 +129,10 @@ async function getAccessToken() {
     const code = await getRefreshCode()
     return new Promise((resolve, reject) => {
         if (code == 0) {
-            pushMsg("阅读任务失败", "请尝试填写新Cookie！开始活动任务...")
-            resolve(0)
+            getDIDC ? code = getDIDC : resolve(0)
         }
         GM_xmlhttpRequest({
-            url: `https://login.live.com/oauth20_token.srf?client_id0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
+            url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
             onload(xhr) {
                 var res = JSON.parse(xhr.responseText)
                 if (res.access_token) {
@@ -154,28 +151,16 @@ let readPoints = 3
 
 async function taskRead() {
     if (readtimes > 20) {
-        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...")
+        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...", rcUrl)
         return true
-    }
-    if (!cookieDIDC) {
-        pushMsg("阅读任务失败", "Cookie获取失败！开始活动任务...")
-        return true
-    } else {
-        var formatDIDC = cookieDIDC.match(/DIDC=(.*?);/)
-        if (formatDIDC) {
-            GM_setValue("Config.cookie", formatDIDC[0])
-        } else {
-            pushMsg("阅读任务失败", "Cookie填写错误！开始活动任务...")
-            return true
-        }
     }
     if (readPoints == 0) {
-        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
+        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...", rcUrl)
         return true
     }
     const token = await getAccessToken()
     if (token == 0) {
-        pushMsg("阅读任务失败", "访问令牌获取失败！开始活动任务...")
+        pushMsg("APP任务失败", "请重新填写令牌！开始活动任务...", rcUrl)
         return true
     }
     readtimes++
@@ -183,6 +168,7 @@ async function taskRead() {
         method: "POST",
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
+            "User-Agent": getRandStr(2),
             "Content-Type": "application/json",
             "authorization": `Bearer ${token}`
         },
@@ -361,7 +347,6 @@ async function taskPromo() {
     }
     const token = await getRewardsToken()
     if (token == 0) {
-        pushMsg("活动任务失败", "请求令牌获取失败！开始搜索任务...")
         return true
     }
     testTimes++
@@ -427,13 +412,14 @@ return new Promise((resolve, reject) => {
     readStart()
 })
 
-function pushMsg(title, text) {
+function pushMsg(title, text, url) {
+    url ? url : rwUrl
     GM_notification({
         text: text,
         title: "微软积分商城" + title,
         image: "https://rewards.bing.com/rewards.png",
         onclick: () => {
-            GM_openInTab("https://rewards.bing.com/pointsbreakdown", { active: true, insert: true, setParent: true })
+            GM_openInTab(url, { active: true, insert: true, setParent: true })
         }
     })
 }
