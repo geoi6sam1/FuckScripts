@@ -33,6 +33,7 @@ const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const dateNowPure = `${monthNow}${dayNow}${yearNow}`
 const getDIDC = GM_getValue("Config.token")
+const getToken = GM_getValue("AccessToken")
 let rwUrl = "https://rewards.bing.com/pointsbreakdown"
 let rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 
@@ -136,6 +137,7 @@ async function getAccessToken() {
             onload(xhr) {
                 var res = JSON.parse(xhr.responseText)
                 if (res.access_token) {
+                    GM_setValue("AccessToken", res.access_token)
                     resolve(res.access_token)
                 } else {
                     GM_log(`【${res.error}】${res.error_description}`)
@@ -151,17 +153,20 @@ let readPoints = 3
 
 async function taskRead() {
     if (readtimes > 20) {
-        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...", rcUrl)
+        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...")
         return true
     }
     if (readPoints == 0) {
-        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...", rcUrl)
-        return true
+        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
     }
-    const token = await getAccessToken()
-    if (token == 0) {
-        pushMsg("APP任务失败", "请重新填写令牌！开始活动任务...", rcUrl)
-        return true
+    if (getToken) {
+        token = getToken
+    } else {
+        const token = await getAccessToken()
+        if (token == 0) {
+            pushMsg("APP任务失败", "请重新填写令牌！开始活动任务...", rcUrl)
+            return true
+        }
     }
     readtimes++
     GM_xmlhttpRequest({
@@ -183,10 +188,14 @@ async function taskRead() {
         }),
         responseType: "json",
         onload(xhr) {
-            var res = JSON.parse(xhr.responseText)
-            var points = res.response.activity.p
-            if (points == 0) {
-                readPoints = 0
+            if (xhr.status == 200) {
+                var res = JSON.parse(xhr.responseText)
+                var points = res.response.activity.p
+                if (points == 0) {
+                    readPoints = 0
+                }
+            } else {
+                await getAccessToken()
             }
         }
     })
