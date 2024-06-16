@@ -2,7 +2,7 @@
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
 // @version         1.0.8
-// @description     每天自动完成微软积分商城活动任务和必应搜索任务获取微软积分商城奖励
+// @description     每天自动完成微软积分商城任务获取积分奖励，✅必应搜索任务、✅每日活动任务、✅更多活动任务、✅新闻阅读任务（国内）、🚫每日签到任务（测试中）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
@@ -10,17 +10,28 @@
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_openInTab
+// @grant           GM_getValue
+// @grant           GM_setValue
 // @grant           GM_log
 // @connect         bing.com
+// @connect         live.com
+// @connect         microsoft.com
 // @connect         hot.baiwumm.com
 // @license         GPL-3.0
 // ==/UserScript==
+
+/* ==UserConfig==
+Config:
+  cookie:
+    title: Cookie
+ ==/UserConfig== */
 
 const dateTime = new Date()
 const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
+const dateNowPure = `${monthNow}${dayNow}${yearNow}`
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -46,6 +57,16 @@ function getRandUniNum(min, max) {
     } while (num === lastNumber);
     lastNumber = num
     return num
+}
+
+function generateRandomString(length) {
+    let result = ""
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
 }
 
 function getRandStr(type) {
@@ -84,6 +105,108 @@ function getRandStr(type) {
     }
 }
 
+let cookieDIDC = GM_getValue("Config.cookie")
+
+function getRefreshCode() {
+    return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+            url: "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf",
+            headers: {
+                "Cookie": cookieDIDC
+            },
+            onload(xhr) {
+                var res = xhr.finalUrl
+                var code = res.match(/code=(.*?)&/)
+                if (code) {
+                    resolve(code[1])
+                } else {
+                    resolve(0)
+                }
+            }
+        })
+    })
+}
+
+async function getAccessToken() {
+    const code = await getRefreshCode()
+    return new Promise((resolve, reject) => {
+        if (code == 0) {
+            pushMsg("阅读任务失败", "请尝试填写新Cookie！开始活动任务...")
+            resolve(0)
+        }
+        GM_xmlhttpRequest({
+            url: `https://login.live.com/oauth20_token.srf?client_id0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
+            onload(xhr) {
+                var res = JSON.parse(xhr.responseText)
+                if (res.access_token) {
+                    resolve(res.access_token)
+                } else {
+                    GM_log(`【${res.error}】${res.error_description}`)
+                    resolve(0)
+                }
+            }
+        })
+    })
+}
+
+let readtimes = 0
+let readPoints = 3
+
+async function taskRead() {
+    if (readtimes > 20) {
+        pushMsg("阅读任务出错", "无法获取阅读积分！开始活动任务...")
+        return true
+    }
+    if (!cookieDIDC) {
+        pushMsg("阅读任务失败", "Cookie获取失败！开始活动任务...")
+        return true
+    } else {
+        var formatDIDC = cookieDIDC.match(/DIDC=(.*?);/)
+        if (formatDIDC) {
+            GM_setValue("Config.cookie", formatDIDC[0])
+        } else {
+            pushMsg("阅读任务失败", "Cookie填写错误！开始活动任务...")
+            return true
+        }
+    }
+    if (readPoints == 0) {
+        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
+        return true
+    }
+    const token = await getAccessToken()
+    if (token == 0) {
+        pushMsg("阅读任务失败", "访问令牌获取失败！开始活动任务...")
+        return true
+    }
+    readtimes++
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": `Bearer ${token}`
+        },
+        data: JSON.stringify({
+            "amount": 1,
+            "country": "cn",
+            "id": `${generateRandomString(64)}`,
+            "type": 101,
+            "attributes": {
+                "offerid": "ENUS_readarticle3_30points"
+            }
+        }),
+        responseType: "json",
+        onload(xhr) {
+            var res = JSON.parse(xhr.responseText)
+            var points = res.response.activity.p
+            if (points == 0) {
+                readPoints = 0
+            }
+        }
+    })
+    return false
+}
+
 function getRewardsToken() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
@@ -117,11 +240,11 @@ function getRewardsInfo() {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
                     } else {
-                        pushMsg("脚本运行失败", "请检查微软账号登录状态！")
+                        pushMsg("账号状态失效", "请检查微软账号登录状态或重新登录！")
                         return true
                     }
                 } else {
-                    pushMsg("脚本运行失败", "获取积分信息失败！状态码：" + xhr.status)
+                    pushMsg("信息获取失败", "获取微软积分商城信息失败！状态码：" + xhr.status)
                     return true
                 }
             }
@@ -147,7 +270,7 @@ async function getTopKeyword() {
                         keywordList = getRandArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        pushMsg("脚本运行失败", "获取关键词失败！状态码：" + xhr.status)
+                        pushMsg("热点获取失败", "获取今日热榜关键词失败！状态码：" + xhr.status)
                         return true
                     }
                 }
@@ -231,69 +354,77 @@ async function taskSearch() {
 
 let testTimes = 0
 
-async function taskPromotions() {
+async function taskPromo() {
     if (testTimes > 2) {
-        pushMsg("活动任务失败", "失败！开始必应搜索任务，请耐心等待...")
+        pushMsg("活动任务出错", "活动可能还未开始！开始搜索任务...")
         return true
     }
     const token = await getRewardsToken()
     if (token == 0) {
+        pushMsg("活动任务失败", "请求令牌获取失败！开始搜索任务...")
+        return true
+    }
+    testTimes++
+    const promotionsArr = []
+    const dashboard = await getRewardsInfo()
+    const morePromotions = dashboard.morePromotions
+    const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+    for (let d = 0; d < dailySetPromotions.length; d++) {
+        if (dailySetPromotions[d].complete == false) {
+            promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
+        }
+    }
+    for (let m = 0; m < morePromotions.length; m++) {
+        if (morePromotions[m].complete == false) {
+            promotionsArr.push({ "offerId": morePromotions[m].offerId, "hash": morePromotions[m].hash })
+        }
+    }
+    if (promotionsArr.length == 0) {
+        pushMsg("活动任务完成", "完成！开始搜索任务，请耐心等待...")
         return true
     } else {
-        testTimes++
-        const promotionsArr = []
-        const dashboard = await getRewardsInfo()
-        const morePromotions = dashboard.morePromotions
-        const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
-        for (let d = 0; d < dailySetPromotions.length; d++) {
-            if (dailySetPromotions[d].complete == false) {
-                promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
-            }
-        }
-        for (let m = 0; m < morePromotions.length; m++) {
-            if (morePromotions[m].complete == false) {
-                promotionsArr.push({ "offerId": morePromotions[m].offerId, "hash": morePromotions[m].hash })
-            }
-        }
-        if (promotionsArr.length == 0) {
-            pushMsg("活动任务完成", "完成！开始必应搜索任务，请耐心等待...")
-            return true
-        } else {
-            promotionsArr.forEach((item) => {
-                GM_xmlhttpRequest({
-                    method: "POST",
-                    url: `https://rewards.bing.com/api/reportactivity`,
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Referer": `https://rewards.bing.com/`,
-                        "User-Agent": getRandStr(1)
-                    },
-                    data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`,
-                })
+        promotionsArr.forEach((item) => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `https://rewards.bing.com/api/reportactivity`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Referer": `https://rewards.bing.com/`,
+                    "User-Agent": getRandStr(1)
+                },
+                data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`,
             })
-            return false
-        }
+        })
+        return false
     }
 }
 
 return new Promise((resolve, reject) => {
-    const start = async () => {
+    const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(start, getSRandNum(6789, 9876))
+            result ? resolve() : setTimeout(searchStart, getSRandNum(6789, 9876))
         } catch (err) {
             reject(err)
         }
     }
-    const begin = async () => {
+    const promoStart = async () => {
         try {
-            const ending = await taskPromotions()
-            ending ? start() : setTimeout(begin, 4321)
+            const result = await taskPromo()
+            result ? searchStart() : setTimeout(promoStart, 3e3)
         } catch (err) {
             reject(err)
         }
     }
-    begin()
+    const readStart = async () => {
+        try {
+            const result = await taskRead()
+            result ? promoStart() : setTimeout(readStart, 2e3)
+        } catch (err) {
+            reject(err)
+        }
+    }
+    readStart()
 })
 
 function pushMsg(title, text) {
