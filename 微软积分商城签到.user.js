@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.8
-// @description     每天自动完成微软积分商城任务获取积分奖励，✅必应搜索任务、✅每日活动任务、✅更多活动任务、✅新闻阅读任务（国内）、🚫每日签到任务（测试中）
+// @version         1.0.8.1
+// @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
@@ -22,8 +22,12 @@
 
 /* ==UserConfig==
 Config:
+  app:
+    title: App任务
+    type: select
+    values: [关,开]
   cookie:
-    title: Cookie
+    title: 请求头Cookie
     type: textarea
  ==/UserConfig== */
 
@@ -32,9 +36,8 @@ const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
-const dateNowPure = `${monthNow}${dayNow}${yearNow}`
-let rwUrl = "https://rewards.bing.com/pointsbreakdown"
-let rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
+const rwUrl = "https://rewards.bing.com/pointsbreakdown"
+const rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 
 function getRandNum(num) {
     return Math.floor(Math.random() * num)
@@ -45,27 +48,27 @@ function getSRandNum(min, max) {
 }
 
 function getRandArr(arr) {
-    const randSort = () => {
+    let randSort = () => {
         return Math.random() > .5 ? -1 : 1
     }
     return arr.sort(randSort)
 }
 
-let lastNumber = null;
+let lastNumber = null
 
 function getRandUniNum(min, max) {
     let num
     do {
         num = Math.floor(Math.random() * (max - min + 1) + min)
-    } while (num === lastNumber);
+    } while (num === lastNumber)
     lastNumber = num
     return num
 }
 
 function generateRandomString(length) {
     let result = ""
-    const characters = "abcdefghijklmnopqrstuvwxyz0123456789"
-    const charactersLength = characters.length
+    let characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+    let charactersLength = characters.length
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
@@ -108,6 +111,8 @@ function getRandStr(type) {
     }
 }
 
+var appTimes = 0
+
 function getRefreshCode() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
@@ -116,11 +121,12 @@ function getRefreshCode() {
                 "Cookie": GM_getValue("Config.cookie")
             },
             onload(xhr) {
-                var res = xhr.finalUrl
-                var code = res.match(/code=(.*?)&/)
+                let res = xhr.finalUrl
+                let code = res.match(/code=(.*?)&/)
                 if (code) {
                     resolve(code[1])
                 } else {
+                    appTimes++
                     resolve(0)
                 }
             }
@@ -128,13 +134,11 @@ function getRefreshCode() {
     })
 }
 
-let appTimes = 0
-
 async function getAccessToken() {
     if (GM_getValue("Config.cookie") == null) {
         GM_setValue("Config.cookie", "")
     } else {
-        var formatDIDC = GM_getValue("Config.cookie").match(/DIDC=(.*?);/)
+        let formatDIDC = GM_getValue("Config.cookie").match(/DIDC=(.*?);/)
         if (formatDIDC) {
             GM_setValue("Config.cookie", formatDIDC[0])
         }
@@ -143,7 +147,7 @@ async function getAccessToken() {
     GM_xmlhttpRequest({
         url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
         onload(xhr) {
-            var res = JSON.parse(xhr.responseText)
+            let res = JSON.parse(xhr.responseText)
             if (res.access_token) {
                 GM_setValue("Config.token", res.access_token)
             } else {
@@ -161,16 +165,12 @@ async function getAccessToken() {
     }
 }
 
-let readTimes = 0
-let readPoints = 3
+var readTimes = 0
+var readPoints = 3
 
 function taskRead() {
-    if (readTimes > 2) {
-        pushMsg("阅读任务失败", "阅读信息获取失败！开始活动任务...")
-        return true
-    }
-    if (readPoints == 0) {
-        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
+    if (readTimes > 3) {
+        pushMsg("阅读任务出错", "未知原因！开始活动任务...", rcUrl)
         return true
     }
     GM_xmlhttpRequest({
@@ -193,8 +193,8 @@ function taskRead() {
         onload(xhr) {
             if (xhr.status == 200) {
                 readTimes = 0
-                var res = JSON.parse(xhr.responseText)
-                var points = res.response.activity.p
+                let res = JSON.parse(xhr.responseText)
+                let points = res.response.activity.p
                 if (points == 0) {
                     readPoints = 0
                 }
@@ -203,7 +203,48 @@ function taskRead() {
             }
         }
     })
-    return false
+    if (readPoints == 0) {
+        pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
+        return true
+    } else {
+        return false
+    }
+}
+
+var signPoints = 0
+
+function taskSign() {
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": `Bearer ${GM_getValue("Config.token")}`
+        },
+        data: JSON.stringify({
+            "amount": 1,
+            "attributes": {
+                "offerid": "Gamification_Sapphire_DailyCheckIn",
+            },
+            "type": 101,
+            "country": "cn",
+            "risk_context": {},
+            "channel": "SAAndroid"
+        }),
+        responseType: "json",
+        onload(xhr) {
+            if (xhr.status == 200) {
+                let res = JSON.parse(xhr.responseText)
+                let points = res.response.activity.p
+                signPoints = points
+            }
+        }
+    })
+    if (signPoints > 0) {
+        pushMsg("App签到成功", `获得${signPoints}积分！开始阅读任务...`)
+    } else {
+        pushMsg("App签到重复", "今日已签到！开始阅读任务...")
+    }
 }
 
 function getRewardsToken() {
@@ -212,11 +253,11 @@ function getRewardsToken() {
             url: "https://rewards.bing.com",
             onload(xhr) {
                 if (xhr.status == 200) {
-                    var res = xhr.responseText
-                    var html = res.replace(/\s/g, "")
-                    var data = html.match(/RequestVerificationToken/)
+                    let res = xhr.responseText
+                    let html = res.replace(/\s/g, "")
+                    let data = html.match(/RequestVerificationToken/)
                     if (data && data[0]) {
-                        var token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
+                        let token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
                         resolve(token[1])
                     } else {
                         resolve(0)
@@ -233,8 +274,8 @@ function getRewardsInfo() {
             url: "https://rewards.bing.com/api/getuserinfo?type=1",
             onload(xhr) {
                 if (xhr.status == 200) {
-                    var res = xhr.responseText
-                    var data = res.match(/(\"dashboard\"?)/)
+                    let res = xhr.responseText
+                    let data = res.match(/(\"dashboard\"?)/)
                     if (data && data[0]) {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
@@ -251,8 +292,8 @@ function getRewardsInfo() {
     })
 }
 
-let keywordList = []
-let keywordIndex = 0
+var keywordList = []
+var keywordIndex = 0
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
@@ -262,7 +303,7 @@ async function getTopKeyword() {
                 url: getRandStr(0),
                 onload(xhr) {
                     if (xhr.status == 200) {
-                        var res = JSON.parse(xhr.responseText)
+                        let res = JSON.parse(xhr.responseText)
                         for (let i = 0; i < res.data.length; i++) {
                             keywordList.push(res.data[i].title)
                         }
@@ -285,77 +326,73 @@ async function getTopKeyword() {
     return query + Date.now() % 1000
 }
 
-let retryTimes = 0
-let lastProcess = 0
-let pcPtPro = 0
-let mobilePtPro = 0
-let pcPtProMax = 1
-let mobilePtProMax = 1
-let domain = "www.bing.com"
+var retryTimes = 0
+var lastProcess = 0
+var pcPtPro = 0
+var mobilePtPro = 0
+var pcPtProMax = 1
+var mobilePtProMax = 1
+var domain = "www.bing.com"
 
 async function taskSearch() {
     const onload = (res) => {
-        const url = new URL(res.finalUrl)
+        let url = new URL(res.finalUrl)
         if (url.host != domain) {
             domain = url.host
         }
     }
     const dashboard = await getRewardsInfo()
-    const userInfo = dashboard.userStatus
-    if (userInfo.counters.pcSearch) {
-        pcPtPro = userInfo.counters.pcSearch[0].pointProgress
-        pcPtProMax = userInfo.counters.pcSearch[0].pointProgressMax
+    if (dashboard.userStatus.counters.pcSearch) {
+        pcPtPro = dashboard.userStatus.counters.pcSearch[0].pointProgress
+        pcPtProMax = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
     }
-    if (userInfo.counters.mobileSearch) {
-        mobilePtPro = userInfo.counters.mobileSearch[0].pointProgress
-        mobilePtProMax = userInfo.counters.mobileSearch[0].pointProgressMax
+    if (dashboard.userStatus.counters.mobileSearch) {
+        mobilePtPro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
+        mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
     }
-    if (userInfo.counters.dailyPoint[0].pointProgress === lastProcess) {
+    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
-        if (retryTimes > 6) {
+        if (retryTimes > 3) {
             pushMsg("搜索任务出错", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
         retryTimes = 0
-        lastProcess = userInfo.counters.dailyPoint[0].pointProgress
+        lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        pushMsg("搜索任务完成", `历史：${userInfo.lifetimePoints}　本月：${userInfo.levelInfo.progress}\n有效：${userInfo.availablePoints}　今日：${userInfo.counters.dailyPoint[0].pointProgress}`)
+        pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
         return true
     } else {
-        const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=QBLH`,
+                url: `https://${domain}/search?q=${await getTopKeyword()}&form=QBLH`,
                 headers: {
                     "User-Agent": getRandStr(1),
                     "Referer": `https://${domain}/`
                 },
                 onload: onload
             })
-            return false
-        } else {
-            if (mobilePtPro < mobilePtProMax) {
-                GM_xmlhttpRequest({
-                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&FORM=QBLH`,
-                    headers: {
-                        "User-Agent": getRandStr(2),
-                        "Referer": `https://${domain}/`
-                    },
-                    onload: onload
-                })
-                return false
-            }
         }
+        if (mobilePtPro < mobilePtProMax) {
+            GM_xmlhttpRequest({
+                url: `https://${domain}/search?q=${await getTopKeyword()}&form=QBLH`,
+                headers: {
+                    "User-Agent": getRandStr(2),
+                    "Referer": `https://${domain}/`
+                },
+                onload: onload
+            })
+        }
+        return false
     }
 }
 
-let testTimes = 0
+var testTimes = 0
 
 async function taskPromo() {
-    if (testTimes > 2) {
-        pushMsg("活动任务出错", "活动可能还未开始！开始搜索任务...")
+    if (testTimes > 3) {
+        pushMsg("活动任务出错", "未知原因！开始搜索任务...")
         return true
     }
     const token = await getRewardsToken()
@@ -363,10 +400,10 @@ async function taskPromo() {
         return true
     }
     testTimes++
-    const promotionsArr = []
+    var promotionsArr = []
     const dashboard = await getRewardsInfo()
-    const morePromotions = dashboard.morePromotions
-    const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+    var morePromotions = dashboard.morePromotions
+    var dailySetPromotions = dashboard.dailySetPromotions[dateNow]
     for (let d = 0; d < dailySetPromotions.length; d++) {
         if (dailySetPromotions[d].complete == false) {
             promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
@@ -398,10 +435,13 @@ async function taskPromo() {
 }
 
 return new Promise((resolve, reject) => {
+    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") == "") {
+        GM_setValue("Config.app", "关")
+    }
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(searchStart, getSRandNum(6789, 9876))
+            result ? resolve() : setTimeout(() => { searchStart() }, getSRandNum(6789, 9876))
         } catch (err) {
             reject(err)
         }
@@ -409,7 +449,7 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? searchStart() : setTimeout(promoStart, 3e3)
+            result ? searchStart() : setTimeout(() => { promoStart() }, 3e3)
         } catch (err) {
             reject(err)
         }
@@ -417,7 +457,7 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? promoStart() : setTimeout(readStart, 2e3)
+            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
         } catch (err) {
             reject(err)
         }
@@ -425,16 +465,20 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await getAccessToken()
-            result ? promoStart() : readStart()
+            result ? promoStart() : (await taskSign(), readStart())
         } catch (err) {
             reject(err)
         }
     }
-    start()
+    if (GM_getValue("Config.app") == "开") {
+        start()
+    } else {
+        promoStart()
+    }
 })
 
 function pushMsg(title, text, url) {
-    url ? url : rwUrl
+    url ? url : url = rwUrl
     GM_notification({
         text: text,
         title: "微软积分商城" + title,
