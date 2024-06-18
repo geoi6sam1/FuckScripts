@@ -186,7 +186,9 @@ function taskRead() {
             if (xhr.status == 200) {
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
-                readPoints = points
+                points ? readPoints = points : readPoints = 0
+            } else {
+                readTimes++
             }
         }
     })
@@ -195,8 +197,6 @@ function taskRead() {
         return true
     } else if (readPoints == 3) {
         return false
-    } else {
-        readTimes++
     }
 }
 
