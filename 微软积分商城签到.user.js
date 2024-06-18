@@ -39,7 +39,7 @@ const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
 const rctUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
-    query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸蟹", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
+    query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
     url: [
         "https://hot.baiwumm.com/api/baidu",
         "https://hot.baiwumm.com/api/weibo",
@@ -77,56 +77,40 @@ function getScopeRandomNum(min, max) {
 }
 
 function getRandomArr(arr) {
-    let randSort = () => {
-        return Math.random() > .5 ? -1 : 1
-    }
-    return arr.sort(randSort)
-}
-
-let lastNumber = null
-
-function getRandomUniNum(min, max) {
-    let num
-    do {
-        num = Math.floor(Math.random() * (max - min + 1) + min)
-    } while (num === lastNumber)
-    lastNumber = num
-    return num
+    return arr.sort(() => {
+        return Math.random() - 0.5
+    })
 }
 
 function generateRandomStr(length) {
-    let result = ""
-    let characters = "abcdefghijklmnopqrstuvwxyz0123456789"
-    let charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join("")
 }
 
 function getRandomSentence(a, l) {
-    const k = [...a]
-    const r = []
+    let k = [...a]
+    let r = []
     for (let i = 0; i < l; i++) {
         if (k.length === 0) break
-
-        const n = Math.floor(Math.random() * k.length)
-        const q = k[n]
+        let [n] = [Math.floor(Math.random() * k.length)]
+        let [q] = [k.splice(n, 1)[0]]
         r.push(q)
-        k.splice(n, 1)
     }
     return r.join("")
 }
 
-function getRandomStr(type) {
-    switch (type) {
-        case 0: return randomData.url[getRandomUniNum(0, randomData.url.length - 1)]
-        case 1: return randomData.pc[getRandomNum(randomData.pc.length)]
-        case 2: return randomData.mobile[getRandomNum(randomData.mobile.length)]
-    }
-}
+let visitedIndices = new Set()
 
-var appTimes = 0
+function getRandomElement(arr, visited) {
+    const unvisitedIndices = [...arr.keys()].filter(index => !visited.has(index))
+    if (unvisitedIndices.length === 0) {
+        visited.clear()
+        return getRandomElement(arr, visited)
+    }
+    const randomIndex = unvisitedIndices[Math.floor(Math.random() * unvisitedIndices.length)]
+    visited.add(randomIndex)
+    return arr[randomIndex]
+}
 
 function getRefreshCode() {
     return new Promise((resolve, reject) => {
@@ -138,12 +122,7 @@ function getRefreshCode() {
             onload(xhr) {
                 let res = xhr.finalUrl
                 let code = res.match(/code=(.*?)&/)
-                if (code) {
-                    resolve(code[1])
-                } else {
-                    appTimes++
-                    resolve(0)
-                }
+                resolve(code ? code[1] : 0)
             }
         })
     })
@@ -159,29 +138,27 @@ async function getAccessToken() {
         }
     }
     const code = await getRefreshCode()
-    GM_xmlhttpRequest({
-        url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
-        onload(xhr) {
-            if (xhr.status == 200) {
-                let res = JSON.parse(xhr.responseText)
-                GM_setValue("Config.token", res.access_token)
-            } else {
-                appTimes++
-                GM_setValue("Config.token", "")
-                GM_log(`【${res.error}】${res.error_description}`)
-            }
-        }
-    })
-    if (appTimes > 0) {
+    if (code == 0) {
         pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rctUrl)
         return true
     } else {
+        GM_xmlhttpRequest({
+            url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
+            onload(xhr) {
+                let res = JSON.parse(xhr.responseText)
+                if (xhr.status == 200) {
+                    GM_setValue("Config.token", res.access_token)
+                } else {
+                    GM_setValue("Config.token", "")
+                }
+            }
+        })
         return false
     }
 }
 
-var readTimes = 0
-var readPoints = 3
+let readTimes = 0
+let readPoints = 3
 
 function taskRead() {
     if (readTimes > 3) {
@@ -207,22 +184,19 @@ function taskRead() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
-                readTimes = 0
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
-                if (points == 0) {
-                    readPoints = 0
-                }
-            } else {
-                readTimes++
+                readPoints = points
             }
         }
     })
     if (readPoints == 0) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
-    } else {
+    } else if (readPoints == 3) {
         return false
+    } else {
+        readTimes++
     }
 }
 
@@ -247,7 +221,7 @@ function taskSign() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
-                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
+                return pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
             }
         }
     })
@@ -298,15 +272,14 @@ function getRewardsInfo() {
     })
 }
 
-var keywordList = []
-var keywordIndex = 0
+let keywordList = []
+let keywordIndex = 0
 
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
-            keywordIndex++
             GM_xmlhttpRequest({
-                url: getRandomStr(0),
+                url: getRandomElement(randomData.url, visitedIndices),
                 onload(xhr) {
                     if (xhr.status == 200) {
                         let res = JSON.parse(xhr.responseText)
@@ -314,7 +287,7 @@ async function getTopKeyword() {
                             keywordList.push(res.data[i].title)
                         }
                         keywordList = getRandomArr(keywordList)
-                        resolve(keywordList[keywordIndex])
+                        resolve(keywordList[0])
                     } else {
                         const sentence = getRandomSentence(randomData.query, 3)
                         resolve(sentence)
@@ -332,17 +305,17 @@ async function getTopKeyword() {
     return query + Date.now() % 1000
 }
 
-var retryTimes = 0
-var lastProcess = 0
-var pcPtPro = 0
-var mobilePtPro = 0
-var pcPtProMax = 1
-var mobilePtProMax = 1
-var domain = "www.bing.com"
+let retryTimes = 0
+let lastProcess = 0
+let pcPtPro = 0
+let mobilePtPro = 0
+let pcPtProMax = 1
+let mobilePtProMax = 1
+let domain = "www.bing.com"
 
 async function taskSearch() {
-    const onload = (res) => {
-        let url = new URL(res.finalUrl)
+    const onload = (xhr) => {
+        let url = new URL(xhr.finalUrl)
         if (url.host != domain) {
             domain = url.host
         }
@@ -356,15 +329,14 @@ async function taskSearch() {
         mobilePtPro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
         mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
     }
-    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
-        retryTimes++
-        if (retryTimes > 3) {
-            pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
-            return true
-        }
-    } else {
+    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress !== lastProcess) {
         retryTimes = 0
         lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
+    } else if (retryTimes > 3) {
+        pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+        return true
+    } else {
+        retryTimes++
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
         pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
@@ -375,7 +347,7 @@ async function taskSearch() {
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "User-Agent": getRandomStr(1),
+                    "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
                     "Referer": `https://${domain}/`
                 },
                 onload: onload
@@ -387,7 +359,7 @@ async function taskSearch() {
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "User-Agent": getRandomStr(2),
+                    "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
                     "Referer": `https://${domain}/`
                 },
                 onload: onload
@@ -397,7 +369,8 @@ async function taskSearch() {
     }
 }
 
-var testTimes = 0
+let testTimes = 0
+let promotionsArr = []
 
 async function taskPromo() {
     if (testTimes > 3) {
@@ -408,19 +381,12 @@ async function taskPromo() {
     if (token == 0) {
         return true
     }
-    testTimes++
-    var promotionsArr = []
     const dashboard = await getRewardsInfo()
-    var morePromotions = dashboard.morePromotions
-    var dailySetPromotions = dashboard.dailySetPromotions[dateNow]
-    for (let d = 0; d < dailySetPromotions.length; d++) {
-        if (dailySetPromotions[d].complete == false) {
-            promotionsArr.push({ "offerId": dailySetPromotions[d].offerId, "hash": dailySetPromotions[d].hash })
-        }
-    }
-    for (let m = 0; m < morePromotions.length; m++) {
-        if (morePromotions[m].complete == false) {
-            promotionsArr.push({ "offerId": morePromotions[m].offerId, "hash": morePromotions[m].hash })
+    const morePromotions = dashboard.morePromotions
+    const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+    for (const promotion of [...dailySetPromotions, ...morePromotions]) {
+        if (!promotion.complete) {
+            promotionsArr.push({ offerId: promotion.offerId, hash: promotion.hash })
         }
     }
     if (promotionsArr.length == 0) {
@@ -433,12 +399,12 @@ async function taskPromo() {
                 url: `https://rewards.bing.com/api/reportactivity`,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Referer": `https://rewards.bing.com/`,
-                    "User-Agent": getRandomStr(1)
+                    "Referer": `https://rewards.bing.com/`
                 },
-                data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`,
+                data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
             })
         })
+        testTimes++
         return false
     }
 }
@@ -451,32 +417,32 @@ return new Promise((resolve, reject) => {
         try {
             const result = await taskSearch()
             result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
-        } catch (err) {
-            reject(err)
+        } catch (e) {
+            reject(e)
         }
     }
     const promoStart = async () => {
         try {
             const result = await taskPromo()
             result ? searchStart() : setTimeout(() => { promoStart() }, 3e3)
-        } catch (err) {
-            reject(err)
+        } catch (e) {
+            reject(e)
         }
     }
     const readStart = async () => {
         try {
             const result = await taskRead()
             result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
-        } catch (err) {
-            reject(err)
+        } catch (e) {
+            reject(e)
         }
     }
     const start = async () => {
         try {
             const result = await getAccessToken()
             result ? promoStart() : (await taskSign(), readStart())
-        } catch (err) {
-            reject(err)
+        } catch (e) {
+            reject(e)
         }
     }
     if (GM_getValue("Config.app") == "开") {
@@ -486,8 +452,7 @@ return new Promise((resolve, reject) => {
     }
 })
 
-function pushMsg(title, text, url) {
-    url ? url : url = pbdUrl
+function pushMsg(title, text, url = pbdUrl) {
     GM_notification({
         text: text,
         title: "微软积分商城" + title,
