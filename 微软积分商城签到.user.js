@@ -331,7 +331,7 @@ async function taskSearch() {
         mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
     }
     if (retryTimes > 3) {
-        pushMsg("搜索任务出错", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+        pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
         return true
     }
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
