@@ -130,7 +130,7 @@ function getRefreshCode() {
 
 async function getAccessToken() {
     if (GM_getValue("Config.cookie") == null) {
-        GM_setValue("Config.cookie", "")
+        GM_setValue("Config.cookie", rctUrl)
     } else {
         let formatDIDC = GM_getValue("Config.cookie").match(/DIDC=(.*?);/)
         if (formatDIDC) {
@@ -139,6 +139,7 @@ async function getAccessToken() {
     }
     const code = await getRefreshCode()
     if (code == 0) {
+        GM_setValue("Config.cookie", rctUrl)
         pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rctUrl)
         return true
     } else {
