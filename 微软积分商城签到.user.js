@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.8.1
+// @version         1.0.9
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -36,18 +36,47 @@ const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
-const rwUrl = "https://rewards.bing.com/pointsbreakdown"
-const rcUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
+const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
+const rctUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
+const randomData = {
+    query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸蟹", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
+    url: [
+        "https://hot.baiwumm.com/api/baidu",
+        "https://hot.baiwumm.com/api/weibo",
+        "https://hot.baiwumm.com/api/douyin",
+        "https://hot.baiwumm.com/api/kuaishou",
+        "https://hot.baiwumm.com/api/zhihu",
+        "https://hot.baiwumm.com/api/thepaper",
+        "https://hot.baiwumm.com/api/netease",
+        "https://hot.baiwumm.com/api/toutiao",
+        "https://hot.baiwumm.com/api/qq",
+        "https://hot.baiwumm.com/api/baidutieba",
+        "https://hot.baiwumm.com/api/juejin",
+        "https://hot.baiwumm.com/api/history-today"
+    ],
+    pc: [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
+        "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/604.1 Edg/122.0.2365.106",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.181",
+        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.140"
+    ],
+    mobile: [
+        "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
+        "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/123.0.2420.108 Version/18.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
+    ]
+}
 
-function getRandNum(num) {
+function getRandomNum(num) {
     return Math.floor(Math.random() * num)
 }
 
-function getSRandNum(min, max) {
+function getScopeRandomNum(min, max) {
     return Math.floor(Math.random() * (max + 1 - min) + min)
 }
 
-function getRandArr(arr) {
+function getRandomArr(arr) {
     let randSort = () => {
         return Math.random() > .5 ? -1 : 1
     }
@@ -56,7 +85,7 @@ function getRandArr(arr) {
 
 let lastNumber = null
 
-function getRandUniNum(min, max) {
+function getRandomUniNum(min, max) {
     let num
     do {
         num = Math.floor(Math.random() * (max - min + 1) + min)
@@ -65,7 +94,7 @@ function getRandUniNum(min, max) {
     return num
 }
 
-function generateRandomString(length) {
+function generateRandomStr(length) {
     let result = ""
     let characters = "abcdefghijklmnopqrstuvwxyz0123456789"
     let charactersLength = characters.length
@@ -75,39 +104,25 @@ function generateRandomString(length) {
     return result
 }
 
-function getRandStr(type) {
-    const randData = {
-        url: [
-            "https://hot.baiwumm.com/api/baidu",
-            "https://hot.baiwumm.com/api/weibo",
-            "https://hot.baiwumm.com/api/douyin",
-            "https://hot.baiwumm.com/api/kuaishou",
-            "https://hot.baiwumm.com/api/zhihu",
-            "https://hot.baiwumm.com/api/thepaper",
-            "https://hot.baiwumm.com/api/netease",
-            "https://hot.baiwumm.com/api/toutiao",
-            "https://hot.baiwumm.com/api/qq",
-            "https://hot.baiwumm.com/api/baidutieba",
-            "https://hot.baiwumm.com/api/juejin",
-            "https://hot.baiwumm.com/api/history-today"
-        ],
-        pc: [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
-            "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/604.1 Edg/122.0.2365.106",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.181",
-            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.140"
-        ],
-        mobile: [
-            "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
-            "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/123.0.2420.108 Version/18.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
-        ]
+function getRandomSentence(a, l) {
+    const k = [...a]
+    const r = []
+    for (let i = 0; i < l; i++) {
+        if (k.length === 0) break
+
+        const n = Math.floor(Math.random() * k.length)
+        const q = k[n]
+        r.push(q)
+        k.splice(n, 1)
     }
+    return r.join("")
+}
+
+function getRandomStr(type) {
     switch (type) {
-        case 0: return randData.url[getRandUniNum(0, randData.url.length - 1)]
-        case 1: return randData.pc[getRandNum(randData.pc.length)]
-        case 2: return randData.mobile[getRandNum(randData.mobile.length)]
+        case 0: return randomData.url[getRandomUniNum(0, randomData.url.length - 1)]
+        case 1: return randomData.pc[getRandomNum(randomData.pc.length)]
+        case 2: return randomData.mobile[getRandomNum(randomData.mobile.length)]
     }
 }
 
@@ -116,7 +131,7 @@ var appTimes = 0
 function getRefreshCode() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
-            url: rcUrl,
+            url: rctUrl,
             headers: {
                 "Cookie": GM_getValue("Config.cookie")
             },
@@ -147,8 +162,8 @@ async function getAccessToken() {
     GM_xmlhttpRequest({
         url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
         onload(xhr) {
-            let res = JSON.parse(xhr.responseText)
-            if (res.access_token) {
+            if (xhr.status == 200) {
+                let res = JSON.parse(xhr.responseText)
                 GM_setValue("Config.token", res.access_token)
             } else {
                 appTimes++
@@ -158,7 +173,7 @@ async function getAccessToken() {
         }
     })
     if (appTimes > 0) {
-        pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rcUrl)
+        pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rctUrl)
         return true
     } else {
         return false
@@ -170,7 +185,7 @@ var readPoints = 3
 
 function taskRead() {
     if (readTimes > 3) {
-        pushMsg("阅读任务出错", "未知原因！开始活动任务...", rcUrl)
+        pushMsg("阅读任务失败", "未知原因出错！开始活动任务...", rctUrl)
         return true
     }
     GM_xmlhttpRequest({
@@ -183,7 +198,7 @@ function taskRead() {
         data: JSON.stringify({
             "amount": 1,
             "country": "cn",
-            "id": `${generateRandomString(64)}`,
+            "id": `${generateRandomStr(64)}`,
             "type": 101,
             "attributes": {
                 "offerid": "ENUS_readarticle3_30points"
@@ -211,8 +226,6 @@ function taskRead() {
     }
 }
 
-var signPoints = 0
-
 function taskSign() {
     GM_xmlhttpRequest({
         method: "POST",
@@ -234,17 +247,10 @@ function taskSign() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
-                let res = JSON.parse(xhr.responseText)
-                let points = res.response.activity.p
-                signPoints = points
+                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
             }
         }
     })
-    if (signPoints > 0) {
-        pushMsg("App签到成功", `获得${signPoints}积分！开始阅读任务...`)
-    } else {
-        pushMsg("App签到重复", "今日已签到！开始阅读任务...")
-    }
 }
 
 function getRewardsToken() {
@@ -300,18 +306,18 @@ async function getTopKeyword() {
         if (keywordIndex < 1 || keywordList.length < 1) {
             keywordIndex++
             GM_xmlhttpRequest({
-                url: getRandStr(0),
+                url: getRandomStr(0),
                 onload(xhr) {
                     if (xhr.status == 200) {
                         let res = JSON.parse(xhr.responseText)
                         for (let i = 0; i < res.data.length; i++) {
                             keywordList.push(res.data[i].title)
                         }
-                        keywordList = getRandArr(keywordList)
+                        keywordList = getRandomArr(keywordList)
                         resolve(keywordList[keywordIndex])
                     } else {
-                        pushMsg("热点获取失败", "获取今日热榜关键词失败！状态码：" + xhr.status)
-                        return true
+                        const sentence = getRandomSentence(randomData.query, 3)
+                        resolve(sentence)
                     }
                 }
             })
@@ -353,7 +359,7 @@ async function taskSearch() {
     if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
         retryTimes++
         if (retryTimes > 3) {
-            pushMsg("搜索任务出错", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+            pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
             return true
         }
     } else {
@@ -365,26 +371,29 @@ async function taskSearch() {
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${await getTopKeyword()}&form=QBLH`,
+                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "User-Agent": getRandStr(1),
+                    "User-Agent": getRandomStr(1),
                     "Referer": `https://${domain}/`
                 },
                 onload: onload
             })
+            return false
         }
         if (mobilePtPro < mobilePtProMax) {
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${await getTopKeyword()}&form=QBLH`,
+                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "User-Agent": getRandStr(2),
+                    "User-Agent": getRandomStr(2),
                     "Referer": `https://${domain}/`
                 },
                 onload: onload
             })
+            return false
         }
-        return false
     }
 }
 
@@ -392,7 +401,7 @@ var testTimes = 0
 
 async function taskPromo() {
     if (testTimes > 3) {
-        pushMsg("活动任务出错", "未知原因！开始搜索任务...")
+        pushMsg("活动任务失败", "未知原因出错！开始搜索任务...")
         return true
     }
     const token = await getRewardsToken()
@@ -425,7 +434,7 @@ async function taskPromo() {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Referer": `https://rewards.bing.com/`,
-                    "User-Agent": getRandStr(1)
+                    "User-Agent": getRandomStr(1)
                 },
                 data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`,
             })
@@ -441,7 +450,7 @@ return new Promise((resolve, reject) => {
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(() => { searchStart() }, getSRandNum(6789, 9876))
+            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
         } catch (err) {
             reject(err)
         }
@@ -478,7 +487,7 @@ return new Promise((resolve, reject) => {
 })
 
 function pushMsg(title, text, url) {
-    url ? url : url = rwUrl
+    url ? url : url = pbdUrl
     GM_notification({
         text: text,
         title: "微软积分商城" + title,
