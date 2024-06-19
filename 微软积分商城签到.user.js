@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.9.1
+// @version         1.1.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -420,7 +420,7 @@ return new Promise((resolve, reject) => {
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
+            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(9876, 12345))
         } catch (e) {
             reject(e)
         }
