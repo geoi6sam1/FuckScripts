@@ -224,7 +224,7 @@ function taskSign() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
-                return pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
+                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
             }
         }
     })
