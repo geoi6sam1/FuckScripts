@@ -148,8 +148,8 @@ async function getAccessToken() {
         GM_xmlhttpRequest({
             url: `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`,
             onload(xhr) {
-                let res = JSON.parse(xhr.responseText)
                 if (xhr.status == 200) {
+                    let res = JSON.parse(xhr.responseText)
                     GM_setValue("Config.token", res.access_token)
                 } else {
                     GM_setValue("Config.token", "")
@@ -428,7 +428,7 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? setTimeout(() => { searchStart() }) : setTimeout(() => { promoStart() }, 2e3)
+            result ? searchStart() : setTimeout(() => { promoStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -436,7 +436,7 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? setTimeout(() => { promoStart() }) : setTimeout(() => { readStart() }, 2e3)
+            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -444,7 +444,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await getAccessToken()
-            result ? setTimeout(() => { promoStart() }) : (await taskSign(), readStart())
+            result ? promoStart() : (await taskSign(), readStart())
         } catch (e) {
             reject(e)
         }
