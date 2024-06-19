@@ -83,11 +83,6 @@ function getRandomArr(arr) {
     })
 }
 
-function generateRandomStr(length) {
-    const characters = "abcdefghijklmnopqrstuvwxyz0123456789"
-    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join("")
-}
-
 function getRandomSentence(a, l) {
     let k = [...a]
     let r = []
@@ -178,7 +173,6 @@ function taskRead() {
         data: JSON.stringify({
             "amount": 1,
             "country": "cn",
-            "id": `${generateRandomStr(64)}`,
             "type": 101,
             "attributes": {
                 "offerid": "ENUS_readarticle3_30points"
@@ -198,35 +192,38 @@ function taskRead() {
     if (readPoints == 0) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
-    } else if (readPoints == 3) {
+    } else {
         return false
     }
 }
 
 function taskSign() {
-    GM_xmlhttpRequest({
-        method: "POST",
-        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": `Bearer ${GM_getValue("Config.token")}`
-        },
-        data: JSON.stringify({
-            "amount": 1,
-            "attributes": {
-                "offerid": "Gamification_Sapphire_DailyCheckIn",
+    return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${GM_getValue("Config.token")}`
             },
-            "type": 101,
-            "country": "cn",
-            "risk_context": {},
-            "channel": "SAAndroid"
-        }),
-        responseType: "json",
-        onload(xhr) {
-            if (xhr.status == 200) {
-                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
+            data: JSON.stringify({
+                "amount": 1,
+                "attributes": {
+                    "offerid": "Gamification_Sapphire_DailyCheckIn",
+                },
+                "type": 101,
+                "country": "cn",
+                "risk_context": {},
+                "channel": "SAAndroid"
+            }),
+            responseType: "json",
+            onload(xhr) {
+                if (xhr.status == 200) {
+                    pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
+                }
+                resolve()
             }
-        }
+        })
     })
 }
 
