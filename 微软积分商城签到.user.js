@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.0.9
+// @version         1.0.9.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -25,6 +25,7 @@ Config:
   app:
     title: App任务
     type: select
+    default: 关
     values: [关,开]
   cookie:
     title: 请求头Cookie
@@ -135,11 +136,12 @@ async function getAccessToken() {
         let formatDIDC = GM_getValue("Config.cookie").match(/DIDC=(.*?);/)
         if (formatDIDC) {
             GM_setValue("Config.cookie", formatDIDC[0])
+        } else {
+            GM_setValue("Config.cookie", rctUrl)
         }
     }
     const code = await getRefreshCode()
     if (code == 0) {
-        GM_setValue("Config.cookie", rctUrl)
         pushMsg("APP任务失败", "Cookie过期了！开始活动任务...", rctUrl)
         return true
     } else {
@@ -387,7 +389,7 @@ async function taskPromo() {
     const morePromotions = dashboard.morePromotions
     const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
     for (const promotion of [...dailySetPromotions, ...morePromotions]) {
-        if (!promotion.complete) {
+        if (promotion.complete == false) {
             promotionsArr.push({ offerId: promotion.offerId, hash: promotion.hash })
         }
     }
@@ -426,7 +428,7 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? searchStart() : setTimeout(() => { promoStart() }, 3e3)
+            result ? setTimeout(() => { searchStart() }) : setTimeout(() => { promoStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -434,7 +436,7 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
+            result ? setTimeout(() => { promoStart() }) : setTimeout(() => { readStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -442,7 +444,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await getAccessToken()
-            result ? promoStart() : (await taskSign(), readStart())
+            result ? setTimeout(() => { promoStart() }) : (await taskSign(), readStart())
         } catch (e) {
             reject(e)
         }
