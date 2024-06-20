@@ -201,6 +201,10 @@ let signTimes = 0
 let signPoints = 5
 
 function taskSign() {
+    if (signTimes > 3) {
+        pushMsg("App签到失败", "未知原因出错！开始阅读任务...", rctUrl)
+        return true
+    }
     GM_xmlhttpRequest({
         method: "POST",
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
