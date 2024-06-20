@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.0
+// @version         1.1.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -198,32 +198,29 @@ function taskRead() {
 }
 
 function taskSign() {
-    return new Promise((resolve, reject) => {
-        GM_xmlhttpRequest({
-            method: "POST",
-            url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
-            headers: {
-                "Content-Type": "application/json",
-                "authorization": `Bearer ${GM_getValue("Config.token")}`
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": `Bearer ${GM_getValue("Config.token")}`
+        },
+        data: JSON.stringify({
+            "amount": 1,
+            "attributes": {
+                "offerid": "Gamification_Sapphire_DailyCheckIn",
             },
-            data: JSON.stringify({
-                "amount": 1,
-                "attributes": {
-                    "offerid": "Gamification_Sapphire_DailyCheckIn",
-                },
-                "type": 101,
-                "country": "cn",
-                "risk_context": {},
-                "channel": "SAAndroid"
-            }),
-            responseType: "json",
-            onload(xhr) {
-                if (xhr.status == 200) {
-                    pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
-                }
-                resolve()
+            "type": 101,
+            "country": "cn",
+            "risk_context": {},
+            "channel": "SAAndroid"
+        }),
+        responseType: "json",
+        onload(xhr) {
+            if (xhr.status == 200) {
+                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
             }
-        })
+        }
     })
 }
 
@@ -425,7 +422,7 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? searchStart() : setTimeout(() => { promoStart() }, 2e3)
+            result ? searchStart() : setTimeout(() => { promoStart() }, 3210)
         } catch (e) {
             reject(e)
         }
@@ -433,7 +430,7 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
+            result ? promoStart() : setTimeout(() => { readStart() }, 3210)
         } catch (e) {
             reject(e)
         }
