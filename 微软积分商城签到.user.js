@@ -368,7 +368,6 @@ async function taskSearch() {
 }
 
 let testTimes = 0
-let promotionsArr = []
 
 async function taskPromo() {
     if (testTimes > 3) {
@@ -379,6 +378,7 @@ async function taskPromo() {
     if (token == 0) {
         return true
     }
+    let promotionsArr = []
     const dashboard = await getRewardsInfo()
     const morePromotions = dashboard.morePromotions
     const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
