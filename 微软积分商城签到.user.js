@@ -197,6 +197,9 @@ function taskRead() {
     }
 }
 
+let signTimes = 0
+let signPoints = 5
+
 function taskSign() {
     GM_xmlhttpRequest({
         method: "POST",
@@ -218,11 +221,20 @@ function taskSign() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
-                pushMsg("App签到完成", "今日已签到！请等待阅读任务完成...")
+                let res = JSON.parse(xhr.responseText)
+                let points = res.response.activity.p
+                points ? signPoints = points : signPoints = 0
+            } else {
+                signTimes++
             }
         }
     })
-    return
+    if (signPoints == 0) {
+        pushMsg("App签到完成", "完成！开始阅读任务，请耐心等待...")
+        return true
+    } else {
+        return false
+    }
 }
 
 function getRewardsToken() {
@@ -415,7 +427,7 @@ return new Promise((resolve, reject) => {
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(9876, 12345))
+            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 12345))
         } catch (e) {
             reject(e)
         }
@@ -423,7 +435,7 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? searchStart() : setTimeout(() => { promoStart() }, 3210)
+            result ? searchStart() : setTimeout(() => { promoStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -431,7 +443,15 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? promoStart() : setTimeout(() => { readStart() }, 3210)
+            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
+        } catch (e) {
+            reject(e)
+        }
+    }
+    const signStart = async () => {
+        try {
+            const result = await taskSign()
+            result ? readStart() : setTimeout(() => { signStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
@@ -439,7 +459,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await getAccessToken()
-            result ? promoStart() : (await taskSign(), readStart())
+            result ? promoStart() : signStart()
         } catch (e) {
             reject(e)
         }
