@@ -222,6 +222,7 @@ function taskSign() {
             }
         }
     })
+    return
 }
 
 function getRewardsToken() {
