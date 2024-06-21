@@ -296,12 +296,13 @@ async function getTopKeyword() {
                 url: getRandomElement(randomData.url, visitedIndices),
                 onload(xhr) {
                     if (xhr.status == 200) {
+                        keywordIndex = 1
                         let res = JSON.parse(xhr.responseText)
                         for (let i = 0; i < res.data.length; i++) {
                             keywordList.push(res.data[i].title)
                         }
                         keywordList = getRandomArr(keywordList)
-                        resolve(keywordList[0])
+                        resolve(keywordList[keywordIndex])
                     } else {
                         const sentence = getRandomSentence(randomData.query, 3)
                         resolve(sentence)
@@ -431,7 +432,7 @@ return new Promise((resolve, reject) => {
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(9876, 12345))
+            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
         } catch (e) {
             reject(e)
         }
