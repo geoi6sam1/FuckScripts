@@ -41,20 +41,7 @@ const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
 const rctUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
     query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
-    url: [
-        "https://hot.baiwumm.com/api/baidu",
-        "https://hot.baiwumm.com/api/weibo",
-        "https://hot.baiwumm.com/api/douyin",
-        "https://hot.baiwumm.com/api/kuaishou",
-        "https://hot.baiwumm.com/api/zhihu",
-        "https://hot.baiwumm.com/api/thepaper",
-        "https://hot.baiwumm.com/api/netease",
-        "https://hot.baiwumm.com/api/toutiao",
-        "https://hot.baiwumm.com/api/qq",
-        "https://hot.baiwumm.com/api/baidutieba",
-        "https://hot.baiwumm.com/api/juejin",
-        "https://hot.baiwumm.com/api/history-today"
-    ],
+    url: ["weibo", "baidu", "douyin", "kuaishou", "zhihu", "thepaper", "netease", "toutiao", "qq", "baidutieba"],
     pc: [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
         "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/604.1 Edg/122.0.2365.106",
@@ -293,7 +280,7 @@ async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
             GM_xmlhttpRequest({
-                url: getRandomElement(randomData.url, visitedIndices),
+                url: `https://hot.baiwumm.com/api/${getRandomElement(randomData.url, visitedIndices)}`,
                 onload(xhr) {
                     if (xhr.status == 200) {
                         keywordIndex = 1
