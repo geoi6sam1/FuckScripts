@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2024070419
+! Version: 2024070420
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! Adblock Plus 基础过滤器：https://easylist-downloads.adblockplus.org/easylist.txt
@@ -46,7 +46,7 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 123pan.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,.rightInfo .user-reward-btn,.rightInfo .qrcode_btn,[class*="header-waning-tips"],.user-reward-btn,.loginModal-footer.payment-footer,.sider-member-btn,.activity-box,.ant-modal-root:has(img[src*="linear-banner"]),.bg_svip_block_ads
 123pan.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
 123pan.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
-123pan.com#$#.svip-body { background-image: url() !important; }
+123pan.com#$#.webbody.svip-body { height: 0 !important; }
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
