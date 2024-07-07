@@ -28,7 +28,7 @@ Config:
     default: 关
     values: [关, 开]
   code:
-    title: Code
+    title: 授权Code
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
  ==/UserConfig== */
