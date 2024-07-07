@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3
+// @version         1.1.2
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -38,6 +38,7 @@ const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
+const regex = /M\.C\d+_\w+\.\d+\.\w+\.[0-9a-fA-F-]+/
 const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
 const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
@@ -122,17 +123,20 @@ function getToken(url) {
 function getOAuthCode() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
-            url: rctUrl,
+            url: srfUrl,
             onload(xhr) {
                 let res = xhr.finalUrl
-                let code = res.match(/code=(.*?)&/)
+                let code = res.match(regex)
                 if (code) {
-                    resolve(code[1])
+                    resolve(code[0])
                 } else {
-                    if (GM_getValue("Config.code") == srfUrl) {
-                        resolve(0)
+                    let _res = GM_getValue("Config.code")
+                    let _code = _res.match(regex)
+                    GM_setValue("Config.code", srfUrl)
+                    if (_code) {
+                        resolve(_code[0])
                     } else {
-                        resolve(GM_getValue("Config.code"))
+                        resolve(0)
                     }
                 }
             }
@@ -144,7 +148,6 @@ async function isExpired() {
     if (GM_getValue("refresh_token") == "") {
         const code = await getOAuthCode()
         if (code == 0) {
-            GM_setValue("Config.code", srfUrl)
             pushMsg("APP任务失败", "Token获取失败！开始活动任务...", srfUrl)
             return true
         } else {
@@ -152,7 +155,7 @@ async function isExpired() {
             return false
         }
     } else {
-        getToken(`https://login.live.com/oauth20_token.srfclient_id=0000000040170455&refresh_token=${GM_getValue("refresh_token")}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
+        getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&refresh_token=${GM_getValue("refresh_token")}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
         return false
     }
 }
@@ -195,7 +198,7 @@ function taskRead() {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
     } else {
-        return false
+        isExpired()
     }
 }
 
@@ -239,7 +242,7 @@ function taskSign() {
         pushMsg("App签到完成", "完成！开始阅读任务，请耐心等待...")
         return true
     } else {
-        return false
+        isExpired()
     }
 }
 
@@ -433,6 +436,9 @@ return new Promise((resolve, reject) => {
     }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", srfUrl)
+    }
+    if (GM_getValue("refresh_token") == null) {
+        GM_setValue("refresh_token", "")
     }
     const searchStart = async () => {
         try {
