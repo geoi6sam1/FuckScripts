@@ -3,20 +3,20 @@
 ! Version: 2024070420
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
-! Adblock Plus 基础过滤器：https://easylist-downloads.adblockplus.org/easylist.txt
-! Adblock Plus 中文过滤器：https://easylist-downloads.adblockplus.org/easylistchina.txt
 ! Adblock Plus 隐私保护过滤器：https://easylist-downloads.adblockplus.org/easyprivacy.txt
 ! Adblock Plus 反拦截过滤器：https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
+！Fanboy's Annoyance List：https://secure.fanboy.co.nz/fanboy-annoyance.txt
+！Peter Lowe's BlockList：https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
 ! AdGuard 基础过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
 ! AdGuard 中文过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
 ! AdGuard 移动广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
-! AdGuard 恼人广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_14_Annoyances/filter.txt
-! AdGuard 解除搜索广告和自我推销过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_10_Useful/filter.txt
+! AdGuard 移动应用横幅广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_20_Annoyances_MobileApp/filter.txt
+! AdGuard 其他恼人广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_21_Annoyances_Other/filter.txt
 ! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
 
 
 ! ---------必应搜索---------
-bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta), #b_footer ul
+bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta), #b_footer ul
 
 ! ---------腾讯视频---------
 v.qq.com,film.qq.com##.quick_games, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .txp_none, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, [dt-eid="openbanner"], .bottom-wrapper, .at-app-banner
