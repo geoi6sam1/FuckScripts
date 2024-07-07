@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3.4
+// @version         1.1.3.5
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -364,31 +364,25 @@ async function taskSearch() {
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
-            const keyword = encodeURIComponent(await getTopKeyword())
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                method: "POST",
-                url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
+                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
                     "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
                     "Referer": `https://${domain}/`
                 },
-                data: `url=&V=web`,
                 onload: onload
             })
             return false
         }
         if (mobilePtPro < mobilePtProMax) {
-            const keyword = encodeURIComponent(await getTopKeyword())
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                method: "POST",
-                url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
+                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
                     "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
                     "Referer": `https://${domain}/`
                 },
-                data: `url=&V=web`,
                 onload: onload
             })
             return false
