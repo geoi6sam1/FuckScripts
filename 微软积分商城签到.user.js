@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3.2
+// @version         1.1.3.3
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -373,7 +373,7 @@ async function taskSearch() {
                     "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
                     "Referer": `https://${domain}/`
                 },
-                data=`url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
+                data: `url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
                 onload: onload
             })
             return false
@@ -388,7 +388,7 @@ async function taskSearch() {
                     "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
                     "Referer": `https://${domain}/`
                 },
-                data=`url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
+                data: `url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
                 onload: onload
             })
             return false
