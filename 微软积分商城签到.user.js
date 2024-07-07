@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.2
+// @version         1.1.3
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -23,13 +23,13 @@
 /* ==UserConfig==
 Config:
   app:
-    title: App Tasks
+    title: App任务
     type: select
-    default: off
-    values: [off, on]
-  token:
-    title: Access Token
-    default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=token&redirect_uri=https://login.live.com/oauth20_desktop.srf
+    default: 关
+    values: [关, 开]
+  code:
+    title: Code
+    default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
  ==/UserConfig== */
 
@@ -39,7 +39,7 @@ const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
-const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=token&redirect_uri=https://login.live.com/oauth20_desktop.srf"
+const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
     query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
     url: ["weibo", "baidu", "douyin", "kuaishou", "zhihu", "thepaper", "netease", "toutiao", "qq", "baidutieba"],
@@ -96,28 +96,63 @@ function getRandomElement(arr, visited) {
     return arr[randomIndex]
 }
 
-async function getAccessToken() {
+function getToken(url) {
     GM_xmlhttpRequest({
-        url: srfUrl,
+        url: url,
         onload(xhr) {
-            let res = xhr.finalUrl
-            let token = res.match(/access_token=(.*?)&/)
-            if (token) {
-                GM_setValue("Config.token", decodeURIComponent(token[1]))
-            } else {
-                let formatCode = GM_getValue("Config.token").match(/access_token=(.*?)&/)
-                if (formatCode) {
-                    GM_setValue("Config.token", decodeURIComponent(formatCode[1]))
+            if (xhr.status == 200) {
+                let res = xhr.responseText
+                let refresh_token = JSON.parse(res).refresh_token
+                let access_token = JSON.parse(res).access_token
+                if (refresh_token && access_token) {
+                    GM_setValue("refresh_token", refresh_token)
+                    GM_setValue("access_token", access_token)
                 } else {
-                    GM_setValue("Config.token", srfUrl)
+                    GM_setValue("refresh_token", "")
+                    GM_setValue("access_token", "")
                 }
+            } else {
+                GM_setValue("refresh_token", "")
+                GM_setValue("access_token", "")
             }
         }
     })
-    if (GM_getValue("Config.token") == srfUrl) {
-        pushMsg("APP任务失败", "Token获取失败！开始活动任务...", srfUrl)
-        return true
+}
+
+function getOAuthCode() {
+    return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+            url: rctUrl,
+            onload(xhr) {
+                let res = xhr.finalUrl
+                let code = res.match(/code=(.*?)&/)
+                if (code) {
+                    resolve(code[1])
+                } else {
+                    if (GM_getValue("Config.code") == srfUrl) {
+                        resolve(0)
+                    } else {
+                        resolve(GM_getValue("Config.code"))
+                    }
+                }
+            }
+        })
+    })
+}
+
+async function isExpired() {
+    if (GM_getValue("refresh_token") == "") {
+        const code = await getOAuthCode()
+        if (code == 0) {
+            GM_setValue("Config.code", srfUrl)
+            pushMsg("APP任务失败", "Token获取失败！开始活动任务...", srfUrl)
+            return true
+        } else {
+            getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`)
+            return false
+        }
     } else {
+        getToken(`https://login.live.com/oauth20_token.srfclient_id=0000000040170455&refresh_token=${GM_getValue("refresh_token")}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
         return false
     }
 }
@@ -135,7 +170,7 @@ function taskRead() {
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
             "Content-Type": "application/json",
-            "authorization": `Bearer ${GM_getValue("Config.token")}`
+            "authorization": `Bearer ${GM_getValue("access_token")}`
         },
         data: JSON.stringify({
             "amount": 1,
@@ -150,7 +185,7 @@ function taskRead() {
             if (xhr.status == 200) {
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
-                points ? readPoints = points : readPoints = 0
+                points ? readPoints = points : readTimes++
             } else {
                 readTimes++
             }
@@ -165,7 +200,7 @@ function taskRead() {
 }
 
 let signTimes = 0
-let signPoints = 5
+let signPoints = 1
 
 function taskSign() {
     if (signTimes > 3) {
@@ -177,7 +212,7 @@ function taskSign() {
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
             "Content-Type": "application/json",
-            "authorization": `Bearer ${GM_getValue("Config.token")}`
+            "authorization": `Bearer ${GM_getValue("access_token")}`
         },
         data: JSON.stringify({
             "amount": 1,
@@ -194,7 +229,7 @@ function taskSign() {
             if (xhr.status == 200) {
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
-                points ? signPoints = points : signPoints = 0
+                points ? signPoints = points : signTimes++
             } else {
                 signTimes++
             }
@@ -393,11 +428,11 @@ async function taskPromo() {
 }
 
 return new Promise((resolve, reject) => {
-    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") == "") {
-        GM_setValue("Config.app", "off")
+    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") == "关" || GM_getValue("Config.app") != "开") {
+        GM_setValue("Config.app", "关")
     }
-    if (GM_getValue("Config.token") == null || GM_getValue("Config.token") == "") {
-        GM_setValue("Config.token", srfUrl)
+    if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
+        GM_setValue("Config.code", srfUrl)
     }
     const searchStart = async () => {
         try {
@@ -433,13 +468,13 @@ return new Promise((resolve, reject) => {
     }
     const start = async () => {
         try {
-            const result = await getAccessToken()
+            const result = await isExpired()
             result ? promoStart() : signStart()
         } catch (e) {
             reject(e)
         }
     }
-    if (GM_getValue("Config.app") == "on") {
+    if (GM_getValue("Config.app") == "开") {
         start()
     } else {
         promoStart()
