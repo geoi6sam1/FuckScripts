@@ -366,6 +366,7 @@ async function taskSearch() {
         if (pcPtPro < pcPtProMax) {
             const keyword = encodeURIComponent(await getTopKeyword())
             GM_xmlhttpRequest({
+                method: "POST",
                 url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -380,6 +381,7 @@ async function taskSearch() {
         if (mobilePtPro < mobilePtProMax) {
             const keyword = encodeURIComponent(await getTopKeyword())
             GM_xmlhttpRequest({
+                method: "POST",
                 url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
