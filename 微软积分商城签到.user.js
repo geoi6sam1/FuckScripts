@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.2
+// @version         1.1.3
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -132,7 +132,6 @@ function getOAuthCode() {
                 } else {
                     let _res = GM_getValue("Config.code")
                     let _code = _res.match(regex)
-                    GM_setValue("Config.code", srfUrl)
                     if (_code) {
                         resolve(_code[0])
                     } else {
@@ -147,6 +146,7 @@ function getOAuthCode() {
 async function isExpired() {
     if (GM_getValue("refresh_token") == "") {
         const code = await getOAuthCode()
+        GM_setValue("Config.code", srfUrl)
         if (code == 0) {
             pushMsg("APP任务失败", "Token获取失败！开始活动任务...", srfUrl)
             return true
@@ -475,7 +475,7 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await isExpired()
-            result ? promoStart() : signStart()
+            result ? promoStart() : setTimeout(() => { signStart() }, 2e3)
         } catch (e) {
             reject(e)
         }
