@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3
+// @version         1.1.3.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -28,7 +28,7 @@ Config:
     default: 关
     values: [关, 开]
   code:
-    title: Code
+    title: 授权Code
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
  ==/UserConfig== */
