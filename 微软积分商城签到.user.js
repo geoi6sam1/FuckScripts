@@ -38,7 +38,7 @@ const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
-const regex = /M\.C\d+_\w+\.\d+\.\w+\.[0-9a-fA-F-]+/
+const regex = /M\.\w+_\w+\.\w+\.\w+\.[0-9a-fA-F-]+/
 const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
 const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
