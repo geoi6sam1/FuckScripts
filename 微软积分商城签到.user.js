@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3.3
+// @version         1.1.3.4
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -364,31 +364,29 @@ async function taskSearch() {
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
-            const keyword = await getTopKeyword()
+            const keyword = encodeURIComponent(await getTopKeyword())
             GM_xmlhttpRequest({
-                method: "POST",
-                url: `https://${domain}/rewardsapp/reportActivity`,
+                url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
                     "Referer": `https://${domain}/`
                 },
-                data: `url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
+                data: `url=&V=web`,
                 onload: onload
             })
             return false
         }
         if (mobilePtPro < mobilePtProMax) {
-            const keyword = await getTopKeyword()
+            const keyword = encodeURIComponent(await getTopKeyword())
             GM_xmlhttpRequest({
-                method: "POST",
-                url: `https://${domain}/rewardsapp/reportActivity`,
+                url: `https://${domain}/rewardsapp/reportActivity?q=${keyword}&form=QBLH`,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
                     "Referer": `https://${domain}/`
                 },
-                data: `url=https://${domain}/search?q=${keyword}&form=QBLH&V=web`,
+                data: `url=&V=web`,
                 onload: onload
             })
             return false
@@ -437,7 +435,7 @@ async function taskPromo() {
 }
 
 return new Promise((resolve, reject) => {
-    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") == "关" || GM_getValue("Config.app") != "开") {
+    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
     }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
