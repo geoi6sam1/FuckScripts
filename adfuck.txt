@@ -5,8 +5,8 @@
 ! 👇👇过滤规则推荐👇👇
 ! Adblock Plus 隐私保护过滤器：https://easylist-downloads.adblockplus.org/easyprivacy.txt
 ! Adblock Plus 反拦截过滤器：https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
-！Fanboy's Annoyance List：https://secure.fanboy.co.nz/fanboy-annoyance.txt
-！Peter Lowe's BlockList：https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
+! Fanboy's Annoyance List：https://secure.fanboy.co.nz/fanboy-annoyance.txt
+! Peter Lowe's BlockList：https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
 ! AdGuard 基础过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt
 ! AdGuard 中文过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_224_Chinese/filter.txt
 ! AdGuard 移动广告过滤器：https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt
