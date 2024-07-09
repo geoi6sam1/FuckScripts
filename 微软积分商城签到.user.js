@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3.6
+// @version         1.1.3.7
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -97,28 +97,6 @@ function getRandomElement(arr, visited) {
     return arr[randomIndex]
 }
 
-function getRandomStr(length) {
-    const characters = "0123456789abcdef"
-    let result = ""
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length))
-    }
-    return result
-}
-
-function getRandomStrID() {
-    const characters = "0123456789abcdef"
-    let result = ""
-    for (let i = 0; i < 36; i++) {
-        if (i === 8 || i === 13 || i === 18 || i === 23) {
-            result += "-"
-        } else {
-            result += characters.charAt(Math.floor(Math.random() * characters.length))
-        }
-    }
-    return result
-}
-
 function getToken(url) {
     GM_xmlhttpRequest({
         url: url,
@@ -195,12 +173,13 @@ function taskRead() {
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
             "Content-Type": "application/json",
+            "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
             "authorization": `Bearer ${GM_getValue("access_token")}`
         },
         data: JSON.stringify({
             "amount": 1,
             "country": "cn",
-            "id": getRandomStr(64),
+            "id": "",
             "type": 101,
             "attributes": {
                 "offerid": "ENUS_readarticle3_30points"
@@ -209,6 +188,7 @@ function taskRead() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
+                readTimes = 0
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
                 points ? readPoints = points : readPoints = 0
@@ -238,6 +218,7 @@ function taskSign() {
         url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
         headers: {
             "Content-Type": "application/json",
+            "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
             "authorization": `Bearer ${GM_getValue("access_token")}`
         },
         data: JSON.stringify({
@@ -248,7 +229,7 @@ function taskSign() {
                 "signIn": false,
                 "timezoneOffset": "08:00:00"
             },
-            "id": getRandomStrID(),
+            "id": "",
             "type": 101,
             "country": "cn",
             "risk_context": {},
@@ -257,6 +238,7 @@ function taskSign() {
         responseType: "json",
         onload(xhr) {
             if (xhr.status == 200) {
+                signTimes = 0
                 let res = JSON.parse(xhr.responseText)
                 let points = res.response.activity.p
                 points ? signPoints = points : signPoints = 0
