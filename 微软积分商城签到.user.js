@@ -174,7 +174,7 @@ function getReadPro() {
                 if (pro) {
                     for (const o of pro) {
                         if (o.attributes.offerid == "ENUS_readarticle3_30points") {
-                            resolve(o.attributes.pointprogress)
+                            resolve(Number(o.attributes.pointprogress))
                         }
                     }
                 } else {
@@ -391,7 +391,7 @@ async function taskSearch() {
         lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${Number(dashboard.userStatus.counters.dailyPoint[0].pointProgress) + Number(readPoints)}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
+        pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${dashboard.userStatus.counters.dailyPoint[0].pointProgress + readPoints}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
