@@ -222,7 +222,7 @@ async function taskRead() {
             }),
             responseType: "json"
         })
-        return false
+        isExpired()
     }
 }
 
