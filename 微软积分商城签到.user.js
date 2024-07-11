@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.3.8
+// @version         1.1.4
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -155,52 +155,74 @@ async function isExpired() {
             return false
         }
     } else {
+        GM_setValue("Config.code", srfUrl)
         getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&refresh_token=${GM_getValue("refresh_token")}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
         return false
     }
 }
 
-let readTimes = 0
-let readPoints = 3
+function getReadPro() {
+    return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+            url: "https://prod.rewardsplatform.microsoft.com/dapi/me?channel=SAAndroid&options=613",
+            headers: {
+                "authorization": `Bearer ${GM_getValue("access_token")}`
+            },
+            onload(xhr) {
+                let res = xhr.responseText
+                let pro = JSON.parse(res).response.promotions
+                if (pro) {
+                    for (const o of pro) {
+                        if (o.attributes.offerid == "ENUS_readarticle3_30points") {
+                            resolve(o.attributes.pointprogress)
+                        }
+                    }
+                } else {
+                    resolve(0)
+                }
+            }
+        })
+    })
+}
 
-function taskRead() {
+let readTimes = 0
+let readPoints = 0
+
+async function taskRead() {
     if (readTimes > 3) {
         pushMsg("阅读任务失败", "未知原因出错！开始活动任务...", srfUrl)
         return true
     }
-    GM_xmlhttpRequest({
-        method: "POST",
-        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": `Bearer ${GM_getValue("access_token")}`
-        },
-        data: JSON.stringify({
-            "amount": 1,
-            "country": "cn",
-            "id": "",
-            "type": 101,
-            "attributes": {
-                "offerid": "ENUS_readarticle3_30points"
-            }
-        }),
-        responseType: "json",
-        onload(xhr) {
-            if (xhr.status == 200) {
-                readTimes = 0
-                let res = JSON.parse(xhr.responseText)
-                let points = res.response.activity.p
-                points ? readPoints = points : readPoints = 0
-            } else {
-                readTimes++
-            }
-        }
-    })
-    if (readPoints == 0) {
+    const readPro = await getReadPro()
+    if (readPro == readPoints) {
+        readTimes++
+    } else {
+        readTimes = 0
+        readPoints = readPro
+    }
+    if (readPro >= 30) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
     } else {
-        isExpired()
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${GM_getValue("access_token")}`
+            },
+            data: JSON.stringify({
+                "amount": 1,
+                "country": "cn",
+                "id": "",
+                "type": 101,
+                "attributes": {
+                    "offerid": "ENUS_readarticle3_30points"
+                }
+            }),
+            responseType: "json"
+        })
+        return false
     }
 }
 
@@ -214,7 +236,7 @@ function taskSign() {
     }
     GM_xmlhttpRequest({
         method: "POST",
-        url: `https://prod.rewardsplatform.microsoft.com/dapi/me/activities`,
+        url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
         headers: {
             "Content-Type": "application/json",
             "authorization": `Bearer ${GM_getValue("access_token")}`
@@ -355,19 +377,21 @@ async function taskSearch() {
     if (dashboard.userStatus.counters.mobileSearch) {
         mobilePtPro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
         mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
+    } else {
+        mobilePtPro = 1
     }
     if (retryTimes > 3) {
         pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
         return true
     }
-    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress === lastProcess) {
+    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == lastProcess) {
         retryTimes++
     } else {
         retryTimes = 0
         lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
     }
     if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${dashboard.userStatus.counters.dailyPoint[0].pointProgress}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
+        pushMsg("搜索任务完成", `历史：${dashboard.userStatus.lifetimePoints}　今日：${Number(dashboard.userStatus.counters.dailyPoint[0].pointProgress) + Number(readPoints)}\n有效：${dashboard.userStatus.availablePoints}　本月：${dashboard.userStatus.levelInfo.progress}`)
         return true
     } else {
         if (pcPtPro < pcPtProMax) {
