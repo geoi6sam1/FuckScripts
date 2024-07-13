@@ -38,10 +38,10 @@ obj.replaceNativePlayer = function () {
                         if (!node.only) {
                             node.only = true;
                             const { bpAudio, fileList, fileMetaList } = node.__vue__;
-                            obj.audio_page.fileList = (document.querySelector(".nd-new-main-list")?.__vue__?.fileList || fileMetaList).filter(function (item, index) {
+                            obj.audio_page.fileList = (document.querySelector(".nd-new-main-list")?.__vue__?.fileList || fileMetaList).filter( (item, index)=> {
                                 return item.category === 2 || item.category === 6 && !item.isdir && ["flac", "ape"].includes(item.server_filename.split(".").pop().toLowerCase());
                             });
-                            obj.audio_page.fileIndex = obj.audio_page.fileList.findIndex(function (item, index) {
+                            obj.audio_page.fileIndex = obj.audio_page.fileList.findIndex( (item, index) =>{
                                 return item.fs_id == fileList[0].fs_id;
                             });
                             if (node.classList.contains("normal")) {
@@ -68,16 +68,16 @@ obj.insertPrettyPlayer = function () {
             set(__vue__) {
                 if (__vue__ && Array.isArray(__vue__.fileList)) {
                     var playbtn = $(".wp-s-header__center .play-btn");
-                    (obj.audio_page.fileList = __vue__.fileList.filter(function (item, index) {
+                    (obj.audio_page.fileList = __vue__.fileList.filter( (item, index)=> {
                         return item.category === 2 || item.category === 6 && !item.isdir && ["flac", "ape"].includes(item.real_category.toLowerCase());
-                    })).length ? playbtn.length || $('<div class="wp-s-agile-tool-bar__h-action is-need-left-sep is-list play-btn" style="border-top-right-radius: 16px;border-bottom-right-radius: 16px;"><button type="button" class="u-button wp-s-agile-tool-bar__h-action-button u-button--text u-button--small" title="音乐播放" style="height: 32px;"><i class="u-icon-play"></i><span>音乐播放</span></button></div>').appendTo(".wp-s-header__center").on("click", function () {
+                    })).length ? playbtn.length || $('<div class="wp-s-agile-tool-bar__h-action is-need-left-sep is-list play-btn" style="border-top-right-radius: 16px;border-bottom-right-radius: 16px;"><button type="button" class="u-button wp-s-agile-tool-bar__h-action-button u-button--text u-button--small" title="音乐播放" style="height: 32px;"><i class="u-icon-play"></i><span>音乐播放</span></button></div>').appendTo(".wp-s-header__center").on("click",  ()=> {
                         obj.aplayerStart();
                     }) : playbtn.length && playbtn.remove();
                     if (__vue__.selectLength && obj.audio_page.fileList.length) {
-                        var audiofile = __vue__.selectedList.find(function (item) {
+                        var audiofile = __vue__.selectedList.find( (item)=> {
                             return item.category === 2 || item.category === 6 && !item.isdir && ["flac", "ape"].includes(item.real_category.toLowerCase());
                         });
-                        audiofile && (obj.audio_page.fileIndex = obj.audio_page.fileList.findIndex(function (item, index) {
+                        audiofile && (obj.audio_page.fileIndex = obj.audio_page.fileList.findIndex( (item, index)=> {
                             return item.fs_id == audiofile.fs_id;
                         }));
                     }
@@ -89,12 +89,13 @@ obj.insertPrettyPlayer = function () {
 
 obj.aplayerStart = function () {
     var aplayerNode, audio = obj.audio_page.fileList;
-    audio.forEach(function (item) {
+    audio.forEach((item)=> {
         Object.assign(item, {
             name: item.server_filename,
+            artist: item.singer,
             url: "/rest/2.0/xpan/file?method=streaming&path=" + encodeURIComponent(item.path) + "&type=M3U8_HLS_MP3_128",
             cover: item.categoryImageGrid || item.categoryImage,
-            theme: obj.getRandomColor(),
+            theme: "#06a7ff",
             type: "customHls"
         });
     });
@@ -121,14 +122,14 @@ obj.aplayerStart = function () {
             container: aplayerNode,
             audio: audio,
             customAudioType: {
-                customHls: function (audioElement, audio, player) {
+                customHls (audioElement, audio, player) {
                     const Hls = window.Hls;
                     if (Hls.isSupported()) {
                         if (player.hls) player.hls.destroy();
                         const hls = player.hls = new Hls();
                         hls.loadSource(audio.url);
                         hls.attachMedia(audioElement);
-                        hls.on(Hls.Events.ERROR, function (event, data) {
+                        hls.on(Hls.Events.ERROR,  (event, data)=> {
                             if (data.fatal) {
                                 switch (data.type) {
                                     case Hls.ErrorTypes.NETWORK_ERROR:
@@ -169,7 +170,7 @@ obj.aplayerStart = function () {
             },
             autoplay: true,
             lrcType: 1,
-            mutex: true
+            listFolded: false,
         });
         obj.onEvents(player);
 
@@ -240,10 +241,10 @@ obj.loadLyric = function (player, index) {
             const pipinfo = {
                 id: result.id || result.audio_id || 1234567890,
                 name: result.audio_name || result.songname,
-                artists: (result.authors || []).map(function (n) {
+                artists: (result.authors || []).map((n) =>{
                     return n && {
                         name: n.author_name
-                    };
+                    }
                 }).filter(Boolean),
                 album: {
                     picUrl: result.img,
@@ -260,7 +261,7 @@ obj.loadLyric = function (player, index) {
                 id: 1234567890,
                 name: file.name.split(".").slice(0, -1).join("."),
                 lrc: {
-                    lyric: "[00:00.00]（改）百度网盘音频播放器\r\n[00:01.00]愿你一生欢喜，不为世俗所及。\r\n[10:00.00]THE END"
+                    lyric: "[00:00.00]（改）百度网盘音频播放器\r\n[00:01.00]愿你一生欢喜，不为世俗所及。\r\n[10:00.00]THE END."
                 },
             });
         }
@@ -289,7 +290,7 @@ obj.querySongInfo = function (file) {
     if (songInfo) {
         return Promise.resolve(songInfo);
     }
-    return obj.songinfoKugou(name, hash, size).then(function (result) {
+    return obj.songinfoKugou(name, hash, size).then((result)=> {
         if (result.img) {
             if (result.img.indexOf("/400/") > -1) result.img = "";
             result.img = result.img.replace(/^https?:/, "");
@@ -300,29 +301,29 @@ obj.querySongInfo = function (file) {
 };
 
 obj.songinfoKugou = function (name, hash, size) {
-    return obj.songinfoKugouByHash(hash).then(function (result) {
+    return obj.songinfoKugouByHash(hash).then((result) =>{
         return result;
-    }, function (e) {
+    },  (e)=> {
         return obj.songinfoKugouByName(name, hash, size);
     });
 };
 
 obj.songinfoKugouByHash = function (hash) {
     if (!hash) return Promise.reject();
-    return obj.searchKugouByHash(hash).then(function (result) {
-        return obj.getdataKugou(hash).then(function (data) {
+    return obj.searchKugouByHash(hash).then( (result)=> {
+        return obj.getdataKugou(hash).then( (data)=> {
             var candidates = result.candidates.slice(0, 3);
             var promises = [];
-            candidates.forEach(function (item, index) {
+            candidates.forEach( (item, index) =>{
                 promises.push(obj.downloadKugouByHash(item.id, item.accesskey));
             });
-            return Promise.allSettled(promises).then(function (results) {
-                results.forEach(function (item, index) {
+            return Promise.allSettled(promises).then( (results)=> {
+                results.forEach( (item, index)=> {
                     if (item.status == "fulfilled" && item.value) {
                         Object.assign(candidates[index], { lyric: item.value }, { sourceType: "KuGou" });
                     }
                 });
-                return candidates.find(function (item, index) {
+                return candidates.find( (item, index)=> {
                     return (item.lyric || item.lyrics) && Object.assign(item, data);
                 }) || Promise.reject();
             });
@@ -331,14 +332,13 @@ obj.songinfoKugouByHash = function (hash) {
 };
 
 obj.searchKugouByHash = function (hash) {
-    return new Promise(function (resolve, reject) {
+    return new Promise( (resolve, reject)=> {
         obj.ajax({
             url: "https://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=&duration=&hash=" + hash,
             headers: {
-                origin: "https://www.kugou.com",
                 referer: "https://www.kugou.com/"
             },
-            success: function (result) {
+            success (result) {
                 if (result && result.status == 200 && result.proposal !== "0") {
                     resolve(result);
                 }
@@ -346,7 +346,7 @@ obj.searchKugouByHash = function (hash) {
                     reject(result);
                 }
             },
-            error: function (error) {
+            error (error) {
                 reject(error);
             }
         });
@@ -354,17 +354,16 @@ obj.searchKugouByHash = function (hash) {
 };
 
 obj.downloadKugouByHash = function (id, accesskey) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject)=> {
         obj.ajax({
             url: "https://lyrics.kugou.com/download?ver=1&client=pc&id=" + id + "&accesskey=" + accesskey + "&fmt=lrc&charset=utf8",
             headers: {
-                origin: "https://www.kugou.com",
                 referer: "https://www.kugou.com/"
             },
-            success: function (result) {
+            success (result) {
                 resolve(result);
             },
-            error: function (error) {
+            error(error) {
                 reject(error);
             }
         });
@@ -372,33 +371,32 @@ obj.downloadKugouByHash = function (id, accesskey) {
 };
 
 obj.songinfoKugouByName = function (name, hash, size) {
-    return obj.searchKugouByName(name, hash, size).then(function (result) {
+    return obj.searchKugouByName(name, hash, size).then( (result)=> {
         var info = result.info;
-        let infoFilter = info.filter(function (item, index) {
+        let infoFilter = info.filter((item, index)=> {
             return item.hash == hash || item["320filesize"] == size || item.filesize == size || item.sqfilesize == size;
         });
         if (infoFilter.length) {
             info = infoFilter;
-        }
-        else {
-            info.forEach(function (item, index) {
+        } else {
+            info.forEach((item, index)=> {
                 item.nameSimilar = obj.textSimilarity(name.toLowerCase(), (item.audio_name || item.filename || item.songname).toLowerCase());
             });
-            info = info.sort(function (a, b) {
+            info = info.sort( (a, b) =>{
                 return +b.nameSimilar - +a.nameSimilar;
             }).slice(0, 3);
         }
 
         var promises = [];
-        info.forEach(function (item, index) {
+        info.forEach((item, index)=> {
             promises.push(obj.getdataKugou(item.hash));
         });
-        info.forEach(function (item, index) {
+        info.forEach((item, index)=> {
             promises.push(obj.krcKugou(item.hash));
         });
-        return Promise.allSettled(promises).then(function (results) {
+        return Promise.allSettled(promises).then((results)=> {
             const len = info.length;
-            results.forEach(function (item, index) {
+            results.forEach((item, index)=> {
                 if (item.status == "fulfilled" && item.value) {
                     if (index < len) {
                         Object.assign(info[index], item.value, { sourceType: "KuGou" });
@@ -408,7 +406,7 @@ obj.songinfoKugouByName = function (name, hash, size) {
                     }
                 }
             });
-            return info.find(function (item, index) {
+            return info.find( (item, index)=> {
                 return item.lyric || item.lyrics;
             }) || Promise.reject();
         });
@@ -416,14 +414,13 @@ obj.songinfoKugouByName = function (name, hash, size) {
 };
 
 obj.searchKugouByName = function (name, hash, size) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject)=> {
         obj.ajax({
             url: "http://mobilecdn.kugou.com/api/v3/search/song?pagesize=20&keyword=" + name,
             headers: {
-                origin: "http://www.kugou.com",
                 referer: "http://www.kugou.com/"
             },
-            success: function (result) {
+            success (result) {
                 if (result && result.status == 1 && result.data.total) {
                     resolve(result.data);
                 }
@@ -431,7 +428,7 @@ obj.searchKugouByName = function (name, hash, size) {
                     reject(result);
                 }
             },
-            error: function (error) {
+            error (error) {
                 reject(error);
             }
         });
@@ -443,14 +440,13 @@ obj.krcKugou = function (hash) {
 };
 
 obj.getdataKugou = function (hash) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject)=> {
         obj.ajax({
             url: "https://www.kugou.com/yy/index.php?r=play/getdata&hash=" + hash,
             headers: {
-                origin: "https://www.kugou.com",
                 referer: "https://www.kugou.com/"
             },
-            success: function (result) {
+            success (result) {
                 if (result && result.status == 1) {
                     resolve(result.data);
                 }
@@ -458,7 +454,7 @@ obj.getdataKugou = function (hash) {
                     reject(result);
                 }
             },
-            error: function (error) {
+            error (error) {
                 reject(error);
             }
         });
@@ -466,21 +462,21 @@ obj.getdataKugou = function (hash) {
 };
 
 obj.surlRequest = function (url) {
-    return new Promise(function (resolve, reject) {
+    return new Promise( (resolve, reject)=> {
         obj.ajax({
             url: url,
             dataType: "blob",
-            success: function (blob) {
+            success (blob) {
                 var reader = new FileReader();
                 reader.readAsText(blob, "UTF-8");
-                reader.onload = function (e) {
+                reader.onload =  (e)=> {
                     resolve(reader.result);
                 };
-                reader.onerror = function (e) {
+                reader.onerror =  (e)=> {
                     reject(e);
                 };
             },
-            error: function (error) {
+            error (error) {
                 reject(error);
             }
         });
@@ -492,7 +488,7 @@ obj.ajax = function (option) {
         method: option.type || "get",
         url: option.url,
         responseType: option.dataType || "json",
-        onload: function (result) {
+        onload (result) {
             var response = result.response || result.responseText;
             if (parseInt(result.status / 100) == 2) {
                 option.success && option.success(response);
@@ -501,13 +497,13 @@ obj.ajax = function (option) {
                 option.error && option.error(response);
             }
         },
-        onerror: function (result) {
+        onerror (result) {
             option.error && option.error(result.error);
         }
     };
     if (option.data) {
         if (option.data instanceof Object) {
-            details.data = Object.keys(option.data).map(function (k) {
+            details.data = Object.keys(option.data).map( (k)=> {
                 return encodeURIComponent(k) + "=" + encodeURIComponent(option.data[k]).replace("%20", "+");
             }).join("&");
         }
@@ -525,13 +521,9 @@ obj.ajax = function (option) {
     GM_xmlhttpRequest(details);
 };
 
-obj.getRandomColor = function () {
-    return "#" + ("00000" + (Math.random() * 0x1000000 << 0).toString(16)).substr(-6);
-};
-
 obj.textSimilarity = function (textA, textB) {
     if (!textA || !textB) return 0;
-    var segment = function (text) {
+    var segment =  (text)=> {
         return ("" + text).split("");
     }
     var segmentWordsA = segment(textA);
@@ -565,10 +557,11 @@ obj.textSimilarity = function (textA, textB) {
 };
 
 obj.run = function () {
-    GM_addStyle(GM_getResourceText("aplayerCSS"));
-    obj.replaceNativePlayer();
-    obj.insertPrettyPlayer();
-    unsafeWindow.globalVue.$router.afterHooks.push(function () {
-        setTimeout(obj.insertPrettyPlayer, 500);
-    });
-}();
+    $(".cursor-p.play").addClass("pause")
+    GM_addStyle(GM_getResourceText("aplayerCSS"))
+    obj.replaceNativePlayer()
+    obj.insertPrettyPlayer()
+    unsafeWindow.globalVue.$router.afterHooks.push(()=> {
+        setTimeout(obj.insertPrettyPlayer, 500)
+    })
+}()
