@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.5
+// @version         1.1.5.1
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
 // @author          geoi6sam1@qq.com
 // @match           http*://v.qq.com/*
@@ -174,7 +174,6 @@ iframe[data-src*="mall."],
             clearInterval(run)
             clearAd()
         })
-
         function clearAd() {
             run = setInterval(() => {
                 let adVideos = document.querySelectorAll(".txp_ad video")
@@ -186,10 +185,6 @@ iframe[data-src*="mall."],
                 })
 
             }, 100)
-
-            setTimeout(() => {
-                document.querySelector(".txp_btn.txp_btn_play").click()
-            }, 1000)
         }
     }
     
