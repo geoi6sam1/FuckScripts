@@ -45,6 +45,7 @@
 .quick_vip,
 .quick_upload,
 .quick_message,
+#quick_access,
 #pc_client
 {
     display: none !important;
