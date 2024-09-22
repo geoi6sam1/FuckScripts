@@ -173,7 +173,6 @@ iframe[data-src*="mall."],
             clearInterval(run)
             clearAd()
         })
-        
         function clearAd() {
             run = setInterval(() => {
                 let adVideos = document.querySelectorAll(".txp_ad video")
@@ -189,8 +188,7 @@ iframe[data-src*="mall."],
     if (isMobile) {
         var customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0';
         Object.defineProperty(navigator, 'userAgent', {
-            value: customUserAgent,
-            writable: false
+            value: customUserAgent
         })
     }
     
