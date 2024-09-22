@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2024070420
+! Version: 2024092216
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! Adblock Plus 隐私保护过滤器：https://easylist-downloads.adblockplus.org/easyprivacy.txt
@@ -19,7 +19,7 @@
 bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta), #b_footer ul
 
 ! ---------腾讯视频---------
-v.qq.com,film.qq.com##.quick_games, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .txp_none, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, [dt-eid="openbanner"], .bottom-wrapper, .at-app-banner
+v.qq.com,film.qq.com##.quick_games, .preview-mini-player, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, .bottom-wrapper, .at-app-banner
 v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_DESTROY', '')
 v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_LOAD_START', '')
 
@@ -31,7 +31,7 @@ youku.com#%#//scriptlet('adjust-setTimeout', 'r--', '', '0.02')
 ||cibntv.net/youku/*.mp4?$media,redirect=empty,domain=youku.com,important
 
 ! ---------爱奇艺---------
-iqiyi.com##.iqp-logo-box,.panel-item:has(a[href*="668wan."]),.panel-item:has(a[href*="game."]),.qy20-h-carousel__ad,.ad-ef,.ad-seed,.ad-screen,.ad-tl,.qy-mod-li:has([class*="vipact"]),.iqp-top-item:has(.tipWrap),.iqp-top-item.iqp-client-launcher,.meta-hot ~ .cont,.side-cont .btn-wrap,.header-sideItem.header-vip,.header-sideItem:has(#nav_game),.qy-plist-ad
+iqiyi.com##.iqp-logo-box,#btn_vipBtn,#btn_gameBtn,.panel-item:has(a[href*="668wan."]),.panel-item:has(a[href*="game."]),.qy20-h-carousel__ad,.ad-ef,.ad-seed,.ad-screen,.ad-tl,.qy-mod-li:has([class*="vipact"]),.iqp-top-item:has(.tipWrap),.iqp-top-item.iqp-client-launcher,.meta-hot ~ .cont,.side-cont .btn-wrap,.header-sideItem.header-vip,.header-sideItem:has(#nav_game),.qy-plist-ad
 m.iqiyi.com##.m-iqyGuide-layer,#home_tongyong,.m-box[name="m-recList"],#player_bottom,.m-iqylink-diversion,[class^="ChannelHomeBanner_"]
 iqiyi.com#%#//scriptlet('set-constant', 'QiyiPlayerProphetData.a.data.showResponse.slots', 'emptyObj')
 iqiyi.com#%#//scriptlet("set-constant", "Object.prototype.blackscreenDuration", "1")
@@ -43,7 +43,7 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 ||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,.rightInfo .user-reward-btn,.rightInfo .qrcode_btn,[class*="header-waning-tips"],.user-reward-btn,.loginModal-footer.payment-footer,.sider-member-btn,.activity-box,.bg_svip_block_ads
+123pan.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,[class*="header-waning-tips"],.loginModal-footer.payment-footer,.activity-box,.bg_svip_block_ads
 123pan.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
 123pan.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
 123pan.com#$#.webbody.svip-body { height: 0 !important; }
