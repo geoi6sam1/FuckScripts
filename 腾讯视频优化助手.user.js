@@ -113,7 +113,6 @@ iframe[data-src*="mall."],
 [data-role*="creative-player-pause"],
 #ad_m-site,
 .open-app.old-open,
-[dt-eid="openbanner"],
 .bottom-wrapper,
 .at-app-banner
 {
