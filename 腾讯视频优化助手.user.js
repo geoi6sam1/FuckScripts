@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.5.1
+// @version         1.1.6
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
 // @author          geoi6sam1@qq.com
 // @match           http*://v.qq.com/*
@@ -87,6 +87,7 @@ iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
 
     GM_addStyle(`
 .quick_games,
+.preview-mini-player,
 .video-card-module [dt-params*="ad_"],
 .focus-wrap [dt-eid*="ad_poster"],
 a[href*="9377s."],
@@ -105,7 +106,6 @@ a[href*="iwan."],
 #iwan-game,
 .banner-ad,
 .txp_ad,
-.txp_none,
 .game-switch-ad,
 .player-comment-btn,
 iframe[data-src*="mall."],
@@ -180,12 +180,18 @@ iframe[data-src*="mall."],
                 adVideos.forEach(ad => {
                     if (ad.duration != ad.currentTime) {
                         ad.setAttribute("src", "")
-                        ad.style.display = "none"
                     }
                 })
-
             }, 100)
         }
+    }
+
+    if (isMobile) {
+        var customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0';
+        Object.defineProperty(navigator, 'userAgent', {
+            value: customUserAgent,
+            writable: false
+        });
     }
     
 })()
