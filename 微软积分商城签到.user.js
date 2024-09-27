@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.4
+// @version         1.1.4.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索任务（Web）、✅每日活动任务（Web）、✅更多活动任务（Web）、✅新闻阅读任务（App）、✅每日签到任务（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
-// @crontab         * 12-23 once * *
+// @crontab         */20 * * * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
 // @grant           GM_openInTab
@@ -22,11 +22,6 @@
 
 /* ==UserConfig==
 Config:
-  app:
-    title: App任务
-    type: select
-    default: 关
-    values: [关, 开]
   code:
     title: 授权Code
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
@@ -36,14 +31,15 @@ Config:
 const dateTime = new Date()
 const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
+const hoursNow = dateTime.getHours()
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
-const regex = /M\.\w+_\w+\.\w+\.\w+\.[0-9a-fA-F-]+/
+const regex = /M\.[\w+_\.]+\.[0-9a-fA-F-]+/
 const pbdUrl = "https://rewards.bing.com/pointsbreakdown"
 const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
     query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
-    url: ["weibo", "baidu", "douyin", "kuaishou", "zhihu", "thepaper", "netease", "toutiao", "qq", "baidutieba"],
+    url: ["weibo", "baidu", "douyin", "kuaishou", "thepaper", "netease", "toutiao", "qq", "baidutieba"],
     pc: [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
         "Mozilla/5.0 (Sonoma; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/604.1 Edg/122.0.2365.106",
@@ -84,17 +80,12 @@ function getRandomSentence(a, l) {
     return r.join("")
 }
 
-let visitedIndices = new Set()
-
-function getRandomElement(arr, visited) {
-    const unvisitedIndices = [...arr.keys()].filter(index => !visited.has(index))
-    if (unvisitedIndices.length === 0) {
-        visited.clear()
-        return getRandomElement(arr, visited)
+function getRandomUrl() {
+    if (GM_getValue("last_name") == null) {
+        GM_setValue("last_name", "")
     }
-    const randomIndex = unvisitedIndices[Math.floor(Math.random() * unvisitedIndices.length)]
-    visited.add(randomIndex)
-    return arr[randomIndex]
+    const filteredArr = randomData.url.filter(name => name != GM_getValue("last_name"));
+    return filteredArr[getRandomNum(filteredArr.length)];
 }
 
 function getToken(url) {
@@ -189,7 +180,7 @@ let readTimes = 0
 let readPoints = 0
 
 async function taskRead() {
-    if (readTimes > 3) {
+    if (readTimes > 2) {
         pushMsg("阅读任务失败", "未知原因出错！开始活动任务...", srfUrl)
         return true
     }
@@ -200,7 +191,7 @@ async function taskRead() {
         readTimes = 0
         readPoints = readPro
     }
-    if (readPro >= 30) {
+    if (readPro > 30) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
     } else {
@@ -230,8 +221,8 @@ let signTimes = 0
 let signPoints = 1
 
 function taskSign() {
-    if (signTimes > 3) {
-        pushMsg("App签到失败", "未知原因出错！开始阅读任务...", srfUrl)
+    if (signTimes > 2) {
+        pushMsg("App签到失败", "请尝试更新授权Code后重新运行！", srfUrl)
         return true
     }
     GM_xmlhttpRequest({
@@ -326,8 +317,10 @@ let keywordIndex = 0
 async function getTopKeyword() {
     const query = await new Promise((resolve, reject) => {
         if (keywordIndex < 1 || keywordList.length < 1) {
+            const apiName = getRandomUrl()
+            GM_setValue("last_name", apiName)
             GM_xmlhttpRequest({
-                url: `https://hot.baiwumm.com/api/${getRandomElement(randomData.url, visitedIndices)}`,
+                url: `https://hot.baiwumm.com/api/${apiName}`,
                 onload(xhr) {
                     if (xhr.status == 200) {
                         keywordIndex = 1
@@ -380,7 +373,7 @@ async function taskSearch() {
     } else {
         mobilePtPro = 1
     }
-    if (retryTimes > 3) {
+    if (retryTimes > 2) {
         pushMsg("搜索任务失败", `搜索或收入限制，请尝试手动运行！\n电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
         return true
     }
@@ -424,7 +417,7 @@ async function taskSearch() {
 let testTimes = 0
 
 async function taskPromo() {
-    if (testTimes > 3) {
+    if (testTimes > 2) {
         pushMsg("活动任务失败", "未知原因出错！开始搜索任务...")
         return true
     }
@@ -462,9 +455,6 @@ async function taskPromo() {
 }
 
 return new Promise((resolve, reject) => {
-    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
-        GM_setValue("Config.app", "关")
-    }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", srfUrl)
     }
@@ -474,7 +464,11 @@ return new Promise((resolve, reject) => {
     const searchStart = async () => {
         try {
             const result = await taskSearch()
-            result ? resolve() : setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
+            if (result) {
+                resolve()
+            } else {
+                setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
+            }
         } catch (e) {
             reject(e)
         }
@@ -482,7 +476,11 @@ return new Promise((resolve, reject) => {
     const promoStart = async () => {
         try {
             const result = await taskPromo()
-            result ? searchStart() : setTimeout(() => { promoStart() }, 2e3)
+            if (result) {
+                searchStart()
+            } else {
+                setTimeout(() => { promoStart() }, 2e3)
+            }
         } catch (e) {
             reject(e)
         }
@@ -490,7 +488,11 @@ return new Promise((resolve, reject) => {
     const readStart = async () => {
         try {
             const result = await taskRead()
-            result ? promoStart() : setTimeout(() => { readStart() }, 2e3)
+            if (result) {
+                promoStart()
+            } else {
+                setTimeout(() => { readStart() }, 2e3)
+            }
         } catch (e) {
             reject(e)
         }
@@ -498,7 +500,15 @@ return new Promise((resolve, reject) => {
     const signStart = async () => {
         try {
             const result = await taskSign()
-            result ? readStart() : setTimeout(() => { signStart() }, 2e3)
+            if (result) {
+                if (hoursNow < 12) {
+                    searchStart()
+                } else {
+                    readStart()
+                }
+            } else {
+                setTimeout(() => { signStart() }, 2e3)
+            }
         } catch (e) {
             reject(e)
         }
@@ -506,16 +516,16 @@ return new Promise((resolve, reject) => {
     const start = async () => {
         try {
             const result = await isExpired()
-            result ? promoStart() : setTimeout(() => { signStart() }, 2e3)
+            if (result) {
+                promoStart()
+            } else {
+                setTimeout(() => { signStart() }, 2e3)
+            }
         } catch (e) {
             reject(e)
         }
     }
-    if (GM_getValue("Config.app") == "开") {
-        start()
-    } else {
-        promoStart()
-    }
+    start()
 })
 
 function pushMsg(title, text, url = pbdUrl) {
