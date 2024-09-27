@@ -191,7 +191,7 @@ async function taskRead() {
         readTimes = 0
         readPoints = readPro
     }
-    if (readPro > 30) {
+    if (readPro >= 30) {
         pushMsg("阅读任务完成", "完成！开始活动任务，请耐心等待...")
         return true
     } else {
