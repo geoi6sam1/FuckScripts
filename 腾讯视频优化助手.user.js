@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.6
+// @version         1.1.7
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
 // @author          geoi6sam1@qq.com
 // @match           http*://v.qq.com/*
@@ -87,6 +87,7 @@ iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
 
     GM_addStyle(`
 .quick_games,
+.client_download,
 .preview-mini-player,
 .video-card-module [dt-params*="ad_"],
 .focus-wrap [dt-eid*="ad_poster"],
