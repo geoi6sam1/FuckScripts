@@ -168,26 +168,28 @@ iframe[data-src*="mall."],
     })
 
     window.onload = () => {
-        let run = null
-        clearAd()
-        window.addEventListener("pushState", () => {
-            clearInterval(run)
+        if (!isMobile) {
+            let run = null
             clearAd()
-        })
-        function clearAd() {
-            run = setInterval(() => {
-                let adVideos = document.querySelectorAll(".txp_ad video")
-                adVideos.forEach(ad => {
-                    if (ad.duration != ad.currentTime) {
-                        ad.setAttribute("src", "")
-                    }
-                })
-            }, 100)
+            window.addEventListener("pushState", () => {
+                clearInterval(run)
+                clearAd()
+            })
+            function clearAd() {
+                run = setInterval(() => {
+                    let adVideos = document.querySelectorAll(".txp_ad video")
+                    adVideos.forEach(ad => {
+                        if (ad.duration != ad.currentTime) {
+                            ad.setAttribute("src", "")
+                        }
+                    })
+                }, 100)
+            }
         }
     }
 
     if (isMobile) {
-        var customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0';
+        var customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090c11)XWEB/11275';
         Object.defineProperty(navigator, 'userAgent', {
             value: customUserAgent
         })
