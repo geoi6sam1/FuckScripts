@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.6
+// @version         2.0.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -150,6 +150,8 @@ function isExpired() {
             getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code[0]}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`)
             GM_setValue("Config.code", srfUrl)
         } else {
+            GM_setValue("task_sign", 1)
+            GM_setValue("task_read", 1)
             GM_setValue("Config.code", srfUrl)
             pushMsg("授权Code错误", "请获取并补充授权Code后运行！")
         }
@@ -277,14 +279,19 @@ function getReadPro() {
             },
             onload(xhr) {
                 let readarr = null
-                let res = xhr.responseText
-                let pro = JSON.parse(res).response.promotions
-                if (pro) {
-                    for (const o of pro) {
-                        if (o.attributes.offerid == "ENUS_readarticle3_30points") {
-                            readarr = { "max": Number(o.attributes.max), "progress": Number(o.attributes.progress) }
-                            resolve(readarr)
+                let res = JSON.parse(xhr.responseText)
+                if (res) {
+                    let pro = res.response.promotions
+                    if (pro) {
+                        for (const o of pro) {
+                            if (o.attributes.offerid == "ENUS_readarticle3_30points") {
+                                readarr = { "max": Number(o.attributes.max), "progress": Number(o.attributes.progress) }
+                                resolve(readarr)
+                            }
                         }
+                    } else {
+                        readarr = { "max": 1, "progress": 0 }
+                        resolve(readarr)
                     }
                 } else {
                     readarr = { "max": 1, "progress": 0 }
@@ -534,7 +541,7 @@ return new Promise((resolve, reject) => {
     function taskEnd(name) {
         let taskplus = GM_getValue("task_sign") + GM_getValue("task_read") + GM_getValue("task_promo") + GM_getValue("task_search")
         if (taskplus == lastDate * 4) {
-            GM_setValue("last_date") = lastDate
+            GM_setValue("last_date", lastDate)
             resolve()
         }
         let tasknum = 0
