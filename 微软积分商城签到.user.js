@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.0.0
+// @version         2.0.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -527,6 +527,10 @@ async function taskSearch() {
 
 
 return new Promise((resolve, reject) => {
+    if (GM_getValue("Config.app") == "开") {
+        isExpired()
+    }
+
     if (GM_getValue("last_date") == lastDate) {
         resolve()
     }
@@ -611,7 +615,6 @@ return new Promise((resolve, reject) => {
 
     promoStart()
     if (GM_getValue("Config.app") == "开") {
-        isExpired()
         signStart()
         readStart()
     }
