@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.5
-// @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅新闻阅读（App）、✅每日签到（App）
+// @version         1.1.6
+// @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
@@ -52,10 +52,10 @@ const randomData = {
         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.140"
     ],
     mobile: [
-        "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) Version/4.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Mobile Safari/537.36 EdgA/125.0.2535.51",
+        "Mozilla/5.0 (Linux; Android 14; 2210132C Build/UP1A.231005.007) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.52 Version/4.0 Mobile Safari/537.36 EdgA/125.0.2535.51",
         "Mozilla/5.0 (iPad; CPU OS 16_7_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1",
         "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/123.0.2420.108 Version/18.0 Mobile/15E148 Safari/604.1",
-        "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
+        "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Version/4.0 Mobile Safari/537.36 EdgA/110.0.1587.61"
     ]
 }
 
@@ -223,7 +223,7 @@ async function taskPromo() {
         return true
     }
 
-    if (testTimes > 1) {
+    if (testTimes > 2) {
         GM_setValue("task_promo", 1)
         pushMsg("活动推广失败", "未知原因出错，俺也不造啊！")
         return true
@@ -246,7 +246,7 @@ async function taskPromo() {
         }
     }
 
-    if (promotionsArr.length == 0) {
+    if (promotionsArr.length < 1) {
         GM_setValue("task_promo", lastDate)
         pushMsg("活动推广完成", "哇！哥哥好棒！活动推广完成了！")
         return true
@@ -309,7 +309,7 @@ async function taskRead() {
         return true
     }
 
-    if (readTimes > 1) {
+    if (readTimes > 2) {
         GM_setValue("task_read", 1)
         pushMsg("文章阅读失败", "未知原因出错，俺也不造啊！")
         return true
@@ -358,7 +358,7 @@ async function taskSign() {
         return true
     }
 
-    if (signTimes > 1) {
+    if (signTimes > 2) {
         GM_setValue("task_sign", 1)
         pushMsg("App签到失败", "未知原因出错，俺也不造啊！")
         return true
@@ -473,9 +473,9 @@ async function taskSearch() {
         mobilePtProMax = 0
     }
 
-    if (retryTimes > 1) {
+    if (retryTimes > 2) {
         GM_setValue("task_search", 1)
-        GM_log(`必应搜索收入限制，请等待下个时间点继续完成！电脑：${pcPtPro}/${pcPtProMax}　移动设备：${mobilePtPro}/${mobilePtProMax}`)
+        GM_log(`必应搜索收入限制，电脑搜索：${pcPtPro}/${pcPtProMax}　移动设备搜索：${mobilePtPro}/${mobilePtProMax}，请等待下个时间点继续完成！`)
         return true
     }
 
@@ -491,8 +491,8 @@ async function taskSearch() {
         pushMsg("必应搜索完成", `哇！哥哥好棒！必应搜索完成了！`)
         return true
     } else {
-        const keyword = await getTopKeyword()
         if (pcPtPro < pcPtProMax) {
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
@@ -504,6 +504,7 @@ async function taskSearch() {
             return false
         }
         if (mobilePtPro < mobilePtProMax) {
+            const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
                 url: `https://${domain}/search?q=${keyword}&form=QBLH`,
                 headers: {
@@ -594,20 +595,20 @@ return new Promise((resolve, reject) => {
             if (result) {
                 taskEnd("task_search")
             } else {
-                setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 9876))
+                setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 12345))
             }
         } catch (e) {
             reject(e)
         }
     }
 
-    isExpired()
     promoStart()
-    searchStart()
     if (GM_getValue("Config.app") == "开") {
+        isExpired()
         signStart()
         readStart()
     }
+    searchStart()
 })
 
 
