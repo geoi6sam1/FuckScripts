@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.0.2
+// @version         2.1.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -40,7 +40,6 @@ const hoursNow = dateTime.getHours()
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const lastDate = Number(`${yearNow}${monthNow}${dayNow}`)
-const regex = /M\.[\w+_\.]+\.[0-9a-fA-F-]+/
 const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
 const randomData = {
     query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
@@ -118,24 +117,26 @@ function getToken(url) {
         GM_setValue("access_token", "")
         GM_setValue("task_sign", 1)
         GM_setValue("task_read", 1)
-        pushMsg("Token获取失败", "请获取并补充授权Code后运行！")
     }
 
     GM_xmlhttpRequest({
         url: url,
         onload(xhr) {
             if (xhr.status == 200) {
-                let res = xhr.responseText
-                let refresh_token = JSON.parse(res).refresh_token
-                let access_token = JSON.parse(res).access_token
+                let res = JSON.parse(xhr.responseText)
+                let refresh_token = res.refresh_token
+                let access_token = res.access_token
                 if (refresh_token && access_token) {
                     GM_setValue("refresh_token", refresh_token)
                     GM_setValue("access_token", access_token)
                 } else {
+                    GM_log(xhr.responseText)
                     getTokenError()
+                    pushMsg("授权Token过期", "请获取并补充授权Code后运行！")
                 }
             } else {
                 getTokenError()
+                pushMsg("Token获取失败", "不造怎么肥四？状态码：" + xhr.status)
             }
         }
     })
@@ -144,10 +145,10 @@ function getToken(url) {
 
 function isExpired() {
     if (GM_getValue("refresh_token") == "") {
-        let res = GM_getValue("Config.code")
-        let code = res.match(regex)
+        let val = GM_getValue("Config.code")
+        let code = val.match(/M\.[\w+_\.]+\.[0-9a-fA-F-]+/)
         if (code) {
-            getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code[0]}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`)
+            getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${encodeURIComponent(code[0])}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`)
             GM_setValue("Config.code", srfUrl)
         } else {
             GM_setValue("task_sign", 1)
@@ -157,7 +158,7 @@ function isExpired() {
         }
     } else {
         GM_setValue("Config.code", srfUrl)
-        getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&refresh_token=${GM_getValue("refresh_token")}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
+        getToken(`https://login.live.com/oauth20_token.srf?client_id=0000000040170455&refresh_token=${encodeURIComponent(GM_getValue("refresh_token"))}&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&grant_type=REFRESH_TOKEN`)
     }
 }
 
@@ -275,6 +276,7 @@ function getReadPro() {
         GM_xmlhttpRequest({
             url: "https://prod.rewardsplatform.microsoft.com/dapi/me?channel=SAAndroid&options=613",
             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
                 "authorization": `Bearer ${GM_getValue("access_token")}`
             },
             onload(xhr) {
@@ -501,7 +503,7 @@ async function taskSearch() {
         if (pcPtPro < pcPtProMax) {
             const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
+                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                 headers: {
                     "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
                     "Referer": `https://${domain}/`
@@ -513,7 +515,7 @@ async function taskSearch() {
         if (mobilePtPro < mobilePtProMax) {
             const keyword = await getTopKeyword()
             GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${keyword}&form=QBLH`,
+                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                 headers: {
                     "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
                     "Referer": `https://${domain}/`
