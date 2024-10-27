@@ -33,11 +33,12 @@ Config:
     type: textarea
  ==/UserConfig== */
 
+
 const dateTime = new Date()
 const yearNow = dateTime.getFullYear()
 const monthNow = ("0" + (dateTime.getMonth() + 1)).slice(-2)
-const hoursNow = dateTime.getHours()
 const dayNow = ("0" + dateTime.getDate()).slice(-2)
+const hoursNow = dateTime.getHours()
 const dateNow = `${monthNow}/${dayNow}/${yearNow}`
 const lastDate = Number(`${yearNow}${monthNow}${dayNow}`)
 const srfUrl = "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf"
@@ -64,9 +65,11 @@ dfarr.forEach((item) => {
         GM_setValue(item, "")
     }
 })
+
 if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
     GM_setValue("Config.app", "关")
 }
+
 if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
     GM_setValue("Config.code", srfUrl)
 }
@@ -123,14 +126,14 @@ function getToken(url) {
         url: url,
         onload(xhr) {
             if (xhr.status == 200) {
-                let res = JSON.parse(xhr.responseText)
-                let refresh_token = res.refresh_token
-                let access_token = res.access_token
+                let res = xhr.responseText
+                let refresh_token = JSON.parse(res).refresh_token
+                let access_token = JSON.parse(res).access_token
                 if (refresh_token && access_token) {
                     GM_setValue("refresh_token", refresh_token)
                     GM_setValue("access_token", access_token)
                 } else {
-                    GM_log(xhr.responseText)
+                    GM_log(res)
                     getTokenError()
                     pushMsg("授权Token过期", "请获取并补充授权Code后运行！")
                 }
@@ -163,7 +166,7 @@ function isExpired() {
 }
 
 
-function getRewardsToken() {
+async function getRewardsToken() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com",
@@ -185,7 +188,7 @@ function getRewardsToken() {
 }
 
 
-function getRewardsInfo() {
+async function getRewardsInfo() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://rewards.bing.com/api/getuserinfo?type=1",
@@ -219,71 +222,66 @@ let testTimes = 0
 async function taskPromo() {
     if (GM_getValue("task_promo") != 0) {
         return true
-    }
-
-    if (hoursNow < 12) {
+    } else if (hoursNow < 12) {
         GM_setValue("task_promo", 1)
         return true
-    }
-
-    if (testTimes > 2) {
+    } else if (testTimes > 2) {
         GM_setValue("task_promo", 1)
         pushMsg("活动推广失败", "未知原因出错，俺也不造啊！")
         return true
-    }
-
-    const token = await getRewardsToken()
-    if (token == 0) {
-        GM_setValue("task_promo", 1)
-        pushMsg("请求验证失败", "请检查积分商城登录状态或重新登录！")
-        return true
-    }
-
-    let promotionsArr = []
-    const dashboard = await getRewardsInfo()
-    const morePromotions = dashboard.morePromotions
-    const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
-    for (const promotion of [...dailySetPromotions, ...morePromotions]) {
-        if (promotion.complete == false) {
-            promotionsArr.push({ offerId: promotion.offerId, hash: promotion.hash })
-        }
-    }
-
-    if (promotionsArr.length < 1) {
-        GM_setValue("task_promo", lastDate)
-        pushMsg("活动推广完成", "哇！哥哥好棒！活动推广完成了！")
-        return true
     } else {
-        promotionsArr.forEach((item) => {
-            GM_xmlhttpRequest({
-                method: "POST",
-                url: `https://rewards.bing.com/api/reportactivity`,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Referer": `https://rewards.bing.com/`
-                },
-                data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+        const token = await getRewardsToken()
+        if (token == 0) {
+            GM_setValue("task_promo", 1)
+            pushMsg("请求验证失败", "请检查积分商城登录状态或重新登录！")
+            return true
+        }
+
+        let promotionsArr = []
+        const dashboard = await getRewardsInfo()
+        const morePromotions = dashboard.morePromotions
+        const dailySetPromotions = dashboard.dailySetPromotions[dateNow]
+        for (const promotion of [...dailySetPromotions, ...morePromotions]) {
+            if (promotion.complete == false) {
+                promotionsArr.push({ offerId: promotion.offerId, hash: promotion.hash })
+            }
+        }
+
+        if (promotionsArr.length < 1) {
+            GM_setValue("task_promo", lastDate)
+            pushMsg("活动推广完成", "哇！哥哥好棒！活动推广完成了！")
+            return true
+        } else {
+            promotionsArr.forEach((item) => {
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url: `https://rewards.bing.com/api/reportactivity`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Referer": `https://rewards.bing.com/`
+                    },
+                    data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+                })
             })
-        })
-        testTimes++
-        return false
+            testTimes++
+            return false
+        }
     }
 }
 
 
-function getReadPro() {
+async function getReadPro() {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             url: "https://prod.rewardsplatform.microsoft.com/dapi/me?channel=SAAndroid&options=613",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
                 "authorization": `Bearer ${GM_getValue("access_token")}`
             },
             onload(xhr) {
                 let readarr = { "max": 1, "progress": 0 }
-                let res = JSON.parse(xhr.responseText)
+                let res = xhr.responseText
                 if (res) {
-                    let pro = res.response.promotions
+                    let pro = JSON.parse(res).response.promotions
                     if (pro) {
                         for (const o of pro) {
                             if (o.attributes.offerid == "ENUS_readarticle3_30points") {
@@ -295,7 +293,7 @@ function getReadPro() {
                         resolve(readarr)
                     }
                 } else {
-                    GM_log(xhr.responseText)
+                    GM_log(res)
                     resolve(readarr)
                 }
             }
@@ -310,30 +308,64 @@ let readPoints = 0
 async function taskRead() {
     if (GM_getValue("task_read") != 0) {
         return true
-    }
-
-    if (hoursNow < 12) {
+    } else if (hoursNow < 12) {
         GM_setValue("task_read", 1)
         return true
-    }
-
-    if (readTimes > 2) {
+    } else if (readTimes > 2) {
         GM_setValue("task_read", 1)
         pushMsg("文章阅读失败", "未知原因出错，俺也不造啊！")
         return true
-    }
-
-    const readPro = await getReadPro()
-    if (readPro.progress == readPoints) {
-        readTimes++
     } else {
-        readTimes = 0
-        readPoints = readPro.progress
-    }
+        const readPro = await getReadPro()
+        if (readPro.progress > readPoints) {
+            readTimes = 0
+            readPoints = readPro.progress
+        } else {
+            readTimes++
+        }
 
-    if (readPro.progress >= readPro.max) {
-        GM_setValue("task_read", lastDate)
-        pushMsg("文章阅读完成", "哇！哥哥好棒！文章阅读完成了！")
+        if (readPro.progress >= readPro.max) {
+            GM_setValue("task_read", lastDate)
+            pushMsg("文章阅读完成", "哇！哥哥好棒！文章阅读完成了！")
+            return true
+        } else {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": `Bearer ${GM_getValue("access_token")}`
+                },
+                data: JSON.stringify({
+                    "amount": 1,
+                    "country": "cn",
+                    "id": "",
+                    "type": 101,
+                    "attributes": {
+                        "offerid": "ENUS_readarticle3_30points"
+                    }
+                }),
+                responseType: "json"
+            })
+            return false
+        }
+    }
+}
+
+
+let signTimes = 0
+let signPoints = 1
+
+async function taskSign() {
+    if (GM_getValue("task_sign") != 0) {
+        return true
+    } else if (signTimes > 2) {
+        GM_setValue("task_sign", 1)
+        pushMsg("App签到失败", "未知原因出错，俺也不造啊！")
+        return true
+    } else if (signPoints == 0) {
+        GM_setValue("task_sign", lastDate)
+        pushMsg("App签到完成", "哇！哥哥好棒！App签到完成了！")
         return true
     } else {
         GM_xmlhttpRequest({
@@ -345,70 +377,32 @@ async function taskRead() {
             },
             data: JSON.stringify({
                 "amount": 1,
-                "country": "cn",
+                "attributes": {
+                    "offerid": "Gamification_Sapphire_DailyCheckIn",
+                    "date": lastDate,
+                    "signIn": false,
+                    "timezoneOffset": "08:00:00"
+                },
                 "id": "",
                 "type": 101,
-                "attributes": {
-                    "offerid": "ENUS_readarticle3_30points"
-                }
+                "country": "cn",
+                "risk_context": {},
+                "channel": "SAAndroid"
             }),
-            responseType: "json"
-        })
-    }
-}
-
-
-let signTimes = 0
-let signPoints = 1
-
-async function taskSign() {
-    if (GM_getValue("task_sign") != 0) {
-        return true
-    }
-
-    if (signTimes > 2) {
-        GM_setValue("task_sign", 1)
-        pushMsg("App签到失败", "未知原因出错，俺也不造啊！")
-        return true
-    }
-    GM_xmlhttpRequest({
-        method: "POST",
-        url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": `Bearer ${GM_getValue("access_token")}`
-        },
-        data: JSON.stringify({
-            "amount": 1,
-            "attributes": {
-                "offerid": "Gamification_Sapphire_DailyCheckIn",
-                "date": `${yearNow}${monthNow}${dayNow}`,
-                "signIn": false,
-                "timezoneOffset": "08:00:00"
-            },
-            "id": "",
-            "type": 101,
-            "country": "cn",
-            "risk_context": {},
-            "channel": "SAAndroid"
-        }),
-        responseType: "json",
-        onload(xhr) {
-            signTimes = 0
-            let res = JSON.parse(xhr.responseText)
-            if (res) {
-                let points = res.response.activity.p
-                points ? signPoints = points : signPoints = 0
-            } else {
-                GM_log(xhr.responseText)
-                signTimes++
+            responseType: "json",
+            onload(xhr) {
+                signTimes = 0
+                let res = xhr.responseText
+                if (res) {
+                    let points = JSON.parse(res).response.activity.p
+                    points ? signPoints = points : signPoints = 0
+                } else {
+                    GM_log(res)
+                    signTimes++
+                }
             }
-        }
-    })
-    if (signPoints == 0) {
-        GM_setValue("task_sign", lastDate)
-        pushMsg("App签到完成", "哇！哥哥好棒！App签到完成了！")
-        return true
+        })
+        return false
     }
 }
 
@@ -535,92 +529,92 @@ return new Promise((resolve, reject) => {
 
     if (GM_getValue("last_date") == lastDate) {
         resolve()
-    }
-
-    const taskarr = ["task_sign", "task_read", "task_promo", "task_search"]
-    taskarr.forEach((item) => {
-        if (GM_getValue(item) != lastDate) {
-            GM_setValue(item, 0)
-        }
-    })
-
-    function taskEnd(name) {
-        let taskplus = GM_getValue("task_sign") + GM_getValue("task_read") + GM_getValue("task_promo") + GM_getValue("task_search")
-        if (taskplus == lastDate * 4) {
-            GM_setValue("last_date", lastDate)
-            resolve()
-        }
-        let tasknum = 0
-        const newTaskarr = taskarr.filter(item => item !== name);
-        newTaskarr.forEach((item) => {
-            if (GM_getValue(item) > 0) {
-                tasknum++
+    } else {
+        const taskarr = ["task_sign", "task_read", "task_promo", "task_search"]
+        taskarr.forEach((item) => {
+            if (GM_getValue(item) != lastDate) {
+                GM_setValue(item, 0)
             }
         })
-        if (tasknum > 2) {
-            resolve()
-        }
-    }
 
-    const signStart = async () => {
-        try {
-            const result = await taskSign()
-            if (result) {
-                taskEnd("task_sign")
-            } else {
-                setTimeout(() => { signStart() }, 2333)
+        function taskEnd(name) {
+            let taskplus = GM_getValue("task_sign") + GM_getValue("task_read") + GM_getValue("task_promo") + GM_getValue("task_search")
+            if (taskplus == lastDate * 4) {
+                GM_setValue("last_date", lastDate)
+                resolve()
             }
-        } catch (e) {
-            reject(e)
-        }
-    }
-
-    const readStart = async () => {
-        try {
-            const result = await taskRead()
-            if (result) {
-                taskEnd("task_read")
-            } else {
-                setTimeout(() => { readStart() }, 2333)
+            let tasknum = 0
+            const newTaskarr = taskarr.filter(item => item !== name);
+            newTaskarr.forEach((item) => {
+                if (GM_getValue(item) > 0) {
+                    tasknum++
+                }
+            })
+            if (tasknum > 2) {
+                resolve()
             }
-        } catch (e) {
-            reject(e)
         }
 
-    }
-
-    const promoStart = async () => {
-        try {
-            const result = await taskPromo()
-            if (result) {
-                taskEnd("task_promo")
-            } else {
-                setTimeout(() => { promoStart() }, 2333)
+        const signStart = async () => {
+            try {
+                const result = await taskSign()
+                if (result) {
+                    taskEnd("task_sign")
+                } else {
+                    setTimeout(() => { signStart() }, 2333)
+                }
+            } catch (e) {
+                reject(e)
             }
-        } catch (e) {
-            reject(e)
         }
-    }
 
-    const searchStart = async () => {
-        try {
-            const result = await taskSearch()
-            if (result) {
-                taskEnd("task_search")
-            } else {
-                setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 12345))
+        const readStart = async () => {
+            try {
+                const result = await taskRead()
+                if (result) {
+                    taskEnd("task_read")
+                } else {
+                    setTimeout(() => { readStart() }, 2333)
+                }
+            } catch (e) {
+                reject(e)
             }
-        } catch (e) {
-            reject(e)
-        }
-    }
 
-    promoStart()
-    if (GM_getValue("Config.app") == "开") {
-        signStart()
-        readStart()
+        }
+
+        const promoStart = async () => {
+            try {
+                const result = await taskPromo()
+                if (result) {
+                    taskEnd("task_promo")
+                } else {
+                    setTimeout(() => { promoStart() }, 2333)
+                }
+            } catch (e) {
+                reject(e)
+            }
+        }
+
+        const searchStart = async () => {
+            try {
+                const result = await taskSearch()
+                if (result) {
+                    taskEnd("task_search")
+                } else {
+                    setTimeout(() => { searchStart() }, getScopeRandomNum(6789, 12345))
+                }
+            } catch (e) {
+                reject(e)
+            }
+        }
+
+        promoStart()
+        if (GM_getValue("Config.app") == "开") {
+            signStart()
+            readStart()
+        }
+        searchStart()
     }
-    searchStart()
 })
 
 
