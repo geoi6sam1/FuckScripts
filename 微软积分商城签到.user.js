@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.0.1
+// @version         2.0.2
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -278,7 +278,7 @@ function getReadPro() {
                 "authorization": `Bearer ${GM_getValue("access_token")}`
             },
             onload(xhr) {
-                let readarr = null
+                let readarr = { "max": 1, "progress": 0 }
                 let res = JSON.parse(xhr.responseText)
                 if (res) {
                     let pro = res.response.promotions
@@ -290,11 +290,10 @@ function getReadPro() {
                             }
                         }
                     } else {
-                        readarr = { "max": 1, "progress": 0 }
                         resolve(readarr)
                     }
                 } else {
-                    readarr = { "max": 1, "progress": 0 }
+                    GM_log(xhr.responseText)
                     resolve(readarr)
                 }
             }
@@ -393,12 +392,13 @@ async function taskSign() {
         }),
         responseType: "json",
         onload(xhr) {
-            if (xhr.status == 200) {
-                signTimes = 0
-                let res = JSON.parse(xhr.responseText)
+            signTimes = 0
+            let res = JSON.parse(xhr.responseText)
+            if (res) {
                 let points = res.response.activity.p
                 points ? signPoints = points : signPoints = 0
             } else {
+                GM_log(xhr.responseText)
                 signTimes++
             }
         }
