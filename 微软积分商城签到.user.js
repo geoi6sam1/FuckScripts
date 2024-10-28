@@ -65,11 +65,9 @@ dfarr.forEach((item) => {
         GM_setValue(item, "")
     }
 })
-
 if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
     GM_setValue("Config.app", "关")
 }
-
 if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
     GM_setValue("Config.code", srfUrl)
 }
@@ -208,7 +206,7 @@ async function getRewardsInfo() {
                 } else {
                     GM_setValue("task_promo", 1)
                     GM_setValue("task_search", 1)
-                    pushMsg("信息获取失败", "获取微软积分商城信息失败！状态码：" + xhr.status)
+                    pushMsg("信息获取失败", "积分商城信息获取失败！状态码：" + xhr.status)
                     return true
                 }
             }
@@ -455,68 +453,68 @@ let domain = "www.bing.com"
 async function taskSearch() {
     if (GM_getValue("task_search") != 0) {
         return true
-    }
-
-    const onload = (xhr) => {
-        let url = new URL(xhr.finalUrl)
-        if (url.host != domain) {
-            domain = url.host
+    } else {
+        const onload = (xhr) => {
+            let url = new URL(xhr.finalUrl)
+            if (url.host != domain) {
+                domain = url.host
+            }
         }
-    }
 
-    const dashboard = await getRewardsInfo()
-    if (dashboard.userStatus.counters.pcSearch) {
-        pcPtPro = dashboard.userStatus.counters.pcSearch[0].pointProgress
-        pcPtProMax = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
-    }
-    if (dashboard.userStatus.counters.mobileSearch) {
-        mobilePtPro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
-        mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
-    } else {
-        mobilePtProMax = 0
-    }
-
-    if (retryTimes > 2) {
-        GM_setValue("task_search", 1)
-        GM_log(`必应搜索收入限制，电脑搜索：${pcPtPro}/${pcPtProMax}　移动设备搜索：${mobilePtPro}/${mobilePtProMax}，请等待下个时间点继续完成！`)
-        return true
-    }
-
-    if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == lastProcess) {
-        retryTimes++
-    } else {
-        retryTimes = 0
-        lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
-    }
-
-    if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
-        GM_setValue("task_search", lastDate)
-        pushMsg("必应搜索完成", `哇！哥哥好棒！必应搜索完成了！`)
-        return true
-    } else {
-        if (pcPtPro < pcPtProMax) {
-            const keyword = await getTopKeyword()
-            GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                headers: {
-                    "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
-                    "Referer": `https://${domain}/`
-                },
-                onload: onload
-            })
-            return false
+        const dashboard = await getRewardsInfo()
+        if (dashboard.userStatus.counters.pcSearch) {
+            pcPtPro = dashboard.userStatus.counters.pcSearch[0].pointProgress
+            pcPtProMax = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
         }
-        if (mobilePtPro < mobilePtProMax) {
-            const keyword = await getTopKeyword()
-            GM_xmlhttpRequest({
-                url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                headers: {
-                    "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
-                    "Referer": `https://${domain}/`
-                },
-                onload: onload
-            })
-            return false
+        if (dashboard.userStatus.counters.mobileSearch) {
+            mobilePtPro = dashboard.userStatus.counters.mobileSearch[0].pointProgress
+            mobilePtProMax = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
+        } else {
+            mobilePtProMax = 0
+        }
+
+        if (retryTimes > 2) {
+            GM_setValue("task_search", 1)
+            GM_log(`必应搜索收入限制！电脑搜索：${pcPtPro}/${pcPtProMax}　移动设备搜索：${mobilePtPro}/${mobilePtProMax}，请等待下个时间点继续完成！`)
+            return true
+        }
+
+        if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == lastProcess) {
+            retryTimes++
+        } else {
+            retryTimes = 0
+            lastProcess = dashboard.userStatus.counters.dailyPoint[0].pointProgress
+        }
+
+        if (pcPtPro >= pcPtProMax && mobilePtPro >= mobilePtProMax) {
+            GM_setValue("task_search", lastDate)
+            pushMsg("必应搜索完成", `哇！哥哥好棒！必应搜索完成了！`)
+            return true
+        } else {
+            if (pcPtPro < pcPtProMax) {
+                const keyword = await getTopKeyword()
+                GM_xmlhttpRequest({
+                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                    headers: {
+                        "User-Agent": randomData.pc[getRandomNum(randomData.pc.length)],
+                        "Referer": `https://${domain}/`
+                    },
+                    onload: onload
+                })
+                return false
+            }
+            if (mobilePtPro < mobilePtProMax) {
+                const keyword = await getTopKeyword()
+                GM_xmlhttpRequest({
+                    url: `https://${domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                    headers: {
+                        "User-Agent": randomData.mobile[getRandomNum(randomData.mobile.length)],
+                        "Referer": `https://${domain}/`
+                    },
+                    onload: onload
+                })
+                return false
+            }
         }
     }
 }
@@ -619,9 +617,11 @@ return new Promise((resolve, reject) => {
 
 
 function pushMsg(title, text) {
+    title = "微软积分商城" + title
+    GM_log(title + "！" + text)
     GM_notification({
         text: text,
-        title: "微软积分商城" + title,
+        title: title,
         image: "https://rewards.bing.com/rewards.png",
         onclick: () => {
             GM_openInTab("https://rewards.bing.com/pointsbreakdown", { active: true, insert: true, setParent: true })
