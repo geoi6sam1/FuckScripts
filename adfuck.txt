@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2024103113
+! Version: 2024103114
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! EasyPrivacy：https://easylist-downloads.adblockplus.org/easyprivacy.txt
@@ -17,7 +17,7 @@
 
 
 ! ---------必应搜索---------
-bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta), #b_footer ul
+bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta)
 
 ! ---------腾讯视频---------
 v.qq.com,film.qq.com##.quick_games, .client_download, .link_vip.__open_vip_tv, .playlist-vip-section__vip, .preview-mini-player, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, .bottom-wrapper, .at-app-banner
