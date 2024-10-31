@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.7
+// @version         1.1.8
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
 // @author          geoi6sam1@qq.com
+// @icon            https://v.qq.com/favicon.ico
+// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @match           http*://v.qq.com/*
 // @match           http*://m.v.qq.com/*
 // @match           http*://film.qq.com/*
 // @match           http*://m.film.qq.com/*
-// @icon            https://v.qq.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @run-at          document-start
 // @grant           unsafeWindow
 // @grant           GM_addStyle
@@ -20,7 +20,6 @@
     'use strict'
 
     const obj = {
-        /*** 个性化选项 ***/
         option: {
             quick: 0, // 网页顶部导航按钮，默认隐藏，值为0
             barrage: 0, // 视频弹幕相关内容，默认隐藏，值为0
@@ -72,7 +71,7 @@ iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
     }
 
     obj.wetvWatermark = function () {
-        removeTimeout(".txp-watermark", 5000)
+        removeTimeout(".txp-watermark", 5678)
     }
 
     obj.wetvGrayscale = function () {
@@ -88,6 +87,8 @@ iframe[src*="vfiles.gtimg.cn/tvideo/libcocos-frame"]
     GM_addStyle(`
 .quick_games,
 .client_download,
+.link_vip.__open_vip_tv,
+.playlist-vip-section__vip,
 .preview-mini-player,
 .video-card-module [dt-params*="ad_"],
 .focus-wrap [dt-eid*="ad_poster"],
