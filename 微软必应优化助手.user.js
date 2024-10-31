@@ -26,8 +26,8 @@
             image: 0, // 相关图像，默认隐藏，值为0
             relSearches: 1, // 底部相关搜索，默认显示，值为1
             histories: 0, // 底部历史搜索，默认隐藏，值为0
-            web: [ // 隐藏相关网页，示例example.com
-                "example.com",
+            web: [ // 隐藏相关网页，默认隐藏CSDN社区
+                "csdn.net",
             ],
         },
     }
