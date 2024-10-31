@@ -4,20 +4,20 @@
 // @version         1.2.3
 // @description     微软必应（Microsoft Bing）搜索结果优化，支持电脑端和移动端
 // @author          geoi6sam1
-// @match           http*://*.bing.com/*
 // @icon            https://bing.com/favicon.ico
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @match           http*://*.bing.com/*
 // @run-at          document-start
 // @grant           unsafeWindow
 // @grant           GM_addStyle
 // @license         GPL-3.0
 // ==/UserScript==
 
+
 (function () {
     'use strict'
 
     const obj = {
-        /*** 个性化选项 ***/
         option: {
             faq: 1, // 相关问题，默认显示，值为1
             news: 1, // 相关资讯，默认显示，值为1
@@ -26,11 +26,13 @@
             image: 0, // 相关图像，默认隐藏，值为0
             relSearches: 1, // 底部相关搜索，默认显示，值为1
             histories: 0, // 底部历史搜索，默认隐藏，值为0
-            web: [ // 隐藏相关网页，默认example.com
+            web: [ // 隐藏相关网页，示例example.com
                 "example.com",
             ],
         },
     }
+    const userAgent = navigator.userAgent || window.navigator.userAgent
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini|Mobile/i.test(userAgent)
 
     obj.bingVideo = function () {
         GM_addStyle(`
@@ -96,6 +98,10 @@ li.b_ans:has(.b_mrs)
         `)
     }
 
+    if (isMobile) {
+        GM_addStyle(`#b_footer ul { display: none !important; }`)
+    }
+
     GM_addStyle(`
 .b_ad,
 .ad_sc,
@@ -116,8 +122,7 @@ li.b_algo:has(.b_attribution[data-partnertag]),
 #ev_talkbox_wrapper,
 #idCont [id*="id_qrcode"],
 #b_notificationContainer_bop,
-li.b_ans:has(#opal_serpftrcta),
-#b_footer ul
+li.b_ans:has(#opal_serpftrcta)
 {
     display: none !important;
 }
