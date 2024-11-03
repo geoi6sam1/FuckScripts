@@ -44,8 +44,6 @@
 
 ---
 
-### \#\# 打赏（在线乞讨）
+### \#\# 赞赏码（在线乞讨）
 
-| 微信（WePay） | 支付宝（AliPay） |
-|:---:|:---:|
-| ![WePay](https://geoi6sam1.github.io/assets/images/wepay.png) | ![AliPay](https://geoi6sam1.github.io/assets/images/alipay.png) |
+![赞赏码](https://scriptcat.org/api/v2/resource/image/pDlMAdev3cPONBCD)
