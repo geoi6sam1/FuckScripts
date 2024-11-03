@@ -16,6 +16,8 @@
 | ~~**可可影视播放器**~~ | [~~安装~~](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/可可影视播放器.user.js) | [~~安装~~](https://gitee.com/geoi6sam1/FuckScripts/raw/main/可可影视播放器.user.js) |
 | **微软必应优化助手** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软必应优化助手.user.js) |
 | **腾讯视频优化助手** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
+| **百度网盘音频播放器（改）** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/百度网盘音频播放器（改）.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/百度网盘音频播放器（改）.user.js) |
+| **百度网盘视频播放器（改）** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/百度网盘视频播放器（改）.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/百度网盘视频播放器（改）.user.js) |
 | **自动删除QQ空间说说** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自动删除QQ空间说说.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自动删除QQ空间说说.user.js) |
 | **自用校园网自动登录** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/自用校园网自动登录.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/自用校园网自动登录.user.js) |
 
