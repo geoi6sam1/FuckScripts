@@ -1,28 +1,28 @@
 // ==UserScript==
 // @name           百度网盘音频播放器（改）
 // @namespace      https://github.com/geoi6sam1
-// @version        1.0.0
-// @description    无视文件大小，无视文件格式，告别卡顿即点即播，自动加载歌词，画中画歌词
+// @version        0.2.0.20240713
+// @description    https://scriptcat.org/script-show-page/995
 // @author         geoi6sam1@qq.com
+// @icon           https://staticwx.cdn.bcebos.com/mini-program/images/ic_audio.png
+// @supportURL     https://github.com/geoi6sam1/FuckScripts/issues
 // @match          https://pan.baidu.com/disk/main*
 // @match          https://yun.baidu.com/disk/main*
-// @icon           https://staticwx.cdn.bcebos.com/mini-program/images/ic_audio_v2.png
-// @supportURL     https://github.com/geoi6sam1/FuckScripts/issues
 // @require        https://scriptcat.org/lib/1359/1.1.1/PipLyric.js
 // @require        https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/hls.js/1.5.13/hls.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js
 // @resource       aplayerCSS https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css
 // @run-at         document-end
-// @grant          GM_addStyle
 // @grant          unsafeWindow
+// @grant          GM_addStyle
 // @grant          GM_xmlhttpRequest
 // @grant          GM_getResourceText
 // @connect        kugou.com
 // @license        GPL-3.0
 // ==/UserScript==
 
-var $ = unsafeWindow.jQuery || window.jQuery || $
+var $ = unsafeWindow.jQuery || window.jQuery || jQuery || $
 var obj = {
     audio_page: {
         fileList: [],
