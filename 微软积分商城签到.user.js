@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.1
-// @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
+// @version         2.2.2
+// @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，🟢必应搜索（Web）、🟢每日活动（Web）、🟢更多活动（Web）、🟢文章阅读（App）、🟢每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
@@ -97,6 +97,7 @@ const obj = {
                 progress: 0,
                 max: 1,
             },
+            limit: -99,
         },
         token: "",
     },
@@ -175,6 +176,7 @@ obj.beforeStart = function () {
     }
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
+        obj.task.search.limit = 0
     }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", obj.data.code)
@@ -209,12 +211,12 @@ obj.getToken = function (url) {
                 } else {
                     GM_setValue("refresh_token", "")
                     obj.appOver()
-                    obj.pushMsg("App任务❌", "刷新Token过期，请获取并补充授权Code后运行！")
+                    obj.pushMsg("App任务🔴", "刷新Token过期，请获取并补充授权Code后运行！")
                 }
             } else {
                 GM_setValue("refresh_token", "")
                 obj.appOver()
-                obj.pushMsg("App任务❌", "刷新Token获取出错！状态码：" + xhr.status)
+                obj.pushMsg("App任务🔴", "刷新Token获取出错！状态码：" + xhr.status)
             }
         }
     })
@@ -231,7 +233,7 @@ obj.isExpired = function () {
             GM_setValue("Config.code", obj.data.code)
         } else {
             obj.appOver()
-            obj.pushMsg("App任务❌", "授权Code错误，请获取并补充授权Code后运行！")
+            obj.pushMsg("App任务🔴", "授权Code错误，请获取并补充授权Code后运行！")
             GM_setValue("Config.code", obj.data.code)
         }
     } else {
@@ -255,12 +257,12 @@ obj.getRewardsInfo = function () {
                         resolve(res.dashboard)
                     } else {
                         obj.webOver()
-                        obj.pushMsg("Web任务❌", "账号状态失效，请检查微软账号登录状态或重新登录！")
+                        obj.pushMsg("Web任务🔴", "账号状态失效，请检查微软账号登录状态或重新登录！")
                         resolve("")
                     }
                 } else {
                     obj.webOver()
-                    obj.pushMsg("Web任务❌", "微软积分商城信息获取出错！状态码：" + xhr.status)
+                    obj.pushMsg("Web任务🔴", "微软积分商城信息获取出错！状态码：" + xhr.status)
                     resolve("")
                 }
             }
@@ -283,7 +285,7 @@ obj.getRewardsToken = function () {
                         resolve(token[1])
                     } else {
                         GM_setValue("task_promo", 1)
-                        obj.pushMsg("活动推广❌", "请求验证失败，请检查微软积分商城登录状态或重新登录！")
+                        obj.pushMsg("活动推广🔴", "请求验证失败，请检查微软积分商城登录状态或重新登录！")
                         resolve(xhr.status)
                     }
                 } else {
@@ -301,43 +303,43 @@ obj.taskPromo = async function () {
     } else if (obj.data.time.hoursNow < 12) {
         GM_setValue("task_promo", 1)
         return true
-    } else if (obj.task.promo.times > 3) {
+    } else if (obj.task.promo.times > 2) {
         GM_setValue("task_promo", 1)
-        obj.pushMsg("活动推广❌", "未知原因出错，活动推广结束！")
+        obj.pushMsg("活动推广🔴", "未知原因出错，本次活动推广结束！")
         return true
     } else {
-        let promotionsArr = []
         const dashboard = await obj.getRewardsInfo()
         if (dashboard == "") {
-            obj.task.promo.times++
             return false
-        }
-        const morePromotions = dashboard.morePromotions
-        const dailySetPromotions = dashboard.dailySetPromotions[obj.data.time.dateNow]
-        for (const p of [...dailySetPromotions, ...morePromotions]) {
-            if (p.complete == false) {
-                promotionsArr.push({ offerId: p.offerId, hash: p.hash })
-            }
-        }
-        if (promotionsArr.length < 1) {
-            GM_setValue("task_promo", obj.data.time.dateNowNum)
-            obj.pushMsg("活动推广✅", "哇！哥哥好棒！活动推广完成了！")
-            return true
         } else {
-            const token = await obj.getRewardsToken()
-            promotionsArr.forEach((item) => {
-                GM_xmlhttpRequest({
-                    method: "POST",
-                    url: `https://rewards.bing.com/api/reportactivity`,
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Referer": `https://rewards.bing.com/`
-                    },
-                    data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+            let promotionsArr = []
+            const morePromotions = dashboard.morePromotions
+            const dailySetPromotions = dashboard.dailySetPromotions[obj.data.time.dateNow]
+            for (const p of [...dailySetPromotions, ...morePromotions]) {
+                if (p.complete == false) {
+                    promotionsArr.push({ offerId: p.offerId, hash: p.hash })
+                }
+            }
+            if (promotionsArr.length < 1) {
+                GM_setValue("task_promo", obj.data.time.dateNowNum)
+                obj.pushMsg("活动推广🟢", "哇！哥哥好棒！活动推广完成了！")
+                return true
+            } else {
+                const token = await obj.getRewardsToken()
+                promotionsArr.forEach((item) => {
+                    GM_xmlhttpRequest({
+                        method: "POST",
+                        url: `https://rewards.bing.com/api/reportactivity`,
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Referer": `https://rewards.bing.com/`
+                        },
+                        data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+                    })
                 })
-            })
-            obj.task.promo.times++
-            return false
+                obj.task.promo.times++
+                return false
+            }
         }
     }
 }
@@ -385,9 +387,9 @@ obj.taskRead = async function () {
     } else if (obj.data.time.hoursNow < 12) {
         GM_setValue("task_read", 1)
         return true
-    } else if (obj.task.read.times > 3) {
+    } else if (obj.task.read.times > 2) {
         GM_setValue("task_read", 1)
-        obj.pushMsg("文章阅读❌", "未知原因出错，文章阅读结束！")
+        obj.pushMsg("文章阅读🔴", "未知原因出错，本次文章阅读结束！")
         return true
     } else {
         const readPro = await obj.getReadPro()
@@ -399,10 +401,10 @@ obj.taskRead = async function () {
         }
         if (readPro.progress >= readPro.max) {
             GM_setValue("task_read", obj.data.time.dateNowNum)
-            obj.pushMsg("文章阅读✅", "哇！哥哥好棒！文章阅读完成了！")
+            obj.pushMsg("文章阅读🟢", "哇！哥哥好棒！文章阅读完成了！")
             return true
         } else if (obj.task.token == "") {
-            obj.task.read.times++
+            obj.task.read.times = 0
             return false
         } else {
             GM_xmlhttpRequest({
@@ -432,16 +434,15 @@ obj.taskRead = async function () {
 obj.taskSign = function () {
     if (GM_getValue("task_sign") != 0) {
         return true
-    } else if (obj.task.sign.times > 3) {
+    } else if (obj.task.sign.times > 2) {
         GM_setValue("task_sign", 1)
-        obj.pushMsg("App签到❌", "未知原因出错，App签到结束！")
+        obj.pushMsg("App签到🔴", "未知原因出错，本次App签到结束！")
         return true
     } else if (obj.task.sign.point == 0) {
         GM_setValue("task_sign", obj.data.time.dateNowNum)
-        obj.pushMsg("App签到✅", "哇！哥哥好棒！App签到完成了！")
+        obj.pushMsg("App签到🟢", "哇！哥哥好棒！App签到完成了！")
         return true
     } else if (obj.task.token == "") {
-        obj.task.sign.times++
         return false
     } else {
         GM_xmlhttpRequest({
@@ -501,7 +502,7 @@ obj.getTopKeyword = async function () {
                         obj.task.search.word.list = obj.getRandomArr(obj.task.search.word.list)
                         resolve(obj.task.search.word.list[obj.task.search.word.index])
                     } else {
-                        const sentence = obj.getRandomSentence(obj.data.query, 3)
+                        const sentence = obj.getRandomSentence(obj.data.query, 3) + Date.now() % 1000
                         resolve(sentence)
                     }
                 }
@@ -522,71 +523,73 @@ obj.getTopKeyword = async function () {
 obj.taskSearch = async function () {
     if (GM_getValue("task_search") != 0) {
         return true
-    } else if (obj.task.search.times > 3) {
-        GM_setValue("task_search", 1)
-        obj.pushMsg("必应搜索❌", "未知原因出错，必应搜索结束！")
-        return true
     } else {
-        const onload = (xhr) => {
-            let url = new URL(xhr.finalUrl)
-            if (url.host != obj.task.search.domain) {
-                obj.task.search.domain = url.host
-            }
-        }
         const dashboard = await obj.getRewardsInfo()
         if (dashboard == "") {
-            obj.task.search.times++
             return false
-        }
-        if (dashboard.userStatus.counters.pcSearch) {
-            obj.task.search.pc.progress = dashboard.userStatus.counters.pcSearch[0].pointProgress
-            obj.task.search.pc.max = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
-        }
-        if (dashboard.userStatus.counters.mobileSearch) {
-            obj.task.search.m.progress = dashboard.userStatus.counters.mobileSearch[0].pointProgress
-            obj.task.search.m.max = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
         } else {
-            obj.task.search.m.max = 0
-        }
-        if (obj.task.search.times > 2) {
-            GM_setValue("task_search", 1)
-            GM_log(`必应搜索收入限制！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
-            return true
-        }
-        if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == obj.task.search.progressNow) {
-            obj.task.search.times++
-        } else {
-            obj.task.search.times = 0
-            obj.task.search.progressNow = dashboard.userStatus.counters.dailyPoint[0].pointProgress
-        }
-        if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
-            GM_setValue("task_search", obj.data.time.dateNowNum)
-            obj.pushMsg("必应搜索✅", `哇！哥哥好棒！必应搜索完成了！`)
-            return true
-        } else {
-            if (obj.task.search.pc.progress < obj.task.search.pc.max) {
-                const keyword = await obj.getTopKeyword()
-                GM_xmlhttpRequest({
-                    url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                    headers: {
-                        "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)],
-                        "Referer": `https://${obj.task.search.domain}/`
-                    },
-                    onload: onload
-                })
-                return false
+            const onload = (xhr) => {
+                let url = new URL(xhr.finalUrl)
+                if (url.host != obj.task.search.domain) {
+                    obj.task.search.domain = url.host
+                }
+                obj.task.search.limit++
             }
-            if (obj.task.search.m.progress < obj.task.search.m.max) {
-                const keyword = await obj.getTopKeyword()
-                GM_xmlhttpRequest({
-                    url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                    headers: {
-                        "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)],
-                        "Referer": `https://${obj.task.search.domain}/`
-                    },
-                    onload: onload
-                })
-                return false
+            if (dashboard.userStatus.counters.pcSearch) {
+                obj.task.search.pc.progress = dashboard.userStatus.counters.pcSearch[0].pointProgress
+                obj.task.search.pc.max = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
+            }
+            if (dashboard.userStatus.counters.mobileSearch) {
+                obj.task.search.m.progress = dashboard.userStatus.counters.mobileSearch[0].pointProgress
+                obj.task.search.m.max = dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
+            } else {
+                obj.task.search.m.max = 0
+            }
+            if (obj.task.search.limit > obj.getScopeRandomNum(3, 5)) {
+                GM_setValue("task_search", 1)
+                GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.limit} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                return true
+            } else if (obj.task.search.times > 2) {
+                GM_setValue("task_search", 1)
+                GM_log(`微软积分商城必应搜索🟡您的积分收入限制！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                return true
+            } else {
+                if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == obj.task.search.progressNow) {
+                    obj.task.search.times++
+                } else {
+                    obj.task.search.times = 0
+                    obj.task.search.progressNow = dashboard.userStatus.counters.dailyPoint[0].pointProgress
+                }
+                if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
+                    GM_setValue("task_search", obj.data.time.dateNowNum)
+                    obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
+                    return true
+                } else {
+                    if (obj.task.search.pc.progress < obj.task.search.pc.max) {
+                        const keyword = await obj.getTopKeyword()
+                        GM_xmlhttpRequest({
+                            url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                            headers: {
+                                "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)],
+                                "Referer": `https://${obj.task.search.domain}/`
+                            },
+                            onload: onload
+                        })
+                        return false
+                    }
+                    if (obj.task.search.m.progress < obj.task.search.m.max) {
+                        const keyword = await obj.getTopKeyword()
+                        GM_xmlhttpRequest({
+                            url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                            headers: {
+                                "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)],
+                                "Referer": `https://${obj.task.search.domain}/`
+                            },
+                            onload: onload
+                        })
+                        return false
+                    }
+                }
             }
         }
     }
@@ -659,8 +662,8 @@ return new Promise((resolve, reject) => {
         }
         obj.promoStart()
         if (GM_getValue("Config.app") == "开") {
-            obj.readStart()
             obj.signStart()
+            obj.readStart()
         } else {
             obj.appOver()
         }
