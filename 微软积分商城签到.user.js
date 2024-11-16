@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.0
+// @version         2.2.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -25,13 +25,18 @@
 
 /* ==UserConfig==
 Config:
+  limit:
+    title: 限制搜索
+    type: select
+    default: 开
+    values: [开, 关]
   app:
-    title: App任务（签到+阅读）
+    title: App任务
     type: select
     default: 关
     values: [开, 关]
   code:
-    title: 授权Code（一次性）
+    title: 授权Code
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
  ==/UserConfig== */
@@ -168,6 +173,9 @@ obj.beforeStart = function () {
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
     }
+    if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
+        GM_setValue("Config.limit", "开")
+    }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", obj.data.code)
     }
@@ -248,12 +256,12 @@ obj.getRewardsInfo = function () {
                     } else {
                         obj.webOver()
                         obj.pushMsg("Web任务❌", "账号状态失效，请检查微软账号登录状态或重新登录！")
-                        resolve()
+                        resolve("")
                     }
                 } else {
                     obj.webOver()
                     obj.pushMsg("Web任务❌", "微软积分商城信息获取出错！状态码：" + xhr.status)
-                    resolve()
+                    resolve("")
                 }
             }
         })
@@ -276,7 +284,7 @@ obj.getRewardsToken = function () {
                     } else {
                         GM_setValue("task_promo", 1)
                         obj.pushMsg("活动推广❌", "请求验证失败，请检查微软积分商城登录状态或重新登录！")
-                        resolve()
+                        resolve(xhr.status)
                     }
                 } else {
                     resolve(xhr.status)
@@ -300,11 +308,15 @@ obj.taskPromo = async function () {
     } else {
         let promotionsArr = []
         const dashboard = await obj.getRewardsInfo()
+        if (dashboard == "") {
+            obj.task.promo.times++
+            return false
+        }
         const morePromotions = dashboard.morePromotions
         const dailySetPromotions = dashboard.dailySetPromotions[obj.data.time.dateNow]
         for (const p of [...dailySetPromotions, ...morePromotions]) {
             if (p.complete == false) {
-                p.push({ offerId: p.offerId, hash: p.hash })
+                promotionsArr.push({ offerId: p.offerId, hash: p.hash })
             }
         }
         if (promotionsArr.length < 1) {
@@ -312,7 +324,7 @@ obj.taskPromo = async function () {
             obj.pushMsg("活动推广✅", "哇！哥哥好棒！活动推广完成了！")
             return true
         } else {
-            const token = await getRewardsToken()
+            const token = await obj.getRewardsToken()
             promotionsArr.forEach((item) => {
                 GM_xmlhttpRequest({
                     method: "POST",
@@ -510,6 +522,10 @@ obj.getTopKeyword = async function () {
 obj.taskSearch = async function () {
     if (GM_getValue("task_search") != 0) {
         return true
+    } else if (obj.task.search.times > 3) {
+        GM_setValue("task_search", 1)
+        obj.pushMsg("必应搜索❌", "未知原因出错，必应搜索结束！")
+        return true
     } else {
         const onload = (xhr) => {
             let url = new URL(xhr.finalUrl)
@@ -518,6 +534,10 @@ obj.taskSearch = async function () {
             }
         }
         const dashboard = await obj.getRewardsInfo()
+        if (dashboard == "") {
+            obj.task.search.times++
+            return false
+        }
         if (dashboard.userStatus.counters.pcSearch) {
             obj.task.search.pc.progress = dashboard.userStatus.counters.pcSearch[0].pointProgress
             obj.task.search.pc.max = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
