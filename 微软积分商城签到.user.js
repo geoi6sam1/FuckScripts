@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.2
+// @version         2.2.3
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -16,10 +16,12 @@
 // @grant           GM_log
 // @connect         cn.bing.com
 // @connect         www.bing.com
-// @connect         login.live.com
 // @connect         rewards.bing.com
+// @connect         login.live.com
 // @connect         prod.rewardsplatform.microsoft.com
 // @connect         hot.baiwumm.com
+// @connect         cnxiaobai.com
+// @connect         daily-hot-api.nankoyo.com
 // @license         GPL-3.0
 // ==/UserScript==
 
@@ -39,6 +41,11 @@ Config:
     title: 授权Code
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
+  api:
+    title: 搜索API
+    type: select
+    default: hot.baiwumm.com
+    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.nankoyo.com]
  ==/UserConfig== */
 
 
@@ -66,7 +73,22 @@ const obj = {
             ],
         },
         task: ["task_sign", "task_read", "task_promo", "task_search"],
-        url: ["weibo", "baidu", "douyin", "kuaishou", "thepaper", "netease", "toutiao", "qq", "baidutieba"],
+        api: {
+            baiwumm: {
+                url: "https://hot.baiwumm.com/api/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq", "netease"]
+            },
+            cnxiaobai: {
+                url: "https://cnxiaobai.com/DailyHotApi/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news"],
+            },
+            nankoyo: {
+                url: "https://daily-hot-api.nankoyo.com/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news"],
+            },
+            url: "",
+            hot: [],
+        },
     },
     task: {
         sign: {
@@ -134,11 +156,11 @@ obj.getRandomSentence = function (a, l) {
 }
 
 
-obj.getRandomUrl = function () {
+obj.getRandomApiHot = function () {
     if (GM_getValue("last_name") == null) {
         GM_setValue("last_name", "")
     }
-    const filteredArr = obj.data.url.filter(name => name != GM_getValue("last_name"));
+    const filteredArr = obj.data.api.hot.filter(name => name != GM_getValue("last_name"));
     return filteredArr[obj.getRandomNum(filteredArr.length)];
 }
 
@@ -171,15 +193,40 @@ obj.beforeStart = function () {
             GM_setValue(item, "")
         }
     })
-    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
-        GM_setValue("Config.app", "关")
-    }
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
         obj.task.search.limit = 0
     }
+    if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
+        GM_setValue("Config.app", "关")
+    }
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", obj.data.code)
+    }
+    if (GM_getValue("Config.api") == null) {
+        GM_setValue("Config.api", "hot.baiwumm.com")
+        obj.data.api.url = obj.data.api.baiwumm.url
+        obj.data.api.hot = obj.data.api.baiwumm.hot
+    } else {
+        switch (GM_getValue("Config.api")) {
+            case "hot.baiwumm.com":
+                obj.data.api.url = obj.data.api.baiwumm.url
+                obj.data.api.hot = obj.data.api.baiwumm.hot
+                break
+            case "hot.cnxiaobai.com":
+                obj.data.api.url = obj.data.api.cnxiaobai.url
+                obj.data.api.hot = obj.data.api.cnxiaobai.hot
+                break
+            case "hot.nankoyo.com":
+                obj.data.api.url = obj.data.api.nankoyo.url
+                obj.data.api.hot = obj.data.api.nankoyo.hot
+                break
+            default:
+                GM_setValue("Config.api", "hot.baiwumm.com")
+                obj.data.api.url = obj.data.api.baiwumm.url
+                obj.data.api.hot = obj.data.api.baiwumm.hot
+                break
+        }
     }
 }
 
@@ -487,22 +534,27 @@ obj.taskSign = function () {
 obj.getTopKeyword = async function () {
     const query = await new Promise((resolve, reject) => {
         if (obj.task.search.word.index < 1 || obj.task.search.word.list.length < 1) {
-            const apiName = obj.getRandomUrl()
-            GM_setValue("last_name", apiName)
+            const apiHot = obj.getRandomApiHot()
+            GM_setValue("last_name", apiHot)
             GM_xmlhttpRequest({
-                url: `https://hot.baiwumm.com/api/${apiName}`,
+                url: obj.data.api.url + apiHot,
                 onload(xhr) {
+                    let sentence = obj.getRandomSentence(obj.data.query, 3)
                     if (xhr.status == 200) {
-                        obj.task.search.word.index = 1
                         let res = xhr.responseText
                         res = JSON.parse(res)
-                        for (let i = 0; i < res.data.length; i++) {
-                            obj.task.search.word.list.push(res.data[i].title)
+                        if (res.code == 200) {
+                            obj.task.search.word.index = 1
+                            for (let i = 0; i < res.data.length; i++) {
+                                obj.task.search.word.list.push(res.data[i].title)
+                            }
+                            obj.task.search.word.list = obj.getRandomArr(obj.task.search.word.list)
+                            sentence = obj.task.search.word.list[obj.task.search.word.index]
+                            resolve(sentence)
+                        } else {
+                            resolve(sentence)
                         }
-                        obj.task.search.word.list = obj.getRandomArr(obj.task.search.word.list)
-                        resolve(obj.task.search.word.list[obj.task.search.word.index])
                     } else {
-                        const sentence = obj.getRandomSentence(obj.data.query, 3) + Date.now() % 1000
                         resolve(sentence)
                     }
                 }
