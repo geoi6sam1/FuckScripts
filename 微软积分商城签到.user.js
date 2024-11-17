@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.4
+// @version         2.2.5
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -119,7 +119,7 @@ const obj = {
                 progress: 0,
                 max: 1,
             },
-            limit: -99,
+            limit: 0,
         },
         token: "",
     },
@@ -198,7 +198,6 @@ obj.beforeStart = function () {
     })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
-        obj.task.search.limit = 0
     }
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
@@ -599,50 +598,53 @@ obj.taskSearch = async function () {
             } else {
                 obj.task.search.m.max = 0
             }
-            if (obj.task.search.limit > obj.getScopeRandomNum(3, 5)) {
-                GM_setValue("task_search", 1)
-                GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.limit} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
-                return true
-            } else if (obj.task.search.times > 2) {
-                GM_setValue("task_search", 1)
-                GM_log(`微软积分商城必应搜索🟡您的积分收入限制！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
-                return true
+            if (GM_getValue("Config.limit") == "开") {
+                if (obj.task.search.limit > obj.getScopeRandomNum(3, 5)) {
+                    GM_setValue("task_search", 1)
+                    GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.limit} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                    return true
+                }
             } else {
+                if (obj.task.search.times > 2) {
+                    GM_setValue("task_search", 1)
+                    GM_log(`微软积分商城必应搜索🟡您的积分收入限制！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                    return true
+                }
                 if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == obj.task.search.progressNow) {
                     obj.task.search.times++
                 } else {
                     obj.task.search.times = 0
                     obj.task.search.progressNow = dashboard.userStatus.counters.dailyPoint[0].pointProgress
                 }
-                if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
-                    GM_setValue("task_search", obj.data.time.dateNowNum)
-                    obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
-                    return true
-                } else {
-                    if (obj.task.search.pc.progress < obj.task.search.pc.max) {
-                        const keyword = await obj.getTopKeyword()
-                        GM_xmlhttpRequest({
-                            url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                            headers: {
-                                "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)],
-                                "Referer": `https://${obj.task.search.domain}/`
-                            },
-                            onload: onload
-                        })
-                        return false
-                    }
-                    if (obj.task.search.m.progress < obj.task.search.m.max) {
-                        const keyword = await obj.getTopKeyword()
-                        GM_xmlhttpRequest({
-                            url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
-                            headers: {
-                                "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)],
-                                "Referer": `https://${obj.task.search.domain}/`
-                            },
-                            onload: onload
-                        })
-                        return false
-                    }
+            }
+            if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
+                GM_setValue("task_search", obj.data.time.dateNowNum)
+                obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
+                return true
+            } else {
+                if (obj.task.search.pc.progress < obj.task.search.pc.max) {
+                    const keyword = await obj.getTopKeyword()
+                    GM_xmlhttpRequest({
+                        url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        headers: {
+                            "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)],
+                            "Referer": `https://${obj.task.search.domain}/`
+                        },
+                        onload: onload
+                    })
+                    return false
+                }
+                if (obj.task.search.m.progress < obj.task.search.m.max) {
+                    const keyword = await obj.getTopKeyword()
+                    GM_xmlhttpRequest({
+                        url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        headers: {
+                            "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)],
+                            "Referer": `https://${obj.task.search.domain}/`
+                        },
+                        onload: onload
+                    })
+                    return false
                 }
             }
         }
