@@ -599,7 +599,7 @@ obj.taskSearch = async function () {
                 obj.task.search.m.max = 0
             }
             if (GM_getValue("Config.limit") == "开") {
-                if (obj.task.search.limit > obj.getScopeRandomNum(3, 5)) {
+                if (obj.task.search.limit > obj.getScopeRandomNum(2, 5)) {
                     GM_setValue("task_search", 1)
                     GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.limit} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
@@ -711,7 +711,7 @@ return new Promise((resolve, reject) => {
         obj.searchStart = async function () {
             try {
                 const result = await obj.taskSearch()
-                result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 12345))
+                result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 16789))
             } catch (e) {
                 reject(e)
             }
