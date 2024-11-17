@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.3
+// @version         2.2.4
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -42,7 +42,7 @@ Config:
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
     type: textarea
   api:
-    title: 搜索API
+    title: 搜索词API
     type: select
     default: hot.baiwumm.com
     values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.nankoyo.com]
@@ -157,11 +157,14 @@ obj.getRandomSentence = function (a, l) {
 
 
 obj.getRandomApiHot = function () {
-    if (GM_getValue("last_name") == null) {
-        GM_setValue("last_name", "")
+    if (GM_getValue("last_index") == null) {
+        GM_setValue("last_index", -1)
     }
-    const filteredArr = obj.data.api.hot.filter(name => name != GM_getValue("last_name"));
-    return filteredArr[obj.getRandomNum(filteredArr.length)];
+    const lastIndex = parseInt(GM_getValue("last_index"))
+    const filteredArr = obj.data.api.hot.filter((name, index) => index != lastIndex)
+    const randomIndex = obj.getRandomNum(filteredArr.length)
+    GM_setValue("last_index", randomIndex)
+    return filteredArr[randomIndex]
 }
 
 
@@ -535,7 +538,6 @@ obj.getTopKeyword = async function () {
     const query = await new Promise((resolve, reject) => {
         if (obj.task.search.word.index < 1 || obj.task.search.word.list.length < 1) {
             const apiHot = obj.getRandomApiHot()
-            GM_setValue("last_name", apiHot)
             GM_xmlhttpRequest({
                 url: obj.data.api.url + apiHot,
                 onload(xhr) {
