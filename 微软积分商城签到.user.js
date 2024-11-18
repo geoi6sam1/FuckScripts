@@ -711,7 +711,7 @@ return new Promise((resolve, reject) => {
         obj.searchStart = async function () {
             try {
                 const result = await obj.taskSearch()
-                result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 16789))
+                result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 15678))
             } catch (e) {
                 reject(e)
             }
