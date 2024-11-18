@@ -209,7 +209,7 @@ obj.beforeStart = function () {
     })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
-        obj.task.search.limit = obj.getScopeRandomNum(2, 4)
+        obj.task.search.limit = obj.getScopeRandomNum(2, 5)
     }
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
