@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.5
+// @version         2.2.6
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -21,6 +21,8 @@
 // @connect         prod.rewardsplatform.microsoft.com
 // @connect         hot.baiwumm.com
 // @connect         cnxiaobai.com
+// @connect         hotapi.zhusun.top
+// @connect         hotapi.lysdad.cn
 // @connect         daily-hot-api.nankoyo.com
 // @license         GPL-3.0
 // ==/UserScript==
@@ -45,7 +47,7 @@ Config:
     title: 搜索词API
     type: select
     default: hot.baiwumm.com
-    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.nankoyo.com]
+    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.lysdad.cn, hot.nankoyo.com]
  ==/UserConfig== */
 
 
@@ -76,15 +78,23 @@ const obj = {
         api: {
             baiwumm: {
                 url: "https://hot.baiwumm.com/api/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq", "netease"]
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq", "netease", "zhihu"]
             },
             cnxiaobai: {
                 url: "https://cnxiaobai.com/DailyHotApi/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news"],
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
+            },
+            zhusun: {
+                url: "https://hotapi.zhusun.top/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
+            },
+            lysdad: {
+                url: "https://hotapi.lysdad.cn/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "newsqq", "netease", "zhihu"],
             },
             nankoyo: {
                 url: "https://daily-hot-api.nankoyo.com/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news"],
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
             url: "",
             hot: [],
@@ -119,7 +129,8 @@ const obj = {
                 progress: 0,
                 max: 1,
             },
-            limit: 0,
+            index: 0,
+            limit: 3,
         },
         token: "",
     },
@@ -198,6 +209,7 @@ obj.beforeStart = function () {
     })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
+        obj.task.search.limit = obj.getScopeRandomNum(2, 4)
     }
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
@@ -218,6 +230,14 @@ obj.beforeStart = function () {
             case "hot.cnxiaobai.com":
                 obj.data.api.url = obj.data.api.cnxiaobai.url
                 obj.data.api.hot = obj.data.api.cnxiaobai.hot
+                break
+            case "hot.zhusun.top":
+                obj.data.api.url = obj.data.api.zhusun.url
+                obj.data.api.hot = obj.data.api.zhusun.hot
+                break
+            case "hot.lysdad.cn":
+                obj.data.api.url = obj.data.api.lysdad.url
+                obj.data.api.hot = obj.data.api.lysdad.hot
                 break
             case "hot.nankoyo.com":
                 obj.data.api.url = obj.data.api.nankoyo.url
@@ -586,7 +606,7 @@ obj.taskSearch = async function () {
                 if (url.host != obj.task.search.domain) {
                     obj.task.search.domain = url.host
                 }
-                obj.task.search.limit++
+                obj.task.search.index++
             }
             if (dashboard.userStatus.counters.pcSearch) {
                 obj.task.search.pc.progress = dashboard.userStatus.counters.pcSearch[0].pointProgress
@@ -599,15 +619,15 @@ obj.taskSearch = async function () {
                 obj.task.search.m.max = 0
             }
             if (GM_getValue("Config.limit") == "开") {
-                if (obj.task.search.limit > obj.getScopeRandomNum(2, 5)) {
+                if (obj.task.search.index > obj.task.search.limit) {
                     GM_setValue("task_search", 1)
-                    GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.limit} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                    GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.index} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
             } else {
                 if (obj.task.search.times > 2) {
                     GM_setValue("task_search", 1)
-                    GM_log(`微软积分商城必应搜索🟡您的积分收入限制！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
+                    GM_log(`微软积分商城必应搜索🟡您的积分收入限制！本次运行共搜索 ${obj.task.search.index} 次！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
                 if (dashboard.userStatus.counters.dailyPoint[0].pointProgress == obj.task.search.progressNow) {
