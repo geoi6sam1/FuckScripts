@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.6
+// @version         2.2.6.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -209,7 +209,7 @@ obj.beforeStart = function () {
     })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
-        obj.task.search.limit = obj.getScopeRandomNum(2, 5)
+        obj.task.search.limit = obj.getScopeRandomNum(3, 7)
     }
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
@@ -553,8 +553,8 @@ obj.taskSign = function () {
 }
 
 
-obj.getTopKeyword = async function () {
-    const query = await new Promise((resolve, reject) => {
+obj.getTopKeyword = function () {
+    return new Promise((resolve, reject) => {
         if (obj.task.search.word.index < 1 || obj.task.search.word.list.length < 1) {
             const apiHot = obj.getRandomApiHot()
             GM_xmlhttpRequest({
@@ -589,7 +589,6 @@ obj.getTopKeyword = async function () {
             resolve(sentence)
         }
     })
-    return query + Date.now() % 1000
 }
 
 
@@ -727,7 +726,7 @@ return new Promise((resolve, reject) => {
             } catch (e) {
                 reject(e)
             }
-        }
+        }()
         obj.searchStart = async function () {
             try {
                 const result = await obj.taskSearch()
@@ -735,14 +734,12 @@ return new Promise((resolve, reject) => {
             } catch (e) {
                 reject(e)
             }
-        }
-        obj.promoStart()
+        }()
         if (GM_getValue("Config.app") == "开") {
             obj.signStart()
             obj.readStart()
         } else {
             obj.appOver()
         }
-        obj.searchStart()
     }
 })
