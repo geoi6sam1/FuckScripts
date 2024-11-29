@@ -726,7 +726,7 @@ return new Promise((resolve, reject) => {
             } catch (e) {
                 reject(e)
             }
-        }()
+        }
         obj.searchStart = async function () {
             try {
                 const result = await obj.taskSearch()
@@ -734,12 +734,14 @@ return new Promise((resolve, reject) => {
             } catch (e) {
                 reject(e)
             }
-        }()
+        }
+        obj.promoStart()
         if (GM_getValue("Config.app") == "开") {
             obj.signStart()
             obj.readStart()
         } else {
             obj.appOver()
         }
+        obj.searchStart()
     }
 })
