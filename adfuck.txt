@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: ADFUCK
-! Version: 2024103114
+! Version: 2024120416
 ! Expires: 2 days
 ! 👇👇过滤规则推荐👇👇
 ! EasyPrivacy：https://easylist-downloads.adblockplus.org/easyprivacy.txt
@@ -17,10 +17,10 @@
 
 
 ! ---------必应搜索---------
-bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta)
+bing.com##.b_ad, .ad_sc, .adsblock, #ads_banner, #sacs_win, li.b_algo:has(.b_attribution[data-partnertag]), li.b_algo:has(.b_lineclamp2.b_algoslug), .b_hPanel:has([class*="bingApp_"]), .sidebar:has(.ads_dwn), #bgPro, #b_pole, #id_mobile, #suspenBar, #b_opalpers, #bnp_ttc_div, #bnp_rich_div, #b_ims_bza_pole, #ev_talkbox_wrapper, #idCont [id*="id_qrcode"], #b_notificationContainer_bop, li.b_ans:has(#opal_serpftrcta)
 
 ! ---------腾讯视频---------
-v.qq.com,film.qq.com##.quick_games, .client_download, .link_vip.__open_vip_tv, .playlist-vip-section__vip, .preview-mini-player, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_container, #iwan-game, .banner-ad, .txp_ad, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, .bottom-wrapper, .at-app-banner
+v.qq.com,film.qq.com##.quick_games, .client_download, .link_vip.__open_vip_tv, .playlist-vip-section__vip, .preview-mini-player, .video-card-module [dt-params*="ad_"], .focus-wrap [dt-eid*="ad_poster"], a[href*="9377s."], a[href*="qqgame."], a[href*="gamer."], a[href*="iwan."], .video-banner-module:has(a[href*="9377s."]), .video-banner-module:has(a[href*="qqgame."]), .video-banner-module:has(a[href*="gamer."]), .video-banner-module:has(a[href*="iwan."]), #iwan-gamependant-page, .tip_download, .vip_act, .fixed_box, #ad_pc-index-vip-tips, #channel-vip-popup, #ad_container, #iwan-game, .banner-ad, .txp_ad, .game-switch-ad, .player-comment-btn, iframe[data-src*="mall."], [class*="txp_full_screen_pause"], [data-role*="creative-player-pause"], #ad_m-site, .open-app.old-open, .bottom-wrapper, .at-app-banner
 v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_DESTROY', '')
 v.qq.com#%#//scriptlet('set-constant', 'CreativePlayerwebPlugin.AD_EVENT.AD_LOAD_START', '')
 
@@ -44,7 +44,7 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 ||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com,123pan.cn,123865.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,[class*="header-waning-tips"],.loginModal-footer.payment-footer,.activity-box,.bg_svip_block_ads,.uppy-Dashboard-slowSpeed-banner
+123pan.com,123pan.cn,123865.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,[class*="header-waning-tips"],.loginModal-footer.payment-footer,.activity-box,.bg_svip_block_ads,.uppy-Dashboard-slowSpeed-banner,.ant-modal-content .download-msgInfo-phone,.download-pay-footer
 123pan.com,123pan.cn,123865.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
 123pan.com,123pan.cn,123865.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
 123pan.com,123pan.cn,123865.com#$#.webbody.svip-body { height: 0 !important; }
