@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.1.8
+// @version         1.1.9
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
 // @author          geoi6sam1@qq.com
 // @icon            https://v.qq.com/favicon.ico
@@ -104,6 +104,8 @@ a[href*="iwan."],
 .tip_download,
 .vip_act,
 .fixed_box,
+#ad_pc-index-vip-tips,
+#channel-vip-popup,
 #ad_container,
 #iwan-game,
 .banner-ad,
