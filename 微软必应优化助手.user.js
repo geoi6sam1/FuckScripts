@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软必应优化助手
 // @namespace       https://github.com/geoi6sam1
-// @version         1.2.3
+// @version         1.2.4
 // @description     微软必应（Microsoft Bing）搜索结果优化，支持电脑端和移动端
 // @author          geoi6sam1
 // @icon            https://bing.com/favicon.ico
@@ -109,6 +109,7 @@ li.b_ans:has(.b_mrs)
 #ads_banner,
 #sacs_win,
 li.b_algo:has(.b_attribution[data-partnertag]),
+li.b_algo:has(.b_lineclamp2.b_algoslug),
 .b_hPanel:has([class*="bingApp_"]),
 .sidebar:has(.ads_dwn),
 #bgPro,
