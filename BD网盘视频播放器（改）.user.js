@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         百度网盘视频播放器（改）
+// @name         BD网盘视频播放器（改）
 // @namespace    https://github.com/geoi6sam1
 // @version      0.8.5.20241212
 // @description  https://scriptcat.org/script-show-page/340
