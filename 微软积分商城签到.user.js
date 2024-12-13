@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.6.1
+// @version         2.2.6.5
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
-// @icon            https://rewards.bing.com/rewards.png
+// @icon            https://geoi6sam1.github.io/assets/images/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @crontab         */20 * * * *
 // @grant           unsafeWindow
@@ -22,7 +22,8 @@
 // @connect         hot.baiwumm.com
 // @connect         cnxiaobai.com
 // @connect         hotapi.zhusun.top
-// @connect         hotapi.lysdad.cn
+// @connect         api-hot.imsyy.top
+// @connect         hotapi.nntool.cc
 // @connect         daily-hot-api.nankoyo.com
 // @license         GPL-3.0
 // ==/UserScript==
@@ -30,24 +31,24 @@
 /* ==UserConfig==
 Config:
   limit:
-    title: 限制搜索
+    title: 限制搜索（4~8搜/次）
     type: select
     default: 开
     values: [开, 关]
   app:
-    title: App任务
+    title: APP任务（签到+阅读）
     type: select
     default: 关
     values: [开, 关]
   code:
-    title: 授权Code
-    default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
+    title: 授权Code（一次性）
     type: textarea
+    default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
   api:
-    title: 搜索词API
+    title: 搜索词API（速度自测）
     type: select
     default: hot.baiwumm.com
-    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.lysdad.cn, hot.nankoyo.com]
+    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.imsyy.top, hot.nntool.cc, hot.nankoyo.com]
  ==/UserConfig== */
 
 
@@ -88,14 +89,19 @@ const obj = {
                 url: "https://hotapi.zhusun.top/",
                 hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
-            lysdad: {
-                url: "https://hotapi.lysdad.cn/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "newsqq", "netease", "zhihu"],
+            imsyy: {
+                url: "https://api-hot.imsyy.top/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
+            },
+            nntool: {
+                url: "https://hotapi.nntool.cc/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
             nankoyo: {
                 url: "https://daily-hot-api.nankoyo.com/",
                 hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
+            arr: ["hot.baiwumm.com", "hot.cnxiaobai.com", "hot.zhusun.top", "hot.imsyy.top", "hot.nntool.cc", "hot.nankoyo.com"],
             url: "",
             hot: [],
         },
@@ -104,13 +110,18 @@ const obj = {
         sign: {
             times: 0,
             point: 1,
+            token: 0,
+            isEnd: 0,
         },
         read: {
             times: 0,
             point: 0,
+            token: 0,
+            isEnd: 0,
         },
         promo: {
             times: 0,
+            isEnd: 0,
         },
         search: {
             word: {
@@ -131,6 +142,7 @@ const obj = {
             },
             index: 0,
             limit: 3,
+            isEnd: 0,
         },
         token: "",
     },
@@ -185,7 +197,7 @@ obj.pushMsg = function (title, text) {
     GM_notification({
         text: text,
         title: title,
-        image: "https://rewards.bing.com/rewards.png",
+        image: "https://geoi6sam1.github.io/assets/images/rewards.png",
         onclick: () => {
             GM_openInTab("https://rewards.bing.com/pointsbreakdown", { active: true, insert: true, setParent: true })
         }
@@ -201,12 +213,9 @@ obj.beforeStart = function () {
     obj.data.time.hoursNow = Number(dateTime.getHours())
     obj.data.time.dateNow = `${monthNow}/${dayNow}/${yearNow}`
     obj.data.time.dateNowNum = Number(`${yearNow}${monthNow}${dayNow}`)
-    const startArr = ["refresh_token", "last_date"]
-    startArr.forEach((item) => {
-        if (GM_getValue(item) == null) {
-            GM_setValue(item, "")
-        }
-    })
+    if (GM_getValue("refresh_token") == null) {
+        GM_setValue("refresh_token", "")
+    }
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
         obj.task.search.limit = obj.getScopeRandomNum(3, 7)
@@ -217,7 +226,7 @@ obj.beforeStart = function () {
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", obj.data.code)
     }
-    if (GM_getValue("Config.api") == null) {
+    if (GM_getValue("Config.api") == null || obj.data.api.arr.indexOf(GM_getValue("Config.api")) == -1) {
         GM_setValue("Config.api", "hot.baiwumm.com")
         obj.data.api.url = obj.data.api.baiwumm.url
         obj.data.api.hot = obj.data.api.baiwumm.hot
@@ -235,9 +244,13 @@ obj.beforeStart = function () {
                 obj.data.api.url = obj.data.api.zhusun.url
                 obj.data.api.hot = obj.data.api.zhusun.hot
                 break
-            case "hot.lysdad.cn":
-                obj.data.api.url = obj.data.api.lysdad.url
-                obj.data.api.hot = obj.data.api.lysdad.hot
+            case "hot.imsyy.top":
+                obj.data.api.url = obj.data.api.imsyy.url
+                obj.data.api.hot = obj.data.api.imsyy.hot
+                break
+            case "hot.nntool.cc":
+                obj.data.api.url = obj.data.api.nntool.url
+                obj.data.api.hot = obj.data.api.nntool.hot
                 break
             case "hot.nankoyo.com":
                 obj.data.api.url = obj.data.api.nankoyo.url
@@ -250,18 +263,11 @@ obj.beforeStart = function () {
                 break
         }
     }
-}
-
-
-obj.appOver = function () {
-    GM_setValue("task_sign", 1)
-    GM_setValue("task_read", 1)
-}
-
-
-obj.webOver = function () {
-    GM_setValue("task_promo", 1)
-    GM_setValue("task_search", 1)
+    obj.data.task.forEach((item) => {
+        if (GM_getValue(item) == null || GM_getValue(item) != obj.data.time.dateNowNum) {
+            GM_setValue(item, 0)
+        }
+    })
 }
 
 
@@ -278,14 +284,15 @@ obj.getToken = function (url) {
                     GM_setValue("refresh_token", refreshToken)
                     obj.task.token = accessToken
                 } else {
+                    obj.task.sign.isEnd++
+                    obj.task.read.isEnd++
                     GM_setValue("refresh_token", "")
-                    obj.appOver()
-                    obj.pushMsg("App任务🔴", "刷新Token过期，请获取并补充授权Code后运行！")
+                    obj.pushMsg("App任务🔴", "RefreshToken过期，请获取并补充授权Code后运行！")
                 }
             } else {
-                GM_setValue("refresh_token", "")
-                obj.appOver()
-                obj.pushMsg("App任务🔴", "刷新Token获取出错！状态码：" + xhr.status)
+                obj.task.sign.isEnd++
+                obj.task.read.isEnd++
+                GM_log("微软积分商城App任务🔴RefreshToken获取出错！状态码：" + xhr.status)
             }
         }
     })
@@ -301,7 +308,8 @@ obj.isExpired = function () {
             obj.getToken(encodeURI(url))
             GM_setValue("Config.code", obj.data.code)
         } else {
-            obj.appOver()
+            obj.task.sign.isEnd++
+            obj.task.read.isEnd++
             obj.pushMsg("App任务🔴", "授权Code错误，请获取并补充授权Code后运行！")
             GM_setValue("Config.code", obj.data.code)
         }
@@ -325,13 +333,15 @@ obj.getRewardsInfo = function () {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
                     } else {
-                        obj.webOver()
-                        obj.pushMsg("Web任务🔴", "账号状态失效，请检查微软账号登录状态或重新登录！")
+                        obj.task.sign.isEnd++
+                        obj.task.read.isEnd++
+                        obj.task.promo.isEnd++
+                        obj.task.search.isEnd++
+                        obj.pushMsg("All任务🔴", "账号状态失效，请检查Microsoft登录状态或重新登录！")
                         resolve("")
                     }
                 } else {
-                    obj.webOver()
-                    obj.pushMsg("Web任务🔴", "微软积分商城信息获取出错！状态码：" + xhr.status)
+                    GM_log("微软积分商城Web任务🔴Rewards信息获取出错！状态码：" + xhr.status)
                     resolve("")
                 }
             }
@@ -353,12 +363,13 @@ obj.getRewardsToken = function () {
                         const token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
                         resolve(token[1])
                     } else {
-                        GM_setValue("task_promo", 1)
-                        obj.pushMsg("活动推广🔴", "请求验证失败，请检查微软积分商城登录状态或重新登录！")
-                        resolve(xhr.status)
+                        obj.task.promo.isEnd++
+                        obj.pushMsg("活动推广🔴", "请求验证失败，请检查Rewards登录状态或重新登录！")
+                        resolve("")
                     }
                 } else {
-                    resolve(xhr.status)
+                    GM_log("微软积分商城Web任务🔴RequestVerificationToken获取出错！状态码：" + xhr.status)
+                    resolve("")
                 }
             }
         })
@@ -367,13 +378,13 @@ obj.getRewardsToken = function () {
 
 
 obj.taskPromo = async function () {
-    if (GM_getValue("task_promo") != 0) {
+    if (obj.task.promo.isEnd > 0) {
         return true
     } else if (obj.data.time.hoursNow < 12) {
-        GM_setValue("task_promo", 1)
+        obj.task.promo.isEnd++
         return true
     } else if (obj.task.promo.times > 2) {
-        GM_setValue("task_promo", 1)
+        obj.task.promo.isEnd++
         obj.pushMsg("活动推广🔴", "未知原因出错，本次活动推广结束！")
         return true
     } else {
@@ -390,24 +401,31 @@ obj.taskPromo = async function () {
                 }
             }
             if (promotionsArr.length < 1) {
+                obj.task.promo.isEnd++
+                if (GM_getValue("task_promo") == 0) {
+                    obj.pushMsg("活动推广🟢", "哇！哥哥好棒！活动推广完成了！")
+                }
                 GM_setValue("task_promo", obj.data.time.dateNowNum)
-                obj.pushMsg("活动推广🟢", "哇！哥哥好棒！活动推广完成了！")
                 return true
             } else {
                 const token = await obj.getRewardsToken()
-                promotionsArr.forEach((item) => {
-                    GM_xmlhttpRequest({
-                        method: "POST",
-                        url: `https://rewards.bing.com/api/reportactivity`,
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "Referer": `https://rewards.bing.com/`
-                        },
-                        data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+                if (token == "") {
+                    return false
+                } else {
+                    promotionsArr.forEach((item) => {
+                        GM_xmlhttpRequest({
+                            method: "POST",
+                            url: `https://rewards.bing.com/api/reportactivity`,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                                "Referer": `https://rewards.bing.com/`
+                            },
+                            data: `id=${item.offerId}&hash=${item.hash}&__RequestVerificationToken=${token}`
+                        })
                     })
-                })
-                obj.task.promo.times++
-                return false
+                    obj.task.promo.times++
+                    return false
+                }
             }
         }
     }
@@ -417,50 +435,53 @@ obj.taskPromo = async function () {
 obj.getReadPro = function () {
     return new Promise((resolve, reject) => {
         let readArr = { "max": 1, "progress": 0 }
-        if (obj.task.token == "") {
-            resolve(readArr)
-        } else {
-            GM_xmlhttpRequest({
-                url: "https://prod.rewardsplatform.microsoft.com/dapi/me?channel=SAAndroid&options=613",
-                headers: {
-                    "authorization": `Bearer ${obj.task.token}`
-                },
-                onload(xhr) {
-                    if (xhr.status == 200) {
-                        let res = xhr.responseText
-                        res = JSON.parse(res)
-                        const pro = res.response.promotions
-                        if (pro) {
-                            for (const o of pro) {
-                                if (o.attributes.offerid == "ENUS_readarticle3_30points") {
-                                    readArr = { "max": Number(o.attributes.max), "progress": Number(o.attributes.progress) }
-                                    resolve(readArr)
-                                }
+        GM_xmlhttpRequest({
+            url: "https://prod.rewardsplatform.microsoft.com/dapi/me?channel=SAAndroid&options=613",
+            headers: {
+                "authorization": `Bearer ${obj.task.token}`
+            },
+            onload(xhr) {
+                if (xhr.status == 200) {
+                    let res = xhr.responseText
+                    res = JSON.parse(res)
+                    const pro = res.response.promotions
+                    if (pro) {
+                        for (const o of pro) {
+                            if (o.attributes.offerid == "ENUS_readarticle3_30points") {
+                                readArr = { "max": Number(o.attributes.max), "progress": Number(o.attributes.progress) }
+                                resolve(readArr)
                             }
-                        } else {
-                            resolve(readArr)
                         }
                     } else {
                         resolve(readArr)
                     }
+                } else {
+                    resolve(readArr)
                 }
-            })
-        }
+            }
+        })
     })
 }
 
 
 obj.taskRead = async function () {
-    if (GM_getValue("task_read") != 0) {
+    if (obj.task.read.isEnd > 0) {
         return true
     } else if (obj.data.time.hoursNow < 12) {
-        GM_setValue("task_read", 1)
+        obj.task.read.isEnd++
         return true
     } else if (obj.task.read.times > 2) {
-        GM_setValue("task_read", 1)
+        obj.task.read.isEnd++
         obj.pushMsg("文章阅读🔴", "未知原因出错，本次文章阅读结束！")
         return true
+    } else if (obj.task.read.token > 9) {
+        obj.task.read.isEnd++
+        return true
+    } else if (obj.task.token == "") {
+        obj.task.read.token++
+        return false
     } else {
+        obj.task.read.token = 0
         const readPro = await obj.getReadPro()
         if (readPro.progress > obj.task.read.point) {
             obj.task.read.times = 0
@@ -469,12 +490,12 @@ obj.taskRead = async function () {
             obj.task.read.times++
         }
         if (readPro.progress >= readPro.max) {
+            obj.task.read.isEnd++
+            if (GM_getValue("task_read") == 0) {
+                obj.pushMsg("文章阅读🟢", "哇！哥哥好棒！文章阅读完成了！")
+            }
             GM_setValue("task_read", obj.data.time.dateNowNum)
-            obj.pushMsg("文章阅读🟢", "哇！哥哥好棒！文章阅读完成了！")
             return true
-        } else if (obj.task.token == "") {
-            obj.task.read.times = 0
-            return false
         } else {
             GM_xmlhttpRequest({
                 method: "POST",
@@ -501,19 +522,27 @@ obj.taskRead = async function () {
 
 
 obj.taskSign = function () {
-    if (GM_getValue("task_sign") != 0) {
+    if (obj.task.sign.isEnd > 0) {
         return true
     } else if (obj.task.sign.times > 2) {
-        GM_setValue("task_sign", 1)
+        obj.task.sign.isEnd++
         obj.pushMsg("App签到🔴", "未知原因出错，本次App签到结束！")
         return true
     } else if (obj.task.sign.point == 0) {
+        obj.task.sign.isEnd++
+        if (GM_getValue("task_sign") == 0) {
+            obj.pushMsg("App签到🟢", "哇！哥哥好棒！App签到完成了！")
+        }
         GM_setValue("task_sign", obj.data.time.dateNowNum)
-        obj.pushMsg("App签到🟢", "哇！哥哥好棒！App签到完成了！")
+        return true
+    } else if (obj.task.sign.token > 9) {
+        obj.task.sign.isEnd++
         return true
     } else if (obj.task.token == "") {
+        obj.task.sign.token++
         return false
     } else {
+        obj.task.sign.token = 0
         GM_xmlhttpRequest({
             method: "POST",
             url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
@@ -593,7 +622,7 @@ obj.getTopKeyword = function () {
 
 
 obj.taskSearch = async function () {
-    if (GM_getValue("task_search") != 0) {
+    if (obj.task.search.isEnd > 0) {
         return true
     } else {
         const dashboard = await obj.getRewardsInfo()
@@ -619,13 +648,13 @@ obj.taskSearch = async function () {
             }
             if (GM_getValue("Config.limit") == "开") {
                 if (obj.task.search.index > obj.task.search.limit) {
-                    GM_setValue("task_search", 1)
+                    obj.task.search.isEnd++
                     GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.index} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
             } else {
                 if (obj.task.search.times > 2) {
-                    GM_setValue("task_search", 1)
+                    obj.task.search.isEnd++
                     GM_log(`微软积分商城必应搜索🟡您的积分收入限制！本次运行共搜索 ${obj.task.search.index} 次！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
@@ -637,8 +666,11 @@ obj.taskSearch = async function () {
                 }
             }
             if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
+                obj.task.search.isEnd++
+                if (GM_getValue("task_search") == 0) {
+                    obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
+                }
                 GM_setValue("task_search", obj.data.time.dateNowNum)
-                obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
                 return true
             } else {
                 if (obj.task.search.pc.progress < obj.task.search.pc.max) {
@@ -675,73 +707,49 @@ return new Promise((resolve, reject) => {
     obj.beforeStart()
     if (GM_getValue("Config.app") == "开") {
         obj.isExpired()
-    }
-    if (GM_getValue("last_date") == obj.data.time.dateNowNum) {
-        resolve()
     } else {
-        obj.data.task.forEach((item) => {
-            if (GM_getValue(item) == null || GM_getValue(item) != obj.data.time.dateNowNum) {
-                GM_setValue(item, 0)
-            }
-        })
-        obj.taskEnd = function () {
-            const taskplus = GM_getValue("task_sign") + GM_getValue("task_read") + GM_getValue("task_promo") + GM_getValue("task_search")
-            if (taskplus == (obj.data.time.dateNowNum * 4)) {
-                GM_setValue("last_date", obj.data.time.dateNowNum)
-                resolve()
-            } else {
-                let tasknum = 0
-                obj.data.task.forEach((item) => {
-                    if (GM_getValue(item) > 0) {
-                        tasknum++
-                    }
-                })
-                if (tasknum > 3) {
-                    resolve()
-                }
-            }
-        }
-        obj.signStart = async function () {
-            try {
-                const result = await obj.taskSign()
-                result ? obj.taskEnd() : setTimeout(() => { obj.signStart() }, 2333)
-            } catch (e) {
-                reject(e)
-            }
-        }
-        obj.readStart = async function () {
-            try {
-                const result = await obj.taskRead()
-                result ? obj.taskEnd() : setTimeout(() => { obj.readStart() }, 2333)
-
-            } catch (e) {
-                reject(e)
-            }
-
-        }
-        obj.promoStart = async function () {
-            try {
-                const result = await obj.taskPromo()
-                result ? obj.taskEnd() : setTimeout(() => { obj.promoStart() }, 2333)
-            } catch (e) {
-                reject(e)
-            }
-        }
-        obj.searchStart = async function () {
-            try {
-                const result = await obj.taskSearch()
-                result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 15678))
-            } catch (e) {
-                reject(e)
-            }
-        }
-        obj.promoStart()
-        if (GM_getValue("Config.app") == "开") {
-            obj.signStart()
-            obj.readStart()
-        } else {
-            obj.appOver()
-        }
-        obj.searchStart()
+        obj.task.sign.isEnd++
+        obj.task.read.isEnd++
     }
+    obj.taskEnd = function () {
+        if (obj.task.sign.isEnd > 0 && obj.task.read.isEnd > 0 && obj.task.promo.isEnd > 0 && obj.task.search.isEnd > 0) {
+            resolve()
+        }
+    }
+    obj.signStart = async function () {
+        try {
+            const result = await obj.taskSign()
+            result ? obj.taskEnd() : setTimeout(() => { obj.signStart() }, 2333)
+        } catch (e) {
+            reject(e)
+        }
+    }
+    obj.readStart = async function () {
+        try {
+            const result = await obj.taskRead()
+            result ? obj.taskEnd() : setTimeout(() => { obj.readStart() }, 2333)
+        } catch (e) {
+            reject(e)
+        }
+    }
+    obj.promoStart = async function () {
+        try {
+            const result = await obj.taskPromo()
+            result ? obj.taskEnd() : setTimeout(() => { obj.promoStart() }, 2333)
+        } catch (e) {
+            reject(e)
+        }
+    }
+    obj.searchStart = async function () {
+        try {
+            const result = await obj.taskSearch()
+            result ? obj.taskEnd() : setTimeout(() => { obj.searchStart() }, obj.getScopeRandomNum(6789, 12345))
+        } catch (e) {
+            reject(e)
+        }
+    }
+    obj.promoStart()
+    obj.signStart()
+    obj.readStart()
+    obj.searchStart()
 })
