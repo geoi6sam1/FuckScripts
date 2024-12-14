@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.6.5
+// @version         2.2.7
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
-// @icon            https://geoi6sam1.github.io/assets/images/rewards.png
+// @icon            https://rewards.bing.com/rewards.png
 // @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
 // @crontab         */20 * * * *
 // @grant           unsafeWindow
@@ -75,7 +75,6 @@ const obj = {
                 "Mozilla/5.0 (Linux; Android 10; HarmonyOS; ALN-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Version/4.0 Mobile Safari/537.36 EdgA/110.0.1587.61",
             ],
         },
-        task: ["task_sign", "task_read", "task_promo", "task_search"],
         api: {
             baiwumm: {
                 url: "https://hot.baiwumm.com/api/",
@@ -110,18 +109,16 @@ const obj = {
         sign: {
             times: 0,
             point: 1,
-            token: 0,
-            isEnd: 0,
+            end: 0,
         },
         read: {
             times: 0,
             point: 0,
-            token: 0,
-            isEnd: 0,
+            end: 0,
         },
         promo: {
             times: 0,
-            isEnd: 0,
+            end: 0,
         },
         search: {
             word: {
@@ -142,7 +139,7 @@ const obj = {
             },
             index: 0,
             limit: 3,
-            isEnd: 0,
+            end: 0,
         },
         token: "",
     },
@@ -263,11 +260,6 @@ obj.beforeStart = function () {
                 break
         }
     }
-    obj.data.task.forEach((item) => {
-        if (GM_getValue(item) == null || GM_getValue(item) != obj.data.time.dateNowNum) {
-            GM_setValue(item, 0)
-        }
-    })
 }
 
 
@@ -284,14 +276,14 @@ obj.getToken = function (url) {
                     GM_setValue("refresh_token", refreshToken)
                     obj.task.token = accessToken
                 } else {
-                    obj.task.sign.isEnd++
-                    obj.task.read.isEnd++
+                    obj.task.sign.end++
+                    obj.task.read.end++
                     GM_setValue("refresh_token", "")
                     obj.pushMsg("App任务🔴", "RefreshToken过期，请获取并补充授权Code后运行！")
                 }
             } else {
-                obj.task.sign.isEnd++
-                obj.task.read.isEnd++
+                obj.task.sign.end++
+                obj.task.read.end++
                 GM_log("微软积分商城App任务🔴RefreshToken获取出错！状态码：" + xhr.status)
             }
         }
@@ -308,8 +300,8 @@ obj.isExpired = function () {
             obj.getToken(encodeURI(url))
             GM_setValue("Config.code", obj.data.code)
         } else {
-            obj.task.sign.isEnd++
-            obj.task.read.isEnd++
+            obj.task.sign.end++
+            obj.task.read.end++
             obj.pushMsg("App任务🔴", "授权Code错误，请获取并补充授权Code后运行！")
             GM_setValue("Config.code", obj.data.code)
         }
@@ -333,10 +325,10 @@ obj.getRewardsInfo = function () {
                         res = JSON.parse(res)
                         resolve(res.dashboard)
                     } else {
-                        obj.task.sign.isEnd++
-                        obj.task.read.isEnd++
-                        obj.task.promo.isEnd++
-                        obj.task.search.isEnd++
+                        obj.task.sign.end++
+                        obj.task.read.end++
+                        obj.task.promo.end++
+                        obj.task.search.end++
                         obj.pushMsg("All任务🔴", "账号状态失效，请检查Microsoft登录状态或重新登录！")
                         resolve("")
                     }
@@ -363,7 +355,7 @@ obj.getRewardsToken = function () {
                         const token = html.match(/RequestVerificationToken"type="hidden"value="(.*?)"\/>/)
                         resolve(token[1])
                     } else {
-                        obj.task.promo.isEnd++
+                        obj.task.promo.end++
                         obj.pushMsg("活动推广🔴", "请求验证失败，请检查Rewards登录状态或重新登录！")
                         resolve("")
                     }
@@ -378,13 +370,13 @@ obj.getRewardsToken = function () {
 
 
 obj.taskPromo = async function () {
-    if (obj.task.promo.isEnd > 0) {
+    if (obj.task.promo.end > 0) {
         return true
     } else if (obj.data.time.hoursNow < 12) {
-        obj.task.promo.isEnd++
+        obj.task.promo.end++
         return true
     } else if (obj.task.promo.times > 2) {
-        obj.task.promo.isEnd++
+        obj.task.promo.end++
         obj.pushMsg("活动推广🔴", "未知原因出错，本次活动推广结束！")
         return true
     } else {
@@ -401,13 +393,14 @@ obj.taskPromo = async function () {
                 }
             }
             if (promotionsArr.length < 1) {
-                obj.task.promo.isEnd++
+                obj.task.promo.end++
                 if (GM_getValue("task_promo") == 0) {
                     obj.pushMsg("活动推广🟢", "哇！哥哥好棒！活动推广完成了！")
                 }
                 GM_setValue("task_promo", obj.data.time.dateNowNum)
                 return true
             } else {
+                GM_setValue("task_promo", 0)
                 const token = await obj.getRewardsToken()
                 if (token == "") {
                     return false
@@ -465,20 +458,16 @@ obj.getReadPro = function () {
 
 
 obj.taskRead = async function () {
-    if (obj.task.read.isEnd > 0) {
+    if (obj.task.read.end > 0) {
         return true
     } else if (obj.data.time.hoursNow < 12) {
-        obj.task.read.isEnd++
+        obj.task.read.end++
         return true
     } else if (obj.task.read.times > 2) {
-        obj.task.read.isEnd++
+        obj.task.read.end++
         obj.pushMsg("文章阅读🔴", "未知原因出错，本次文章阅读结束！")
         return true
-    } else if (obj.task.read.token > 9) {
-        obj.task.read.isEnd++
-        return true
     } else if (obj.task.token == "") {
-        obj.task.read.token++
         return false
     } else {
         obj.task.read.token = 0
@@ -490,13 +479,14 @@ obj.taskRead = async function () {
             obj.task.read.times++
         }
         if (readPro.progress >= readPro.max) {
-            obj.task.read.isEnd++
+            obj.task.read.end++
             if (GM_getValue("task_read") == 0) {
                 obj.pushMsg("文章阅读🟢", "哇！哥哥好棒！文章阅读完成了！")
             }
             GM_setValue("task_read", obj.data.time.dateNowNum)
             return true
         } else {
+            GM_setValue("task_read", 0)
             GM_xmlhttpRequest({
                 method: "POST",
                 url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
@@ -522,26 +512,23 @@ obj.taskRead = async function () {
 
 
 obj.taskSign = function () {
-    if (obj.task.sign.isEnd > 0) {
+    if (obj.task.sign.end > 0) {
         return true
     } else if (obj.task.sign.times > 2) {
-        obj.task.sign.isEnd++
+        obj.task.sign.end++
         obj.pushMsg("App签到🔴", "未知原因出错，本次App签到结束！")
         return true
     } else if (obj.task.sign.point == 0) {
-        obj.task.sign.isEnd++
+        obj.task.sign.end++
         if (GM_getValue("task_sign") == 0) {
             obj.pushMsg("App签到🟢", "哇！哥哥好棒！App签到完成了！")
         }
         GM_setValue("task_sign", obj.data.time.dateNowNum)
         return true
-    } else if (obj.task.sign.token > 9) {
-        obj.task.sign.isEnd++
-        return true
     } else if (obj.task.token == "") {
-        obj.task.sign.token++
         return false
     } else {
+        GM_setValue("task_sign", 0)
         obj.task.sign.token = 0
         GM_xmlhttpRequest({
             method: "POST",
@@ -622,7 +609,7 @@ obj.getTopKeyword = function () {
 
 
 obj.taskSearch = async function () {
-    if (obj.task.search.isEnd > 0) {
+    if (obj.task.search.end > 0) {
         return true
     } else {
         const dashboard = await obj.getRewardsInfo()
@@ -648,13 +635,13 @@ obj.taskSearch = async function () {
             }
             if (GM_getValue("Config.limit") == "开") {
                 if (obj.task.search.index > obj.task.search.limit) {
-                    obj.task.search.isEnd++
+                    obj.task.search.end++
                     GM_log(`微软积分商城必应搜索🟡您已开启限制搜索，本次运行搜索 ${obj.task.search.index} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
             } else {
                 if (obj.task.search.times > 2) {
-                    obj.task.search.isEnd++
+                    obj.task.search.end++
                     GM_log(`微软积分商城必应搜索🟡您的积分收入限制！本次运行共搜索 ${obj.task.search.index} 次！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
                     return true
                 }
@@ -666,13 +653,14 @@ obj.taskSearch = async function () {
                 }
             }
             if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
-                obj.task.search.isEnd++
+                obj.task.search.end++
                 if (GM_getValue("task_search") == 0) {
                     obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
                 }
                 GM_setValue("task_search", obj.data.time.dateNowNum)
                 return true
             } else {
+                GM_setValue("task_search", 0)
                 if (obj.task.search.pc.progress < obj.task.search.pc.max) {
                     const keyword = await obj.getTopKeyword()
                     GM_xmlhttpRequest({
@@ -708,11 +696,11 @@ return new Promise((resolve, reject) => {
     if (GM_getValue("Config.app") == "开") {
         obj.isExpired()
     } else {
-        obj.task.sign.isEnd++
-        obj.task.read.isEnd++
+        obj.task.sign.end++
+        obj.task.read.end++
     }
     obj.taskEnd = function () {
-        if (obj.task.sign.isEnd > 0 && obj.task.read.isEnd > 0 && obj.task.promo.isEnd > 0 && obj.task.search.isEnd > 0) {
+        if (obj.task.sign.end > 0 && obj.task.read.end > 0 && obj.task.promo.end > 0 && obj.task.search.end > 0) {
             resolve()
         }
     }
