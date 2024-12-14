@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.7.2
+// @version         2.2.8
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -22,8 +22,9 @@
 // @connect         hot.baiwumm.com
 // @connect         cnxiaobai.com
 // @connect         hotapi.zhusun.top
-// @connect         api-hot.imsyy.top
+// @connect         hotapi.lysdad.cn
 // @connect         hotapi.nntool.cc
+// @connect         api-hot.imsyy.top
 // @connect         daily-hot-api.nankoyo.com
 // @license         GPL-3.0
 // ==/UserScript==
@@ -48,7 +49,7 @@ Config:
     title: 搜索词API（速度自测）
     type: select
     default: hot.baiwumm.com
-    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.imsyy.top, hot.nntool.cc, hot.nankoyo.com]
+    values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.lysdad.cn, hot.nntool.cc, hot.imsyy.top, hot.nankoyo.com]
  ==/UserConfig== */
 
 
@@ -88,19 +89,23 @@ const obj = {
                 url: "https://hotapi.zhusun.top/",
                 hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
-            imsyy: {
-                url: "https://api-hot.imsyy.top/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
+            lysdad: {
+                url: "https://hotapi.lysdad.cn/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "newsqq", "netease", "zhihu"],
             },
             nntool: {
                 url: "https://hotapi.nntool.cc/",
+                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
+            },
+            imsyy: {
+                url: "https://api-hot.imsyy.top/",
                 hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
             nankoyo: {
                 url: "https://daily-hot-api.nankoyo.com/",
                 hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
             },
-            arr: ["hot.baiwumm.com", "hot.cnxiaobai.com", "hot.zhusun.top", "hot.imsyy.top", "hot.nntool.cc", "hot.nankoyo.com"],
+            arr: ["hot.baiwumm.com", "hot.cnxiaobai.com", "hot.zhusun.top", "hot.lysdad.cn", "hot.nntool.cc", "hot.imsyy.top", "hot.nankoyo.com"],
             url: "",
             hot: [],
         },
@@ -241,13 +246,17 @@ obj.beforeStart = function () {
                 obj.data.api.url = obj.data.api.zhusun.url
                 obj.data.api.hot = obj.data.api.zhusun.hot
                 break
-            case "hot.imsyy.top":
-                obj.data.api.url = obj.data.api.imsyy.url
-                obj.data.api.hot = obj.data.api.imsyy.hot
+            case "hot.lysdad.cn":
+                obj.data.api.url = obj.data.api.lysdad.url
+                obj.data.api.hot = obj.data.api.lysdad.hot
                 break
             case "hot.nntool.cc":
                 obj.data.api.url = obj.data.api.nntool.url
                 obj.data.api.hot = obj.data.api.nntool.hot
+                break
+            case "hot.imsyy.top":
+                obj.data.api.url = obj.data.api.imsyy.url
+                obj.data.api.hot = obj.data.api.imsyy.hot
                 break
             case "hot.nankoyo.com":
                 obj.data.api.url = obj.data.api.nankoyo.url
