@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.7.1
+// @version         2.2.7.2
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -294,7 +294,7 @@ obj.getToken = function (url) {
 obj.isExpired = function () {
     if (GM_getValue("refresh_token") == "") {
         let code = GM_getValue("Config.code")
-        code = code.match(/M\.[\w+_\.]+\.[0-9a-fA-F-]+/)
+        code = code.match(/M\.[\w+\.]+(\-\w+){4}/)
         if (code) {
             const url = `https://login.live.com/oauth20_token.srf?client_id=0000000040170455&code=${code[0]}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code`
             obj.getToken(encodeURI(url))
