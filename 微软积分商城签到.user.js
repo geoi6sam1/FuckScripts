@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.8
+// @version         2.2.9
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -77,35 +77,6 @@ const obj = {
             ],
         },
         api: {
-            baiwumm: {
-                url: "https://hot.baiwumm.com/api/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq", "netease", "zhihu"]
-            },
-            cnxiaobai: {
-                url: "https://cnxiaobai.com/DailyHotApi/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
-            },
-            zhusun: {
-                url: "https://hotapi.zhusun.top/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
-            },
-            lysdad: {
-                url: "https://hotapi.lysdad.cn/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "newsqq", "netease", "zhihu"],
-            },
-            nntool: {
-                url: "https://hotapi.nntool.cc/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
-            },
-            imsyy: {
-                url: "https://api-hot.imsyy.top/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
-            },
-            nankoyo: {
-                url: "https://daily-hot-api.nankoyo.com/",
-                hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"],
-            },
-            arr: ["hot.baiwumm.com", "hot.cnxiaobai.com", "hot.zhusun.top", "hot.lysdad.cn", "hot.nntool.cc", "hot.imsyy.top", "hot.nankoyo.com"],
             url: "",
             hot: [],
         },
@@ -228,46 +199,46 @@ obj.beforeStart = function () {
     if (GM_getValue("Config.code") == null || GM_getValue("Config.code") == "") {
         GM_setValue("Config.code", obj.data.code)
     }
-    if (GM_getValue("Config.api") == null || obj.data.api.arr.indexOf(GM_getValue("Config.api")) == -1) {
-        GM_setValue("Config.api", "hot.baiwumm.com")
-        obj.data.api.url = obj.data.api.baiwumm.url
-        obj.data.api.hot = obj.data.api.baiwumm.hot
-    } else {
-        switch (GM_getValue("Config.api")) {
-            case "hot.baiwumm.com":
-                obj.data.api.url = obj.data.api.baiwumm.url
-                obj.data.api.hot = obj.data.api.baiwumm.hot
-                break
-            case "hot.cnxiaobai.com":
-                obj.data.api.url = obj.data.api.cnxiaobai.url
-                obj.data.api.hot = obj.data.api.cnxiaobai.hot
-                break
-            case "hot.zhusun.top":
-                obj.data.api.url = obj.data.api.zhusun.url
-                obj.data.api.hot = obj.data.api.zhusun.hot
-                break
-            case "hot.lysdad.cn":
-                obj.data.api.url = obj.data.api.lysdad.url
-                obj.data.api.hot = obj.data.api.lysdad.hot
-                break
-            case "hot.nntool.cc":
-                obj.data.api.url = obj.data.api.nntool.url
-                obj.data.api.hot = obj.data.api.nntool.hot
-                break
-            case "hot.imsyy.top":
-                obj.data.api.url = obj.data.api.imsyy.url
-                obj.data.api.hot = obj.data.api.imsyy.hot
-                break
-            case "hot.nankoyo.com":
-                obj.data.api.url = obj.data.api.nankoyo.url
-                obj.data.api.hot = obj.data.api.nankoyo.hot
-                break
-            default:
-                GM_setValue("Config.api", "hot.baiwumm.com")
-                obj.data.api.url = obj.data.api.baiwumm.url
-                obj.data.api.hot = obj.data.api.baiwumm.hot
-                break
-        }
+    const defaultApiName = "hot.baiwumm.com"
+    if (GM_getValue("Config.api") == null) {
+        GM_setValue("Config.api", defaultApiName)
+    }
+    const currentApiName = GM_getValue("Config.api")
+    const apiConfigMap = new Map([
+        ["hot.baiwumm.com", {
+            url: "https://hot.baiwumm.com/api/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq", "netease", "zhihu"]
+        }],
+        ["hot.cnxiaobai.com", {
+            url: "https://cnxiaobai.com/DailyHotApi/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"]
+        }],
+        ["hot.zhusun.top", {
+            url: "https://hotapi.zhusun.top/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"]
+        }],
+        ["hot.lysdad.cn", {
+            url: "https://hotapi.lysdad.cn/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "newsqq", "netease", "zhihu"]
+        }],
+        ["hot.nntool.cc", {
+            url: "https://hotapi.nntool.cc/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"]
+        }],
+        ["hot.imsyy.top", {
+            url: "https://api-hot.imsyy.top/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"]
+        }],
+        ["hot.nankoyo.com", {
+            url: "https://daily-hot-api.nankoyo.com/",
+            hot: ["weibo", "douyin", "baidu", "toutiao", "thepaper", "qq-news", "netease-news", "zhihu"]
+        }]
+    ])
+    const getApiConfig = apiConfigMap.get(currentApiName) || apiConfigMap.get(defaultApiName)
+    obj.data.api.url = getApiConfig.url
+    obj.data.api.hot = getApiConfig.hot
+    if (!apiConfigMap.has(currentApiName)) {
+        GM_setValue("Config.api", defaultApiName)
     }
 }
 
