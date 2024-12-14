@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.7
+// @version         2.2.7.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -528,7 +528,6 @@ obj.taskSign = function () {
     } else if (obj.task.token == "") {
         return false
     } else {
-        GM_setValue("task_sign", 0)
         obj.task.sign.token = 0
         GM_xmlhttpRequest({
             method: "POST",
