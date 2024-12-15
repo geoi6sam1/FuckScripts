@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.9
+// @version         2.2.9.5
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -240,6 +240,9 @@ obj.beforeStart = function () {
     if (!apiConfigMap.has(currentApiName)) {
         GM_setValue("Config.api", defaultApiName)
     }
+    if (GM_getValue("task_sign") != obj.data.time.dateNowNum) {
+        GM_setValue("task_sign", 0)
+    }
 }
 
 
@@ -450,7 +453,6 @@ obj.taskRead = async function () {
     } else if (obj.task.token == "") {
         return false
     } else {
-        obj.task.read.token = 0
         const readPro = await obj.getReadPro()
         if (readPro.progress > obj.task.read.point) {
             obj.task.read.times = 0
@@ -492,7 +494,8 @@ obj.taskRead = async function () {
 
 
 obj.taskSign = function () {
-    if (obj.task.sign.end > 0) {
+    if (GM_getValue("task_sign") > 0) {
+        obj.task.sign.end++
         return true
     } else if (obj.task.sign.times > 2) {
         obj.task.sign.end++
@@ -508,7 +511,6 @@ obj.taskSign = function () {
     } else if (obj.task.token == "") {
         return false
     } else {
-        obj.task.sign.token = 0
         GM_xmlhttpRequest({
             method: "POST",
             url: "https://prod.rewardsplatform.microsoft.com/dapi/me/activities",
