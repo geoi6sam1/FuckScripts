@@ -13,7 +13,6 @@
 // @license         GPL-3.0
 // ==/UserScript==
 
-
 (function () {
     'use strict'
 
