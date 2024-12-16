@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.2.9.5
+// @version         2.3.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://rewards.bing.com/rewards.png
@@ -186,9 +186,12 @@ obj.beforeStart = function () {
     obj.data.time.hoursNow = Number(dateTime.getHours())
     obj.data.time.dateNow = `${monthNow}/${dayNow}/${yearNow}`
     obj.data.time.dateNowNum = Number(`${yearNow}${monthNow}${dayNow}`)
-    if (GM_getValue("refresh_token") == null) {
-        GM_setValue("refresh_token", "")
-    }
+    const startArr = ["refresh_token", "task_sign", "task_read", "task_promo", "task_search"]
+    startArr.forEach((item) => {
+        if (GM_getValue(item) == null) {
+            GM_setValue(item, 0)
+        }
+    })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
         obj.task.search.limit = obj.getScopeRandomNum(3, 7)
@@ -240,9 +243,6 @@ obj.beforeStart = function () {
     if (!apiConfigMap.has(currentApiName)) {
         GM_setValue("Config.api", defaultApiName)
     }
-    if (GM_getValue("task_sign") != obj.data.time.dateNowNum) {
-        GM_setValue("task_sign", 0)
-    }
 }
 
 
@@ -261,7 +261,7 @@ obj.getToken = function (url) {
                 } else {
                     obj.task.sign.end++
                     obj.task.read.end++
-                    GM_setValue("refresh_token", "")
+                    GM_setValue("refresh_token", 0)
                     obj.pushMsg("App任务🔴", "RefreshToken过期，请获取并补充授权Code后运行！")
                 }
             } else {
@@ -275,7 +275,7 @@ obj.getToken = function (url) {
 
 
 obj.isExpired = function () {
-    if (GM_getValue("refresh_token") == "") {
+    if (GM_getValue("refresh_token") == 0) {
         let code = GM_getValue("Config.code")
         code = code.match(/M\.[\w+\.]+(\-\w+){4}/)
         if (code) {
@@ -377,7 +377,7 @@ obj.taskPromo = async function () {
             }
             if (promotionsArr.length < 1) {
                 obj.task.promo.end++
-                if (GM_getValue("task_promo") == 0) {
+                if (GM_getValue("task_promo") != obj.data.time.dateNowNum) {
                     obj.pushMsg("活动推广🟢", "哇！哥哥好棒！活动推广完成了！")
                 }
                 GM_setValue("task_promo", obj.data.time.dateNowNum)
@@ -462,7 +462,7 @@ obj.taskRead = async function () {
         }
         if (readPro.progress >= readPro.max) {
             obj.task.read.end++
-            if (GM_getValue("task_read") == 0) {
+            if (GM_getValue("task_read") != obj.data.time.dateNowNum) {
                 obj.pushMsg("文章阅读🟢", "哇！哥哥好棒！文章阅读完成了！")
             }
             GM_setValue("task_read", obj.data.time.dateNowNum)
@@ -494,7 +494,7 @@ obj.taskRead = async function () {
 
 
 obj.taskSign = function () {
-    if (GM_getValue("task_sign") > 0) {
+    if (GM_getValue("task_sign") == obj.data.time.dateNowNum) {
         obj.task.sign.end++
         return true
     } else if (obj.task.sign.times > 2) {
@@ -503,7 +503,7 @@ obj.taskSign = function () {
         return true
     } else if (obj.task.sign.point == 0) {
         obj.task.sign.end++
-        if (GM_getValue("task_sign") == 0) {
+        if (GM_getValue("task_sign") != obj.data.time.dateNowNum) {
             obj.pushMsg("App签到🟢", "哇！哥哥好棒！App签到完成了！")
         }
         GM_setValue("task_sign", obj.data.time.dateNowNum)
@@ -635,7 +635,7 @@ obj.taskSearch = async function () {
             }
             if (obj.task.search.pc.progress >= obj.task.search.pc.max && obj.task.search.m.progress >= obj.task.search.m.max) {
                 obj.task.search.end++
-                if (GM_getValue("task_search") == 0) {
+                if (GM_getValue("task_search") != obj.data.time.dateNowNum) {
                     obj.pushMsg("必应搜索🟢", `哇！哥哥好棒！必应搜索完成了！`)
                 }
                 GM_setValue("task_search", obj.data.time.dateNowNum)
