@@ -493,7 +493,7 @@ obj.taskRead = async function () {
 
 
 obj.taskSign = function () {
-    if (GM_getValue("task_sign") == obj.data.time.dateNowNum) {
+    if (obj.task.sign.end > 0 || GM_getValue("task_sign") == obj.data.time.dateNowNum) {
         obj.task.sign.end++
         return true
     } else if (obj.task.sign.times > 2) {
