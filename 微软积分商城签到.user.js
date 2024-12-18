@@ -14,8 +14,7 @@
 // @grant           GM_getValue
 // @grant           GM_setValue
 // @grant           GM_log
-// @connect         cn.bing.com
-// @connect         www.bing.com
+// @connect         bing.com
 // @connect         rewards.bing.com
 // @connect         login.live.com
 // @connect         prod.rewardsplatform.microsoft.com
@@ -103,7 +102,6 @@ const obj = {
             },
             times: 0,
             progressNow: 0,
-            domain: "www.bing.com",
             pc: {
                 progress: 0,
                 max: 1,
@@ -603,13 +601,6 @@ obj.taskSearch = async function () {
         if (dashboard == "") {
             return false
         } else {
-            const onload = (xhr) => {
-                let url = new URL(xhr.finalUrl)
-                if (url.host != obj.task.search.domain) {
-                    obj.task.search.domain = url.host
-                }
-                obj.task.search.index++
-            }
             if (dashboard.userStatus.counters.pcSearch) {
                 obj.task.search.pc.progress = dashboard.userStatus.counters.pcSearch[0].pointProgress
                 obj.task.search.pc.max = dashboard.userStatus.counters.pcSearch[0].pointProgressMax
@@ -651,24 +642,22 @@ obj.taskSearch = async function () {
                 if (obj.task.search.pc.progress < obj.task.search.pc.max) {
                     const keyword = await obj.getTopKeyword()
                     GM_xmlhttpRequest({
-                        url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        url: `https://bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                         headers: {
-                            "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)],
-                            "Referer": `https://${obj.task.search.domain}/`
+                            "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)]
                         },
-                        onload: onload
+                        onload() { obj.task.search.index++ }
                     })
                     return false
                 }
                 if (obj.task.search.m.progress < obj.task.search.m.max) {
                     const keyword = await obj.getTopKeyword()
                     GM_xmlhttpRequest({
-                        url: `https://${obj.task.search.domain}/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        url: `https://bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
                         headers: {
-                            "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)],
-                            "Referer": `https://${obj.task.search.domain}/`
+                            "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)]
                         },
-                        onload: onload
+                        onload() { obj.task.search.index++ }
                     })
                     return false
                 }
