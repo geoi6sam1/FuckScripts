@@ -31,21 +31,21 @@
 /* ==UserConfig==
 Config:
   limit:
-    title: 限制搜索（4~8搜/次）
+    title: 限制搜索（每次运行只搜 4-8 次）
     type: select
     default: 开
     values: [开, 关]
   app:
-    title: APP任务（签到+阅读）
+    title: APP任务（每日签到 + 文章阅读）
     type: select
     default: 关
     values: [开, 关]
   code:
-    title: 授权Code（一次性）
+    title: 授权Code（Code一次性，Token为28h）
     type: textarea
     default: https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf
   api:
-    title: 搜索词API（速度自测）
+    title: 搜索词API（请自测接口，尽量更换）
     type: select
     default: hot.baiwumm.com
     values: [hot.baiwumm.com, hot.cnxiaobai.com, hot.zhusun.top, hot.lysdad.cn, hot.nntool.cc, hot.imsyy.top, hot.nankoyo.com]
