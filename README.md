@@ -25,12 +25,12 @@
 
 | Name | Type | GitHub | GitCode | Gitee |
 |:---:|:---:|:---:|:---:|:---:|
-| **油猴中文网签到** | **Discuz**(DSU每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/油猴中文网签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/油猴中文网签到.user.js) |
-| **智能电视网签到** | **Discuz**(亮剑打卡签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
-| **飘雪动漫社签到** | **Discuz**(西瓜微社区签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
-| **粤知缘动漫社签到** | **Discuz**(DC每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤知缘动漫社签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社签到.user.js) |
-| **MIUI历史版本签到** | **WordPress** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI历史版本签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) |
-| **微软积分商城签到** | **无** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软积分商城签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软积分商城签到.user.js) |
+| **油猴中文网签到** | **Discuz**(DSU每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/油猴中文网签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/油猴中文网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/油猴中文网签到.user.js) |
+| **智能电视网签到** | **Discuz**(亮剑打卡签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/智能电视网签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/智能电视网签到.user.js) |
+| **飘雪动漫社签到** | **Discuz**(西瓜微社区签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
+| **粤知缘动漫社签到** | **Discuz**(DC每日签到) | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/粤知缘动漫社签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/粤知缘动漫社签到.user.js) |
+| **MIUI历史版本签到** | **WordPress** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/MIUI历史版本签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/MIUI历史版本签到.user.js) |
+| **微软积分商城签到** | **无** | [安装](https://raw.githubusercontent.com/geoi6sam1/FuckScripts/main/微软积分商城签到.user.js) | [安装](https://raw.gitcode.com/geoi6sam1/FuckScripts/raw/main/微软积分商城签到.user.js) | [安装](https://gitee.com/geoi6sam1/FuckScripts/raw/main/微软积分商城签到.user.js) |
 
 ---
 
