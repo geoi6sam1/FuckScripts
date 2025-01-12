@@ -44,10 +44,10 @@ m.mgtv.com##.ReactModalPortal,[class*="OpenApp"],.open-app-popup,.ht.mgui-btn.mg
 ||da.mgtv.com^
 
 ! ---------123云盘---------
-123pan.com,123pan.cn,123865.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,[class*="header-waning-tips"],.loginModal-footer.payment-footer,.activity-box,.bg_svip_block_ads,.uppy-Dashboard-slowSpeed-banner,.ant-modal-content .download-msgInfo-phone,.download-pay-footer
-123pan.com,123pan.cn,123865.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
-123pan.com,123pan.cn,123865.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
-123pan.com,123pan.cn,123865.com#$#.webbody.svip-body { height: 0 !important; }
+123pan.com,123pan.cn,123684.com,123865.com##.advBanner,[class*="adv-container"],[class*="banner-container"],[class*="banner_guide"],#top_container,#banner_container,.banner_all_wrap,.ant-carousel,.btn_reward,[class*="header-waning-tips"],.loginModal-footer.payment-footer,.activity-box,.bg_svip_block_ads,.uppy-Dashboard-slowSpeed-banner,.ant-modal-content .download-msgInfo-phone,.download-pay-footer
+123pan.com,123pan.cn,123684.com,123865.com#$#.contentBorder .conter { margin-bottom: 0 !important; }
+123pan.com,123pan.cn,123684.com,123865.com#$#.appBottomBtn.banner-bottom { bottom: 0 !important; }
+123pan.com,123pan.cn,123684.com,123865.com#$#.webbody.svip-body { height: 0 !important; }
 
 ! ---------APKMirror---------
 apkmirror.com##.ezo_ad,.ains-apkm_outbrain_ad,#bottom-slider,[id*="adtester-container"],[id*="appmanager_sppostswidget"],.listWidget:has([data-feed-url]),.appRow:has([id*="adtester-container"])
