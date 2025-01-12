@@ -570,16 +570,16 @@ obj.getTopKeyword = function () {
                             sentence = obj.task.search.word.list[obj.task.search.word.index]
                             resolve(sentence)
                         } else {
-                            GM_log("微软积分商城必应搜索🔴搜索词API异常！请自行测试搜索词接口！状态码：" + res.code)
+                            GM_log("微软积分商城必应搜索🟣搜索词API异常！请自行测试搜索词接口！状态码：" + res.code)
                             resolve(sentence)
                         }
                     } else {
-                        GM_log("微软积分商城必应搜索🔴搜索词获取失败！请自行测试搜索词接口！状态码：" + xhr.status)
+                        GM_log("微软积分商城必应搜索🟣搜索词获取失败！请自行测试搜索词接口！状态码：" + xhr.status)
                         resolve(sentence)
                     }
                 },
                 ontimeout() {
-                    GM_log("微软积分商城必应搜索🔴搜索词获取超时！请检查网络或更换搜索词接口！")
+                    GM_log("微软积分商城必应搜索🟣搜索词获取超时！请检查网络或更换搜索词接口！")
                     resolve(sentence)
                 }
             })
