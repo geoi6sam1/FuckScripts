@@ -641,23 +641,26 @@ obj.taskSearch = async function () {
                 return true
             } else {
                 GM_setValue("task_search", 0)
+                const keyword = await obj.getTopKeyword()
+                const bParam = `q=${keyword}&qs=ds&form=QBLH`
+                const bUrl = `https://bing.com/search?${bParam}`
                 if (obj.task.search.pc.progress < obj.task.search.pc.max) {
-                    const keyword = await obj.getTopKeyword()
+                    const userAgent = obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)]
                     GM_xmlhttpRequest({
-                        url: `https://bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        url: bUrl,
                         headers: {
-                            "User-Agent": obj.data.ua.pc[obj.getRandomNum(obj.data.ua.pc.length)]
+                            "User-Agent": userAgent
                         },
                         onload() { obj.task.search.index++ }
                     })
                     return false
                 }
                 if (obj.task.search.m.progress < obj.task.search.m.max) {
-                    const keyword = await obj.getTopKeyword()
+                    const userAgent = obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)]
                     GM_xmlhttpRequest({
-                        url: `https://bing.com/search?q=${encodeURIComponent(keyword)}&form=QBLH`,
+                        url: bUrl,
                         headers: {
-                            "User-Agent": obj.data.ua.m[obj.getRandomNum(obj.data.ua.m.length)]
+                            "User-Agent": userAgent
                         },
                         onload() { obj.task.search.index++ }
                     })
