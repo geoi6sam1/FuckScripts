@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.3.0
+// @version         2.4.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://store-images.s-microsoft.com/image/apps.58212.783a7d74-cf5a-4dca-aed6-b5722f311eca.f8c0cb0b-6b57-4f06-99b1-5d7ee04e38e6.517a44fd-f164-40ae-996b-f959198325c2
@@ -60,7 +60,6 @@ const obj = {
             dateNowNum: 19450903,
         },
         code: "https://login.live.com/oauth20_authorize.srf?client_id=0000000040170455&scope=service::prod.rewardsplatform.microsoft.com::MBI_SSL&response_type=code&redirect_uri=https://login.live.com/oauth20_desktop.srf",
-        query: ["脚本猫", "白菜", "菠菜", "胡萝卜", "西兰花", "番茄", "黄瓜", "茄子", "小米辣", "彩椒", "南瓜", "青椒", "冬瓜", "莴苣", "芹菜", "蘑菇", "豆芽", "莲藕", "土豆", "芋头", "空心菜", "芥蓝", "苦瓜", "苹果", "香蕉", "橙子", "西瓜", "葡萄", "柠檬", "草莓", "樱桃", "菠萝", "芒果", "荔枝", "龙眼", "柚子", "猕猴桃", "火龙果", "哈密瓜", "椰子", "山竹", "榴莲", "枇杷", "火锅", "春卷", "鸡腿", "番薯", "油炸鬼", "蛤蜊", "鱿鱼", "排骨", "猪蹄", "火腿", "香肠", "腊肉", "小龙虾", "鸡胸肉", "羊肉串", "肉干", "玫瑰", "百合", "郁金香", "康乃馨", "向日葵", "菊花", "牡丹", "茉莉", "薰衣草", "樱花", "仙人掌", "绿萝", "吊兰", "芦荟", "君子兰", "海棠", "水仙", "风信子", "松树", "潘钜森", "老鼠", "兔子", "蟑螂", "吗喽", "熊猫", "老虎", "大象", "长颈鹿", "斑马", "企鹅", "海豚", "海狮", "金鱼", "烤鸭", "蝴蝶", "蜜蜂", "蚂蚁", "红烧肉", "清蒸鱼", "宫保鸡丁", "麻婆豆腐", "糖醋排骨", "富贵竹", "辣子鸡丁", "发财树", "酸菜鱼", "蛋散", "西葫芦炒鸡蛋", "清炒时蔬", "五柳蛋", "鱼香肉丝", "地三鲜", "香菇滑鸡", "松鼠鱼", "肠粉", "虾饺", "烧卖", "蛋挞", "凤爪", "叉烧包", "糯米鸡", "腊肠粽", "萝卜糕", "牛肉丸", "艇仔粥", "猪肠粉", "肉糜粥", "豉汁蒸排骨", "蒸凤爪", "甘蔗", "榴莲酥", "双皮奶", "油猴中文网"],
         ua: {
             pc: [
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.131",
@@ -137,16 +136,19 @@ obj.getRandomArr = function (arr) {
 }
 
 
-obj.getRandomSentence = function (a, l) {
-    let k = [...a]
-    let r = []
-    for (let i = 0; i < l; i++) {
-        if (k.length === 0) break
-        let [n] = [Math.floor(Math.random() * k.length)]
-        let [q] = [k.splice(n, 1)[0]]
-        r.push(q)
+obj.getRandomChineseChar = function () {
+    const codePoint = Math.floor(Math.random() * (0x57FF - 0x4E00 + 1)) + 0x4E00
+    return String.fromCodePoint(codePoint)
+}
+
+
+obj.generateRandomChineseStr = function (minLength = 6, maxLength = 32) {
+    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength
+    let result = ""
+    for (let i = 0; i < length; i++) {
+        result += obj.getRandomChineseChar()
     }
-    return r.join("")
+    return result
 }
 
 
@@ -191,7 +193,7 @@ obj.beforeStart = function () {
     })
     if (GM_getValue("Config.limit") == null || GM_getValue("Config.limit") != "关") {
         GM_setValue("Config.limit", "开")
-        obj.task.search.limit = obj.getScopeRandomNum(3, 7)
+        obj.task.search.limit = obj.getScopeRandomNum(3, 5)
     }
     if (GM_getValue("Config.app") == null || GM_getValue("Config.app") != "开") {
         GM_setValue("Config.app", "关")
@@ -551,7 +553,7 @@ obj.getTopKeyword = function () {
     return new Promise((resolve, reject) => {
         if (obj.task.search.word.index < 1 || obj.task.search.word.list.length < 1) {
             const apiHot = obj.getRandomApiHot()
-            let sentence = obj.getRandomSentence(obj.data.query, 3)
+            let sentence = obj.generateRandomChineseStr()
             GM_xmlhttpRequest({
                 timeout: 9999,
                 url: obj.data.api.url + apiHot,
