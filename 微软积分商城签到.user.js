@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         2.9.0
+// @version         3.0.0
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://store-images.s-microsoft.com/image/apps.58212.783a7d74-cf5a-4dca-aed6-b5722f311eca.f8c0cb0b-6b57-4f06-99b1-5d7ee04e38e6.517a44fd-f164-40ae-996b-f959198325c2
@@ -18,7 +18,6 @@
 // @connect         rewards.bing.com
 // @connect         login.live.com
 // @connect         prod.rewardsplatform.microsoft.com
-// @connect         ip-api.com
 // @connect         dailyapi.eray.cc
 // @connect         hot.baiwumm.com
 // @connect         cnxiaobai.com
@@ -36,7 +35,7 @@ Config:
         type: checkbox
         default: false
     limit:
-        title: 限制搜索次数（每次运行只搜索 4-8 次）
+        title: 限制搜索（每次运行只搜索 4-8 次）
         type: checkbox
         default: true
     span:
@@ -149,7 +148,7 @@ const obj = {
             index: 0,
             end: 0,
         },
-        token: "",
+        token: 0,
     },
 }
 
@@ -222,11 +221,12 @@ obj.beforeStart = function () {
         const defaultApiName = "hot.eray.cc"
         const currentApiName = GM_getValue("Config.api", defaultApiName)
         const apiConfigMap = new Map(obj.data.api.arr)
-        const getConfigApi = apiConfigMap.get(currentApiName)
+        const getConfigApi = apiConfigMap.get(currentApiName) || apiConfigMap.get(defaultApiName)
         obj.data.api.url = getConfigApi.url
         obj.data.api.hot = getConfigApi.hot
         if (!apiConfigMap.has(currentApiName)) {
-            GM_setValue("Config.api", defaultApiName)
+            GM_setValue("Config.api", "单机模式")
+            obj.pushMsg("必应搜索🟣", "当前搜索词接口失效！已替换成单机模式！")
         }
     }
 }
@@ -486,7 +486,7 @@ obj.taskRead = async function () {
         obj.task.read.end++
         obj.pushMsg("文章阅读🔴", "未知原因出错，本次文章阅读结束！")
         return true
-    } else if (obj.task.token == "") {
+    } else if (obj.task.token == 0) {
         return false
     } else {
         const readPro = await obj.getReadPro()
@@ -544,7 +544,7 @@ obj.taskSign = function () {
         }
         GM_setValue("task_sign", obj.data.time.dateNowNum)
         return true
-    } else if (obj.task.token == "") {
+    } else if (obj.task.token == 0) {
         return false
     } else {
         GM_xmlhttpRequest({
@@ -760,9 +760,9 @@ return new Promise((resolve, reject) => {
             obj.task.sign.end++
             obj.task.read.end++
         }
-        obj.searchStart()
         obj.promoStart()
-        obj.readStart()
         obj.signStart()
+        obj.readStart()
+        obj.searchStart()
     }()
 })
