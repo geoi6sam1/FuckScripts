@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            微软积分商城签到
 // @namespace       https://github.com/geoi6sam1
-// @version         3.0.0
+// @version         3.0.1
 // @description     每天自动完成 Microsoft Rewards 任务获取积分奖励，✅必应搜索（Web）、✅每日活动（Web）、✅更多活动（Web）、✅文章阅读（App）、✅每日签到（App）
 // @author          geoi6sam1@qq.com
 // @icon            https://store-images.s-microsoft.com/image/apps.58212.783a7d74-cf5a-4dca-aed6-b5722f311eca.f8c0cb0b-6b57-4f06-99b1-5d7ee04e38e6.517a44fd-f164-40ae-996b-f959198325c2
@@ -217,7 +217,7 @@ obj.beforeStart = function () {
     obj.data.time.dateNow = `${monthNow}/${dayNow}/${yearNow}`
     obj.data.time.dateNowNum = Number(`${yearNow}${monthNow}${dayNow}`)
     obj.task.search.limit.index = obj.getScopeRandomNum(obj.task.search.limit.min, obj.task.search.limit.max)
-    if (GM_getValue("Config.api", 0) != "单机模式") {
+    if (GM_getValue("Config.api", "单机模式") != "单机模式") {
         const defaultApiName = "hot.eray.cc"
         const currentApiName = GM_getValue("Config.api", defaultApiName)
         const apiConfigMap = new Map(obj.data.api.arr)
@@ -589,7 +589,7 @@ obj.taskSign = function () {
 obj.getTopKeyword = function () {
     return new Promise((resolve, reject) => {
         let sentence = obj.generateRandomChineseStr()
-        if (GM_getValue("Config.api", 0) == "单机模式") {
+        if (GM_getValue("Config.api", "单机模式") == "单机模式") {
             resolve(sentence)
         } else {
             if (obj.task.search.word.index < 1 || obj.task.search.word.list.length < 1) {
@@ -654,7 +654,7 @@ obj.taskSearch = async function () {
             } else {
                 obj.task.search.m.max = 0
             }
-            if (GM_getValue("Config.limit", false) == true) {
+            if (GM_getValue("Config.limit", true) == true) {
                 if (obj.task.search.index > obj.task.search.limit.index) {
                     obj.task.search.end++
                     GM_log(`微软积分商城必应搜索🔵您已开启限制搜索，本次运行搜索 ${obj.task.search.index} 次结束！电脑搜索：${obj.task.search.pc.progress}/${obj.task.search.pc.max}　移动设备搜索：${obj.task.search.m.progress}/${obj.task.search.m.max}，请等待下个时间点继续完成！`)
