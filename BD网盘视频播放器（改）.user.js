@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         BD网盘视频播放器（改）
-// @namespace    https://github.com/geoi6sam1
+// @namespace    https://github.com/geoisam
 // @version      0.8.5.20241212
 // @description  https://scriptcat.org/script-show-page/340
-// @author       geoi6sam1@qq.com
+// @author       geoisam@qq.com
 // @icon         https://staticwx.cdn.bcebos.com/mini-program/images/ic_video.png
-// @supportURL   https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL   https://github.com/geoisam/FuckScripts/issues
 // @match        http*://pan.baidu.com/s/*
 // @match        http*://yun.baidu.com/s/*
 // @match        http*://*.baidu.com/play/video*
