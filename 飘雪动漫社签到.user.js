@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            飘雪动漫社签到
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.3.0
 // @description     飘雪动漫社每日自动签到，领取红包
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://www.dranime.net/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
