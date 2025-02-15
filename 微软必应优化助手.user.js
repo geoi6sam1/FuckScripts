@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            微软必应优化助手
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         1.2.5
 // @description     微软必应（Microsoft Bing）搜索结果优化，支持电脑端和移动端
-// @author          geoi6sam1
+// @author          geoisam
 // @icon            https://bing.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @match           http*://*.bing.com/*
 // @run-at          document-start
 // @grant           unsafeWindow
