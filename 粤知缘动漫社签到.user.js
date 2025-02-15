@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            粤知缘动漫社签到
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.1.1
 // @description     粤知缘动漫社每日自动签到，领取任务奖励，支持自动登录
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://www.yzydm.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @crontab         * 8-23 once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
