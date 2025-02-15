@@ -46,6 +46,13 @@
 
 ### \#\# 赞赏码（在线乞讨）
 
-<img src="./images/tenpay.png" width="300" height="300" />
-<img src="./images/alipay.png" width="300" height="300" />
-<img src="./images/redpacket.png" width="300" height="300" />
+<table>
+<tr>
+<td><a>
+<img src="./images/tenpay.png">
+</a></td>
+<td><a>
+<img src="./images/alipay.png">
+</a></td>
+</tr>
+</table>
