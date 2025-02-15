@@ -12,7 +12,7 @@
 > **👇👇普通脚本（通用）👇👇**
 
 | Name | GitHub | Gitee |
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|
 | ~~**可可影视播放器**~~ | [~~安装~~](https://raw.githubusercontent.com/geoisam/FuckScripts/main/可可影视播放器.user.js) | [~~安装~~](https://gitee.com/geoisam/FuckScripts/raw/main/可可影视播放器.user.js) |
 | **微软必应优化助手** | [安装](https://raw.githubusercontent.com/geoisam/FuckScripts/main/微软必应优化助手.user.js) | [安装](https://gitee.com/geoisam/FuckScripts/raw/main/微软必应优化助手.user.js) |
 | **腾讯视频优化助手** | [安装](https://raw.githubusercontent.com/geoisam/FuckScripts/main/腾讯视频优化助手.user.js) | [安装](https://gitee.com/geoisam/FuckScripts/raw/main/腾讯视频优化助手.user.js) |
@@ -24,7 +24,7 @@
 > **👇👇定时脚本（[脚本猫](https://docs.scriptcat.org)）👇👇**
 
 | Name | Type | GitHub | Gitee |
-|:---:|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|
 | **油猴中文网签到** | **Discuz**(DSU每日签到) | [安装](https://raw.githubusercontent.com/geoisam/FuckScripts/main/油猴中文网签到.user.js) | [安装](https://gitee.com/geoisam/FuckScripts/raw/main/油猴中文网签到.user.js) |
 | **智能电视网签到** | **Discuz**(亮剑打卡签到) | [安装](https://raw.githubusercontent.com/geoisam/FuckScripts/main/智能电视网签到.user.js) | [安装](https://gitee.com/geoisam/FuckScripts/raw/main/智能电视网签到.user.js) |
 | **飘雪动漫社签到** | **Discuz**(西瓜微社区签到) | [安装](https://raw.githubusercontent.com/geoisam/FuckScripts/main/飘雪动漫社签到.user.js) | [安装](https://gitee.com/geoisam/FuckScripts/raw/main/飘雪动漫社签到.user.js) |
@@ -46,4 +46,6 @@
 
 ### \#\# 赞赏码（在线乞讨）
 
-![赞赏码](./images/sponsor.png)
+<img src="./images/tenpay.png" width="300" height="300" />
+<img src="./images/alipay.png" width="300" height="300" />
+<img src="./images/redpacket.png" width="300" height="300" />
