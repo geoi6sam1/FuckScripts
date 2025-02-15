@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            腾讯视频优化助手
-// @namespace       https://github.com/geoi6sam1
-// @version         1.1.9
+// @namespace       https://github.com/geoisam
+// @version         1.2.0
 // @description     优化腾讯视频（WeTV）浏览与观影体验，支持电脑端和移动端
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://v.qq.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @match           http*://v.qq.com/*
 // @match           http*://m.v.qq.com/*
 // @match           http*://film.qq.com/*
@@ -101,6 +101,7 @@ a[href*="iwan."],
 .video-banner-module:has(a[href*="gamer."]),
 .video-banner-module:has(a[href*="iwan."]),
 #iwan-gamependant-page,
+#iwan-gamesearchrank-page,
 .tip_download,
 .vip_act,
 .fixed_box,
