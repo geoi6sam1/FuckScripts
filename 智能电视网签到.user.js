@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            智能电视网签到
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.4.1
 // @description     智能电视网每日自动签到，支持自动登录
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://www.znds.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
