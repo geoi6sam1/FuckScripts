@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name            自动删除QQ空间说说
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.1.0
 // @description     选择了莫后悔，失去了别追回，路还是要走滴，生活还是该继续
-// @author          geoi6sam1
+// @author          geoisam
 // @match           *://user.qzone.qq.com/*
 // @icon            https://qzone.qq.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @run-at          document-end
 // @license         GPL-3.0
 // ==/UserScript==
