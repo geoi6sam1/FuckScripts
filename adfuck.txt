@@ -13,7 +13,7 @@
 ! AdGuard 移动应用横幅广告过滤器：https://filters.adtidy.org/android/filters/20_optimized.txt
 ! AdGuard 其他恼人广告过滤器：https://filters.adtidy.org/android/filters/21_optimized.txt
 ! Legitimate URL Shortener：https://raw.githubusercontent.com/DandelionSprout/adfilt/master/LegitimateURLShortener.txt
-! Homepage: https://github.com/geoi6sam1/FuckScripts/issues
+! Homepage: https://github.com/geoisam/FuckScripts/issues
 
 
 ! ---------必应搜索---------
