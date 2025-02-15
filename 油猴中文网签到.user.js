@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            油猴中文网签到
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.1.1
 // @description     油猴中文网每日自动签到
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://bbs.tampermonkey.net.cn/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
