@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name           百度网盘音频播放器（改）
-// @namespace      https://github.com/geoi6sam1
+// @namespace      https://github.com/geoisam
 // @version        0.2.0.20240713
 // @description    https://scriptcat.org/script-show-page/995
-// @author         geoi6sam1@qq.com
+// @author         geoisam@qq.com
 // @icon           https://staticwx.cdn.bcebos.com/mini-program/images/ic_audio.png
-// @supportURL     https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL     https://github.com/geoisam/FuckScripts/issues
 // @match          https://pan.baidu.com/disk/main*
 // @match          https://yun.baidu.com/disk/main*
 // @require        https://scriptcat.org/lib/1359/1.1.1/PipLyric.js
