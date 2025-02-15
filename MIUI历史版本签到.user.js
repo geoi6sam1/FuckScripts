@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name            MIUI历史版本签到
-// @namespace       https://github.com/geoi6sam1
+// @namespace       https://github.com/geoisam
 // @version         0.3.8
 // @description     MIUI历史版本每日自动签到，支持自动登录
-// @author          geoi6sam1@qq.com
+// @author          geoisam@qq.com
 // @icon            https://miuiver.com/favicon.ico
-// @supportURL      https://github.com/geoi6sam1/FuckScripts/issues
+// @supportURL      https://github.com/geoisam/FuckScripts/issues
 // @crontab         * * once * *
 // @grant           GM_xmlhttpRequest
 // @grant           GM_notification
